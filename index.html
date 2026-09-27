@@ -156,8 +156,8 @@
   .hero-stat .k{font-size:13px;color:var(--muted);margin-bottom:6px;}
   .hero-stat .v{font-size:28px;font-weight:700;color:var(--blue-700);line-height:1.1;}
   .hero-stat .v small{font-size:14px;color:var(--muted);font-weight:400;margin-left:2px;}
-  .hero-stat .v .up{font-size:13px;color:var(--red-600);margin-left:6px;}
-  .hero-stat .v .down{font-size:13px;color:var(--green-600);margin-left:6px;}
+  .hero-stat .v .up{font-size:13px;color:var(--green-600);margin-left:6px;}
+  .hero-stat .v .down{font-size:13px;color:var(--red-600);margin-left:6px;}
   .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
   @media(max-width:900px){.dash-grid{grid-template-columns:1fr;}}
   .proj-score{margin:12px 0;}
@@ -182,6 +182,64 @@
   .rank-row .nm{flex:1;font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .rank-row .me-tag{font-size:11px;color:var(--blue-700);background:#fff;border:1px solid var(--blue-400);border-radius:8px;padding:1px 6px;margin-left:6px;font-weight:400;}
   .rank-row .sc{font-size:17px;font-weight:700;color:var(--blue-700);white-space:nowrap;}
+
+  /* ---- 班级排行（总分 + 均分 双指标合一）---- */
+  .rank-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}  .rank-head h3{margin:0;}
+  .rank-head .spacer{flex:1;}
+  .rank-seg{display:flex;background:var(--blue-50);border-radius:20px;padding:3px;flex:0 0 auto;}
+  .rank-seg button{background:transparent;color:var(--blue-700);border:none;font-size:13px;font-weight:600;padding:4px 12px;min-height:0;height:26px;line-height:1;border-radius:16px;transition:.15s;}
+  .rank-seg button:hover{background:transparent;}
+  .rank-seg button.active,.rank-seg button.active:hover{background:var(--blue-700);color:#fff;}
+  .dash-grid > .span2{grid-column:1 / -1;}
+  .crow{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line);}
+  .crow:last-child{border-bottom:none;}
+  .crow-rk{flex:0 0 32px;height:32px;border-radius:8px;background:var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;}
+  .crow-rk.g1{background:var(--gold);color:#fff;}
+  .crow-rk.g2{background:#94a3b8;color:#fff;}
+  .crow-rk.g3{background:#cd7f32;color:#fff;}
+  .crow-mid{flex:1;min-width:0;}
+  .crow-l1{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px;}
+  .crow-l1 .nm{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .crow-l1 .tot{font-size:19px;font-weight:700;white-space:nowrap;}
+  .crow-l1 .tot small{font-size:12px;color:var(--muted);font-weight:400;}
+  .crow-track{background:var(--line-2);border-radius:5px;height:8px;overflow:hidden;}
+  .crow-track i{display:block;height:100%;border-radius:5px;transition:width .5s;}
+  .crow-avg{flex:0 0 78px;text-align:center;background:#fff;border:1px solid var(--blue-100);border-radius:10px;padding:5px 0;box-shadow:var(--shadow-sm);}
+  .crow-avg .av{display:block;font-size:18px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .crow-avg .ak{font-size:11px;color:var(--muted);}
+  .crow-avg.hi{background:var(--green-100);border-color:#86efac;}
+  .crow-avg.hi .av{color:var(--green-600);}
+  /* ---- 红旗 / 单班今日视图 ---- */
+  .flag{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#7c2d12;background:var(--gold-100);border:1px solid var(--gold);border-radius:20px;padding:1px 7px;margin-left:6px;vertical-align:middle;}
+  .flag svg{width:11px;height:11px;flex:0 0 11px;}
+  .kv2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .kv2-box{background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--r-md);padding:12px 14px;}
+  .kv2-box .k{font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .kv2-box .v{font-size:26px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .kv2-box .v small{font-size:13px;color:var(--muted);font-weight:400;}
+  .kv2-box .s{font-size:12px;color:var(--muted);margin-top:5px;}
+  .prow-head,.prow{display:grid;grid-template-columns:1fr 92px 92px;gap:8px;align-items:center;}
+  .prow-head{font-size:12px;color:var(--muted);padding:0 0 6px;border-bottom:1px solid var(--line);text-align:right;}
+  .prow-head span:first-child{text-align:left;}
+  .prow{padding:9px 0;border-bottom:1px dashed var(--line);}
+  .prow:last-child{border-bottom:none;}
+  .prow .pn{font-size:15px;font-weight:600;color:var(--ink);}
+  .prow .pd,.prow .pp{text-align:right;font-size:15px;font-weight:700;color:var(--red-600);}
+  .prow .pp{color:var(--amber-600);}
+  .prow .zero{color:var(--green-600);font-weight:400;}
+  /* ---- 打分录入 · 行内档位 ---- */
+  .tier-rows{display:grid;gap:8px;margin-top:4px;}
+  .tier-row{display:flex;align-items:center;gap:10px 12px;background:var(--blue-50);border-radius:var(--r-md);padding:9px 12px;flex-wrap:wrap;}
+  .tier-row .tier-name{font-weight:600;color:var(--blue-700);min-width:104px;flex:0 0 104px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tier-chips{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0;}
+  .tier-chip{background:#fff;color:var(--blue-700);border:1px solid var(--blue-400);border-radius:8px;padding:0 11px;min-height:36px;height:36px;font-size:14px;font-weight:600;line-height:1;}
+  .tier-chip:hover{background:var(--blue-100);}
+  .tier-chip.active{background:var(--red-500);border-color:var(--red-500);color:#fff;}
+  .tier-chip.active:hover{background:var(--red-600);}
+  .tier-chip.zero.active{background:var(--green-500);border-color:var(--green-500);}
+  .tier-chip.zero.active:hover{background:var(--green-600);}
+  .tier-row .tier-cur{font-size:13px;color:var(--muted);min-width:80px;flex:0 0 80px;text-align:right;}
+  .tier-row .tier-cur b{color:var(--blue-700);font-size:16px;}
   .trend-summary{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7;}
   .trend-summary b{color:var(--ink);}
 
@@ -215,6 +273,17 @@
     .stat-v{font-size:21px;}
     .dash-hero h2{font-size:18px;}
     .hero-stat .v{font-size:24px;}
+    .crow{gap:10px;padding:10px 0;}
+    .crow-rk{flex:0 0 28px;height:28px;font-size:14px;}
+    .crow-l1 .nm{font-size:14px;}
+    .crow-l1 .tot{font-size:17px;}
+    .crow-avg{flex:0 0 64px;}
+    .crow-avg .av{font-size:16px;}
+    .rank-seg button{padding:4px 9px;font-size:12px;}
+    .tier-row{gap:6px 10px;padding:8px 10px;}
+    .tier-row .tier-name{flex:0 0 100%;min-width:0;font-size:14px;}
+    .tier-row .tier-cur{flex:0 0 auto;min-width:0;margin-left:auto;}
+    .tier-chip{padding:0 9px;min-height:32px;height:32px;font-size:13px;border-radius:7px;}
   }
   #moreBg{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:70;display:flex;align-items:flex-end;}
   #moreSheet{background:#fff;width:100%;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:16px 16px calc(16px + var(--safe-b));max-height:70vh;overflow:auto;}
@@ -283,10 +352,10 @@
         <div class="dash-hero-actions">
           <select id="dClass" class="hero-select"><option value="">全部班级</option></select>
           <select id="dRange" class="hero-select">
+            <option value="week" selected>本周</option>
+            <option value="lastweek">上周</option>
             <option value="today">今日</option>
-            <option value="week">近 7 天</option>
-            <option value="month">近 30 天</option>
-            <option value="all">全部</option>
+            <option value="custom">自定义…</option>
           </select>
           <button class="ghost" id="dashRefresh" style="min-height:42px;">刷新</button>
         </div>
@@ -296,7 +365,14 @@
 
       <div class="dash-grid">
         <div class="card">
-          <h3 id="todayItemsTitle">各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span></h3>
+          <div class="rank-head">
+            <h3 id="todayItemsTitle">各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span></h3>
+            <span class="spacer"></span>
+            <div class="rank-seg hidden" id="rankSeg">
+              <button type="button" data-sort="total" class="active">按总分</button>
+              <button type="button" data-sort="avg">按均分</button>
+            </div>
+          </div>
           <div id="todayItems"></div>
         </div>
         <div class="card">
@@ -307,11 +383,11 @@
       </div>
 
       <div class="dash-grid">
-        <div class="card">
+        <div class="card" id="dedCard">
           <h3>扣分明细 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">按时间倒序</span></h3>
           <div id="todayDeductions"></div>
         </div>
-        <div class="card">
+        <div class="card" id="rankCard">
           <h3 id="rankTitle">班级排名</h3>
           <div id="classRank"></div>
         </div>
@@ -341,20 +417,38 @@
 
     <section class="view only-staff-view" id="view-entry">
       <div class="card">
-        <h3 style="margin:0;">全班常规打分</h3>
-        <div class="muted" style="margin-top:6px;">打分项目由「项目管理」决定：在该班级下增删项目，此处与数据看板会同步变化。</div>
-        <div id="batchCard">
-          <div class="toolbar" style="margin-top:12px;">
-            <div><label>班级</label><select id="eClass"></select></div>
-            <div><label>打分人</label><select id="eScorer"></select></div>
-            <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="eSubmit">保存全班评分</button></div>
-            <div style="flex:0 0 auto;"><label>&nbsp;</label><button class="ghost" id="eUndo">撤销上一笔</button></div>
+        <div class="rank-head">
+          <h3>常规打分</h3>
+          <span class="spacer"></span>
+          <button class="ghost small only-admin" id="tiersBtn">扣分档位</button>
+          <div class="rank-seg" id="entryModeSeg">
+            <button type="button" data-mode="class" class="active">按班级</button>
+            <button type="button" data-mode="project">按项目横评</button>
           </div>
-          <div id="itemRows" class="batch-grid"></div>
+        </div>
+
+        <div class="toolbar" style="margin-top:12px;">
+          <div><label>打分人</label><select id="eScorer"></select></div>
+          <div id="eClassWrap"><label>班级</label><select id="eClass"></select></div>
+          <div id="xProjectWrap" class="hidden"><label>项目</label><select id="xProject"></select></div>
+          <div style="flex:0 0 auto;" id="eSubmitWrap"><label>&nbsp;</label><button id="eSubmit">保存全班评分</button></div>
+          <div style="flex:0 0 auto;" id="xSubmitWrap" class="hidden"><label>&nbsp;</label><button id="xSubmit">保存全部班级</button></div>
+          <div style="flex:0 0 auto;" id="eUndoWrap"><label>&nbsp;</label><button class="ghost" id="eUndo">撤销上一笔</button></div>
+        </div>
+
+        <div id="entryClassBox">
+          <div class="muted" style="margin:2px 0 8px;">打分项目由「项目管理」决定，点档位即可，无需弹窗。</div>
+          <div id="itemRows" class="tier-rows"></div>
           <div class="toolbar" style="margin-top:12px;">
             <div style="flex:1;"><label>其他备注</label><input id="eNote" placeholder="可选，随本次评分一同记录"/></div>
           </div>
           <div class="err" id="entryErr"></div>
+        </div>
+
+        <div id="entryProjBox" class="hidden">
+          <div class="muted" style="margin:2px 0 8px;">一屏横向对比所有班级的同一个项目，适合值日生巡课打分；逐个班点档位，最后一次保存。</div>
+          <div id="xRows" class="tier-rows"></div>
+          <div class="err" id="xErr"></div>
         </div>
       </div>
     </section>
@@ -367,7 +461,7 @@
       </div>
       <div class="card table-card" style="padding:0;overflow:auto;max-height:70vh;">
         <table id="recTable"><thead><tr>
-          <th>时间</th><th>班级</th><th>项目</th><th>对象</th><th>分值</th><th>扣分</th><th>备注</th><th>打分人</th><th class="only-staff">操作</th>
+          <th>时间</th><th>班级</th><th>项目</th><th id="thStudent">对象</th><th>分值</th><th>扣分</th><th>备注</th><th>打分人</th><th class="only-staff">操作</th>
         </tr></thead><tbody id="recBody"></tbody></table>
       </div>
       <div class="rec-cards" id="recCards"></div>
@@ -391,9 +485,10 @@
     <section class="view only-admin-view" id="view-projects">
       <div class="card only-admin-block">
         <h3>新增项目</h3>
+        <div class="muted" style="margin-bottom:8px;">打分项目是<b>全校共用</b>的：选「全部班级」会自动加到每个班；以后新建的班级也会自动继承已有项目。</div>
         <div class="toolbar">
           <div><label>所属班级</label><select id="pClass"></select></div>
-          <div><label>项目名称</label><input id="pName" placeholder="如：第一次月考"/></div>
+          <div><label>项目名称</label><input id="pName" placeholder="如：课间操"/></div>
           <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="pAdd">添加项目</button></div>
         </div>
       </div>
@@ -513,13 +608,33 @@
   </div>
 </div>
 
-<div id="tierModalBg" class="modal-bg hidden">
+<div id="tiersBg" class="modal-bg hidden">
   <div class="modal">
-    <h3 id="tierTitle">选择扣分（满分 100）</h3>
-    <div id="tierGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;"></div>
-    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;">
-      <button class="ghost" id="tierCancel">取消</button>
-      <button class="ghost" id="tierClear">清零</button>
+    <h3>扣分档位设置</h3>
+    <div class="muted" style="margin-bottom:8px;">打分时可选用的扣分档位。全校共用，存云端同步，所有设备自动跟随。</div>
+    <label>档位（英文逗号分隔，必须包含 0）</label>
+    <input id="tiersInput" placeholder="0,0.1,0.2,0.3,0.4,0.5,1"/>
+    <div class="muted" style="margin-top:6px;font-size:12px;">例：<code>0,0.5,1,2</code> —— 档位越少，打分越快。</div>
+    <div class="err" id="tiersErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="ghost" id="tiersDef">恢复默认</button>
+      <button class="ghost" id="tiersCancel">取消</button>
+      <button id="tiersSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="periodBg" class="modal-bg hidden">
+  <div class="modal">
+    <h3>设置评比周期</h3>
+    <div class="muted" style="margin-bottom:8px;">本周期内每个项目满分 100 分，每天检查的扣分从这 100 分里累计扣除。放假周不需要特殊处理 —— 满分只由「项目数」决定，与天数无关。</div>
+    <label>开始日期</label><input id="pStart" type="date"/>
+    <label>结束日期</label><input id="pEnd" type="date"/>
+    <div class="err" id="periodErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="ghost" id="pReset">恢复本周</button>
+      <button class="ghost" id="pCancel">取消</button>
+      <button id="pSave">确定</button>
     </div>
   </div>
 </div>
@@ -532,9 +647,16 @@
    ================================================================== */
 const SUPABASE_URL = 'https://kvammejmkzxffulrmubs.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_yI90MQ_Qkg9KoMBF3aOr4Q_1R3eAKhm';
-const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let _sb = null;
+try{ _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+catch(e){ _sb = null; }
 
-const _u = s => s?.user ? { ...s.user, id: s.user.id, email: s.user.email || '', raw: s.user } : null;
+const _u = s => {
+  const u = s && s.user ? s.user : null;
+  if(!u) return null;
+  const email = u.email || (u.user_metadata && (u.user_metadata.email || u.user_metadata.preferred_username)) || '';
+  return { ...u, id: u.id, email, raw: u };
+};
 const _err = e => ({ message: e?.message || String(e) });
 const cloud = {
   auth: {
@@ -566,10 +688,24 @@ const state = {
   watermark:{ scores:null, events:null, meta:null },
   online:true,
 };
-const dashFilter = { classId:'', range:'all' };
+const dashFilter = { classId:'', range:'week' };
+let dashSort = 'total';   /* 'total' = 按总分 / 'avg' = 按均分 */
 const ITEMS = ['卫生','眼保健操','午休纪律','晨操'];
-const TIERS = [0,0.1,0.2,0.3,0.4,0.5,1];
+/* 扣分档位：默认 7 档，管理员可改并云端同步（存 app_settings.tiers） */
+const DEFAULT_TIERS = [0,0.1,0.2,0.3,0.4,0.5,1];
+let TIER_LIST = DEFAULT_TIERS.slice();
+function setTiers(arr){
+  if(!Array.isArray(arr))return false;
+  const v=arr.map(x=>Number(x)).filter(x=>isFinite(x)&&x>=0&&x<=100);
+  if(v.length<2)return false;
+  const next=[...new Set(v)].sort((a,b)=>a-b);
+  if(JSON.stringify(next)===JSON.stringify(TIER_LIST))return false;
+  TIER_LIST=next;
+  return true;
+}
+function tierLabel(t){ return t===0?'0':String(n2(t)); }
 const ROLE_LABEL = {admin:'总管理员', sub:'子管理员', visitor:'访客'};
+const SORT_LABEL = {total:'按总分', avg:'按均分', ded:'按扣分'};
 const BK_CHECK_MS = 30*60*1000;
 const BK_MIN_GAP  = 10*60*1000;
 const BK_KEEP     = 30;
@@ -579,7 +715,10 @@ const POLL_META   = 30000;
 let bkLastSig='', bkLastAt=0;
 let autoBackupTimer=null, pollFastTimer=null, pollMetaTimer=null;
 let batchDed={};
+let entryMode='class';     /* 'class'=按班级打分 / 'project'=按项目横评（巡课） */
+let prevClassId='';
 let lastScoresJson='';
+let pollTick=0;
 
 const VIEWS = [
   {id:'dash',     label:'看板',   perm:'all',   icon:'chart'},
@@ -597,6 +736,7 @@ const $ = (s)=>document.querySelector(s);
 const $$ = (s)=>document.querySelectorAll(s);
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);}
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function jsq(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 function showSync(mode,text){
   const dot=$('#syncDot'); dot.className='dot'+(mode==='busy'?' busy':(mode==='off'?' off':''));
   $('#syncText').textContent=text||(mode==='busy'?'同步中…':(mode==='off'?'离线模式':'已同步'));
@@ -639,22 +779,90 @@ const ICON = {
   medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M9 9l-3-6M15 9l3-6M12 12v3l1.5 1.5"/></svg>',
   more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>',
 };
+const FLAG_SVG='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2a1 1 0 0 0-1 1v18a1 1 0 1 0 2 0v-6.2h11.4a1.5 1.5 0 0 0 1.3-2.2L16.6 9l2.1-3.6A1.5 1.5 0 0 0 17.4 3H6a1 1 0 0 0-1-1z"/></svg>';
 
-function rangeStart(range){
+/* ===== 评比周期 =====
+   模型：每个打分项目在「一个评比周期内」满分 100 分，每天检查的扣分从这 100 分里累计扣除。
+        → 满分恒为「项目数 × 100」，与周期被压缩成几天无关。放假周因此天然公平：
+          完整周 4项×100=400，放假周同样是 4项×100=400，各班面对同一个分母。 */
+let customPeriod = null;   /* {start:'2026-09-21', end:'2026-09-25'} */
+try{
+  const cp=JSON.parse(localStorage.getItem('wb_period')||'null');
+  if(cp && cp.start) customPeriod={start:cp.start,end:cp.end||cp.start};
+}catch(e){}
+if(customPeriod) dashFilter.range='custom';   /* 上次设过自定义周期就沿用 */
+try{                                           /* 档位离线缓存 */
+  const t=JSON.parse(localStorage.getItem('wb_tiers')||'null');
+  if(Array.isArray(t)) setTiers(t);
+}catch(e){}
+
+function weekStart(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const dow=x.getDay();                        /* 0=周日 */
+  x.setDate(x.getDate()+(dow===0?-6:1-dow));   /* 回到本周一 */
+  return x;
+}
+function dayStart(str){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(str||''));
+  return m? new Date(Number(m[1]),Number(m[2])-1,Number(m[3])) : null;
+}
+function fmtDay(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+function fmtMd(d){ return (fmtDay(d)||'').slice(5).replace('-','/'); }
+
+/* 当前评比周期 [start, end)，end 为开区间 */
+function rangeBounds(){
   const now=new Date();
-  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  if(range==='today')return start;
-  if(range==='week'){const w=new Date(start);w.setDate(w.getDate()-6);return w;}
-  if(range==='month'){const m=new Date(start);m.setDate(m.getDate()-29);return m;}
-  return null;
+  const d0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const r=dashFilter.range;
+  if(r==='today'){
+    const e=new Date(d0); e.setDate(e.getDate()+1);
+    return {start:d0,end:e,label:'今日 '+fmtMd(d0),short:'今日',multi:false};
+  }
+  if(r==='week'){
+    const s=weekStart(now), e=new Date(s); e.setDate(e.getDate()+7);
+    return {start:s,end:e,label:'本周 '+fmtMd(s)+' ~ '+fmtMd(new Date(e-1)),short:'本周',multi:true};
+  }
+  if(r==='lastweek'){
+    const s=weekStart(now); s.setDate(s.getDate()-7);
+    const e=new Date(s); e.setDate(e.getDate()+7);
+    return {start:s,end:e,label:'上周 '+fmtMd(s)+' ~ '+fmtMd(new Date(e-1)),short:'上周',multi:true};
+  }
+  if(r==='custom' && customPeriod && customPeriod.start){
+    const s=dayStart(customPeriod.start);
+    const e0=dayStart(customPeriod.end||customPeriod.start);
+    if(s && e0){
+      const e = e0<s ? new Date(s) : e0;
+      const ex=new Date(e); ex.setDate(ex.getDate()+1);
+      return {start:s,end:ex,label:fmtMd(s)+' ~ '+fmtMd(e),short:'自定义',multi:true};
+    }
+  }
+  return null;   /* 不限制 */
 }
 function inRange(ts){
-  const st=rangeStart(dashFilter.range);
-  if(!st)return true;
-  return new Date(ts)>=st;
+  const b=rangeBounds();
+  if(!b)return true;
+  const t=new Date(ts);
+  return t>=b.start && t<b.end;
 }
-function rangeLabel(range){
-  return {all:'全部时间',today:'今日',week:'近 7 天',month:'近 30 天'}[range]||'全部时间';
+function rangeLabel(){ const b=rangeBounds(); return b? b.label : '全部时间'; }
+function rangeAvgLabel(){ const b=rangeBounds(); return b? '（'+b.short+'）' : ''; }
+/* 涨跌＝本周期均分 vs 上一周期均分（本周↔上周 / 今日↔昨日 / 自定义↔等长前段） */
+function prevRangeAvg(){
+  const b=rangeBounds();
+  if(!b)return null;
+  const span=Math.round((b.end-b.start)/86400000);
+  if(span<=0)return null;
+  const prevStart=new Date(b.start); prevStart.setDate(prevStart.getDate()-span);
+  const rows=state.scores.filter(r=>{
+    if(r.score==null||r.score==='')return false;
+    const t=new Date(r.created_at);
+    return t>=prevStart && t<b.start;
+  });
+  if(!rows.length)return null;
+  return rows.reduce((a,r)=>a+Number(r.score),0)/rows.length;
+}
+function prevRangeLabel(){
+  return {today:'较昨日',week:'较上周',lastweek:'较上上周'}[dashFilter.range]||'较上一周期';
 }
 
 /* ==================================================================
@@ -666,7 +874,8 @@ async function loadAll(force){
 async function refreshScores(force){
   if(!navigator.onLine){ state.online=false; showSync('off','离线模式'); return; }
   state.online=true;
-  showSync('busy');
+  // 后台轮询不闪「同步中」，只在首次/手动/强制刷新时显示 busy，避免每 5 秒闪一下
+  if(force || !state.lastSync) showSync('busy');
   try{
     const wm=state.watermark;
     let q=db.from('scores').select('*').order('updated_at',{ascending:false}).limit(SS_LIMIT);
@@ -700,7 +909,29 @@ async function refreshScores(force){
     showSync('off','同步失败，重试中');
   }
 }
+/* 从云端读取全校配置（评比周期 + 扣分档位）；localStorage 只是离线缓存，云端才是权威 */
+async function fetchSettings(){
+  try{
+    const {data:sp,error}=await db.from('app_settings').select('period_start,period_end,tiers').eq('id',1).maybeSingle();
+    if(error)return;                                   /* 网络失败则保持现状 */
+    /* 扣分档位 */
+    if(sp && Array.isArray(sp.tiers) && sp.tiers.length && setTiers(sp.tiers)){
+      try{ localStorage.setItem('wb_tiers',JSON.stringify(TIER_LIST)); }catch(e){}
+      if(window._vw==='entry'){ if(entryMode==='class')renderItemsForClass(); else renderCrossRows(); }
+    }
+    /* 评比周期 */
+    const next=(sp && sp.period_start)? {start:sp.period_start,end:sp.period_end||sp.period_start} : null;
+    if(JSON.stringify(next)!==JSON.stringify(customPeriod)){
+      customPeriod=next;
+      try{ if(next)localStorage.setItem('wb_period',JSON.stringify(next)); else localStorage.removeItem('wb_period'); }catch(e){}
+      if(!next && dashFilter.range==='custom') dashFilter.range='week';
+      else if(next && dashFilter.range!=='custom') dashFilter.range='custom';
+      if(window._vw==='dash')renderDash();
+    }
+  }catch(e){}
+}
 async function refreshMeta(force){
+  await fetchSettings();        /* 先同步全校配置 */
   try{
     const safe=async(p)=>{ try{ return await p; }catch(e){ return {data:[]}; } };
     const [c,p,pr,b,sc,iv]=await Promise.all([
@@ -723,7 +954,7 @@ async function refreshMeta(force){
     }
     if(sigP!==state.sig.projects){
       state.projects=p.data||[];state.sig.projects=sigP;
-      renderProjects();fillClassSelects();fillDashFilter();renderItemsForClass();
+      renderProjects();fillClassSelects();fillDashFilter();applyEntryMode();
       if(window._vw==='dash')renderDash();
     }
     if(sigU!==state.sig.profiles){state.profiles=pr.data||[];state.sig.profiles=sigU;renderUsers();}
@@ -734,21 +965,26 @@ async function refreshMeta(force){
 }
 function startPolling(){
   if(pollFastTimer)return;
-  pollFastTimer=setInterval(()=>{ if(!document.hidden) refreshScores(); },POLL_FAST);
+  // 前 5 次走增量拉取（快）；每第 6 次（约 30 秒）清空水位做一次全量对账。
+  // 原因：增量查询只看 updated_at > 水位，无法感知「别的设备删除了记录」，
+  // 不清水位的话被删的记录会一直残留成幽灵行。
+  pollFastTimer=setInterval(()=>{
+    if(document.hidden)return;
+    pollTick++;
+    if(pollTick%6===0){ state.watermark.scores=null; lastScoresJson=''; }
+    refreshScores();
+  },POLL_FAST);
   pollMetaTimer=setInterval(()=>{ if(!document.hidden) refreshMeta(); },POLL_META);
   autoBackupTimer=setInterval(()=>{ if(!document.hidden) takeSnapshot(true); },BK_CHECK_MS);
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden){ refreshScores(); refreshMeta(); takeSnapshot(true); }
+    // 切回页面时强制全量刷新，立刻同步其它设备的删除
+    if(!document.hidden){ pollTick=0; refreshScores(true); refreshMeta(); takeSnapshot(true); }
   });
   window.addEventListener('online',()=>{ state.online=true; state.watermark={scores:null,events:null,meta:null}; lastScoresJson=''; refreshScores(true); refreshMeta(true); toast('网络已恢复'); });
   window.addEventListener('offline',()=>{ state.online=false; showSync('off','离线模式'); });
 }
 function filteredScores(){
   return state.scores.filter(r=>(!dashFilter.classId||String(r.class_id)===dashFilter.classId)&&inRange(r.created_at));
-}
-function todayScores(){
-  const t=todayStr();
-  return state.scores.filter(r=>(r.created_at||'').slice(0,10)===t);
 }
 
 /* ==================================================================
@@ -796,10 +1032,13 @@ $('#authSubmit').onclick = async ()=>{
       }
       if(data && data.user){ afterLogin(data.user); }
       else{
-        $('#authErr').textContent='注册成功，请切换到「登录」';
+        // 先切回登录页再写提示，否则 resetAuthStep1() 会把刚写的提示清空
         authTab='password';
         $$('#authTabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab==='password'));
         resetAuthStep1();
+        $('#authErr').textContent = raw.includes('@')
+          ? '注册成功：请到邮箱点击确认链接后，再回来登录。'
+          : '注册成功，但此账号（'+email+'）收不到确认邮件。请在 Supabase 后台关闭「邮箱确认 Confirm email」，或改用真实邮箱注册。';
       }
     }
   }catch(e){$('#authErr').textContent='出错了：'+(e.message||e);}
@@ -823,7 +1062,11 @@ $('#adminLoginBtn').onclick=()=>{resetAuthStep1();$('#auth').classList.remove('h
 $('#authClose').onclick=()=>$('#auth').classList.add('hidden');
 
 async function afterLogin(user){
-  if(user && !user.email && user.raw){ user.email = user.raw.email || user.raw.sub || ''; }
+  if(user && !user.email && user.raw){
+    user.email = user.raw.email
+      || (user.raw.user_metadata && (user.raw.user_metadata.email || user.raw.user_metadata.preferred_username))
+      || user.raw.sub || '';
+  }
   state.user=user;
   $('#auth').classList.add('hidden');
   $('#main').classList.remove('hidden');
@@ -879,8 +1122,16 @@ function enterPublicMode(){
 }
 async function ensureProfile(user){
   try{
-    const {data:me}=await db.from('profiles').select('email').eq('user_id',user.id).maybeSingle();
-    if(!me){ await db.from('profiles').insert({user_id:user.id,email:user.email||null,role:'visitor'}); }
+    const {data:me}=await db.from('profiles').select('email,role').eq('user_id',user.id).maybeSingle();
+    if(!me){
+      // 首个注册者自动成为总管理员（服务端另有触发器兜底，见 supabase_setup.sql）
+      let role='visitor';
+      try{
+        const {count}=await db.from('profiles').select('id',{count:'exact',head:true});
+        if((count||0)===0) role='admin';
+      }catch(e){}
+      await db.from('profiles').insert({user_id:user.id,email:user.email||null,role});
+    }
     else if(!me.email && user.email){ await db.from('profiles').update({email:user.email}).eq('user_id',user.id); }
   }catch(e){}
 }
@@ -935,7 +1186,7 @@ function switchView(vid){
   if(vid==='users'){renderUsers();renderInvites();}
   if(vid==='scorers')renderScorers();
   if(vid==='backup')renderSnapshots();
-  if(vid==='entry')renderItemsForClass();
+  if(vid==='entry')applyEntryMode();
   if(vid==='dash')renderDash();
   buildNav();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -948,7 +1199,8 @@ window._vw='dash';
 function renderDash(){
   const s=filteredScores();
   const valid=s.filter(r=>r.score!=null&&r.score!=='');
-  const avg=valid.length? valid.reduce((a,r)=>a+Number(r.score),0)/valid.length:0;
+  const hasCur=valid.length>0;
+  const avg=hasCur? valid.reduce((a,r)=>a+Number(r.score),0)/valid.length : 0;
   const dedTotal=n2(s.reduce((a,r)=>a+Number(r.deduction||0),0));
   const dedCount=s.filter(r=>Number(r.deduction)>0).length;
   const scoredProjects=new Set(s.map(r=>r.project_id)).size;
@@ -957,9 +1209,17 @@ function renderDash(){
   const d=new Date();
   const weekday=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
   const dateStr=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+weekday;
-  $('#dashSub').textContent=dateStr+' · '+curClassName+' · '+rangeLabel(dashFilter.range);
+  $('#dashSub').textContent=dateStr+' · '+curClassName+' · '+rangeLabel();
+  /* 保持下拉框与实际周期一致（弹窗打开时不要抢改，避免打断用户选择） */
+  const drSel=$('#dRange');
+  if(drSel && $('#periodBg').classList.contains('hidden') && drSel.value!==dashFilter.range){
+    drSel.value=dashFilter.range;
+  }
 
-  const allClassAvgs=calcClassAvgs(s);
+  /* 班级排名要用「只按时间范围过滤、不按班级过滤」的全量数据。
+     否则选中某个班后 allClassAvgs 只剩本班：年级排名会恒为 1/1、排名榜也只剩一行 */
+  const sRange=state.scores.filter(r=>inRange(r.created_at));
+  const allClassAvgs=calcClassAvgs(sRange);
   let rankHtml='—';
   if(dashFilter.classId && allClassAvgs.length){
     const idx=allClassAvgs.findIndex(x=>String(x.id)===dashFilter.classId);
@@ -967,24 +1227,20 @@ function renderDash(){
   } else {
     rankHtml=allClassAvgs.length+'<small>个班</small>';
   }
-  const tScores=todayScores();
-  const y=new Date(); y.setDate(y.getDate()-1);
-  const yStr=ymd(y);
-  const yScores=state.scores.filter(r=>(r.created_at||'').slice(0,10)===yStr);
-  const yValid=yScores.filter(r=>r.score!=null);
-  const yAvg=yValid.length? yValid.reduce((a,r)=>a+Number(r.score),0)/yValid.length : null;
-  const tValid=tScores.filter(r=>r.score!=null);
-  const curTodayAvg=tValid.length? tValid.reduce((a,r)=>a+Number(r.score),0)/tValid.length : null;
+  /* 涨跌＝当前范围 vs 上一段等长时间窗口，与上面均分保持同一口径。
+     原来写死"今日 vs 昨日"，导致"近 30 天均分"后面挂着今天的涨跌 */
+  const prevAvg=prevRangeAvg();
   let deltaHtml='';
-  if(curTodayAvg!=null && yAvg!=null){
-    const dlt=n2(curTodayAvg-yAvg);
-    deltaHtml = dlt>0 ? '<span class="up">↑'+dlt.toFixed(1)+'</span>'
-             : dlt<0 ? '<span class="down">↓'+Math.abs(dlt).toFixed(1)+'</span>'
-             : '<span class="up" style="color:var(--muted);">持平</span>';
+  if(hasCur && prevAvg!=null){
+    const dlt=n2(avg-prevAvg);
+    const tip=prevRangeLabel(dashFilter.range);
+    deltaHtml = dlt>0 ? `<span class="up" title="${tip}">↑${dlt.toFixed(1)}</span>`
+             : dlt<0 ? `<span class="down" title="${tip}">↓${Math.abs(dlt).toFixed(1)}</span>`
+             : `<span class="up" style="color:var(--muted);" title="${tip}">持平</span>`;
   }
 
   $('#heroStats').innerHTML=`
-    <div class="hero-stat"><div class="k">常规均分${dashFilter.range==='today'?'（今日）':''}</div><div class="v">${avg.toFixed(1)}${deltaHtml}</div></div>
+    <div class="hero-stat"><div class="k">常规均分${rangeAvgLabel()}</div><div class="v">${hasCur?avg.toFixed(1):'—'}${deltaHtml}</div></div>
     <div class="hero-stat"><div class="k">扣分事件</div><div class="v">${dedCount}<small>次</small></div></div>
     <div class="hero-stat"><div class="k">已打分项目</div><div class="v">${scoredProjects}<small>/ ${dashFilter.classId? state.projects.filter(p=>String(p.class_id)===dashFilter.classId).length : state.projects.length}</small></div></div>
     <div class="hero-stat"><div class="k">${dashFilter.classId?'年级排名':'班级数'}</div><div class="v">${rankHtml}</div></div>`;
@@ -1011,84 +1267,131 @@ function calcClassAvgs(s){
 function renderTodayItems(s){
   const isClassMode = !!dashFilter.classId;
 
-  /* 模式一：全部班级 → 班级总分排行 */
+  /* 模式一：全部班级 → 班级排行（总分 + 均分）
+     满分＝项目数×100，与周期天数无关：未检查的项目没有扣分，就计满分。
+     这正是放假周也能公平评比的原因 —— 完整周和放假周的分母都是「项目数×100」。 */
   if(!isClassMode){
-    $('#todayItemsTitle').innerHTML='班级总分排行 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">满分=100×项目数</span>';
-    const dedByProject={};
-    s.forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;dedByProject[r.project_id]=(dedByProject[r.project_id]||0)+d;});
+    const b=rangeBounds();
+    const sorts=['total','avg'];
+    if(sorts.indexOf(dashSort)<0) dashSort='total';
+    $('#todayItemsTitle').innerHTML='班级排行 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">总分＝Σ(100−各项目周期内累计扣分) · 满分＝项目数×100</span>';
+    $('#rankSeg').classList.remove('hidden');
+    $('#rankSeg').innerHTML=sorts.map(k=>
+      `<button type="button" data-sort="${k}" class="${dashSort===k?'active':''}">${SORT_LABEL[k]}</button>`).join('');
+    $('#rankCard').classList.add('hidden');
+    $('#dedCard').classList.add('span2');
+
+    const dedByProject={}, avgMap={}, daysByClass={};
+    s.forEach(r=>{
+      const d=Number(r.deduction||0);
+      if(d>0) dedByProject[r.project_id]=(dedByProject[r.project_id]||0)+d;
+      const ck=String(r.class_id);
+      (daysByClass[ck]=daysByClass[ck]||{})[(r.created_at||'').slice(0,10)]=1;
+      if(r.score==null||r.score==='')return;
+      if(!avgMap[ck])avgMap[ck]={sum:0,n:0};
+      avgMap[ck].sum+=Number(r.score);avgMap[ck].n++;
+    });
     const rows=state.classes.map(c=>{
       const projs=state.projects.filter(p=>p.class_id===c.id);
-      let cur=0,tot=0;
-      projs.forEach(p=>{const dd=n2(dedByProject[p.id]||0);cur+=Math.max(0,100-dd);tot+=100;});
-      return {id:c.id,name:c.name,cur:n2(cur),tot,pct:tot>0?cur/tot*100:0};
-    }).filter(x=>x.tot>0).sort((a,b)=>b.cur-a.cur);
+      let cur=0;
+      projs.forEach(p=>{const dd=n2(dedByProject[p.id]||0);cur+=Math.max(0,100-dd);});
+      const tot=projs.length*100;
+      const a=avgMap[String(c.id)];
+      const avg=(a&&a.n)? a.sum/a.n : null;
+      const dc=daysByClass[String(c.id)];
+      return {id:c.id,name:c.name,cur:n2(cur),tot,projN:projs.length,
+              avg,checkedDays:dc?Object.keys(dc).length:0,pct:tot>0?cur/tot*100:0};
+    }).filter(x=>x.projN>0 && x.checkedDays>0);
 
     if(!rows.length){
-      $('#todayItems').innerHTML='<div class="empty">暂无班级或项目，请先到「班级管理」「项目管理」添加</div>';
+      $('#todayItems').innerHTML='<div class="empty">本周期内还没有评分记录（或还没建班级/项目）</div>';
       return;
     }
+    rows.sort((a,c2)=>{
+      if(dashSort==='avg'){
+        const av=a.avg==null?-1:a.avg, bv=c2.avg==null?-1:c2.avg;
+        if(bv!==av) return bv-av;
+      }
+      return c2.cur-a.cur;
+    });
+    /* 周期已结束才叫「流动红旗」，本周还在进行中就叫「本轮领跑」 */
+    const ongoing = !b || (new Date() < b.end);
+    const flagText = ongoing ? '本轮领跑' : '流动红旗';
+
     $('#todayItems').innerHTML=rows.map((r,i)=>{
       const rank=i+1;
-      const rankBg = rank===1?'var(--gold)':rank===2?'#94a3b8':rank===3?'#cd7f32':'var(--line)';
-      const rankColor = rank<=3?'#fff':'var(--muted)';
+      const g = rank===1?' g1':rank===2?' g2':rank===3?' g3':'';
       const col = r.pct>=98?'var(--green-600)':r.pct>=95?'var(--blue-700)':'var(--amber-600)';
-      const pctBar = r.tot>0 ? (r.cur/r.tot*100) : 0;
-      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);">
-        <div style="flex:0 0 32px;height:32px;border-radius:8px;background:${rankBg};color:${rankColor};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;">${rank}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;">
-            <b style="font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(r.name)}</b>
-            <span style="font-size:20px;font-weight:700;color:${col};white-space:nowrap;">${r.cur.toFixed(1)}<span style="font-size:12px;color:var(--muted);font-weight:400;"> / ${r.tot}</span></span>
+      const barPct = r.tot>0 ? Math.min(100,Math.max(0,r.pct)) : 0;
+      const avgTxt = r.avg==null ? '—' : r.avg.toFixed(1);
+      const avgHi = (r.avg!=null && r.avg>=98) ? ' hi' : '';
+      const flag = (rank===1 && b && b.multi) ? `<span class="flag">${FLAG_SVG}${flagText}</span>` : '';
+      return `<div class="crow">
+        <div class="crow-rk${g}">${rank}</div>
+        <div class="crow-mid">
+          <div class="crow-l1">
+            <span class="nm">${esc(r.name)} <span class="muted" style="font-weight:400;font-size:12px;">${r.projN} 项 · 查 ${r.checkedDays} 天</span>${flag}</span>
+            <span class="tot" style="color:${col};">${r.cur.toFixed(1)}<small> / ${r.tot}</small></span>
           </div>
-          <div style="background:var(--line-2);border-radius:5px;height:8px;overflow:hidden;">
-            <div style="height:100%;width:${pctBar.toFixed(1)}%;background:${col};border-radius:5px;transition:width .5s;"></div>
-          </div>
+          <div class="crow-track"><i style="width:${barPct.toFixed(1)}%;background:${col};"></i></div>
         </div>
+        <div class="crow-avg${avgHi}"><span class="av">${avgTxt}</span><span class="ak">均分</span></div>
       </div>`;
     }).join('');
     return;
   }
 
-  /* 模式二：单个班级 → 各项得分明细 */
+  /* 模式二：单个班级 → 今日各项目扣分 + 今日得分 + 本轮总分 */
+  $('#rankSeg').classList.add('hidden');
+  $('#rankCard').classList.remove('hidden');
+  $('#dedCard').classList.remove('span2');
   const cid=Number(dashFilter.classId);
-  $('#todayItemsTitle').innerHTML='「'+esc(className(cid))+'」各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span>';
+  const pb=rangeBounds();
+  $('#todayItemsTitle').innerHTML='「'+esc(className(cid))+'」<span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">今日扣分情况 · 今日得分 · 本轮总分</span>';
   const projs=state.projects.filter(p=>p.class_id===cid);
   if(!projs.length){
     $('#todayItems').innerHTML='<div class="empty">该班级暂无项目，去「项目管理」添加</div>';
     return;
   }
-  const stat={};
-  s.forEach(r=>{
-    if(r.score==null||r.score==='')return;
-    if(!stat[r.project_id])stat[r.project_id]={sum:0,n:0,ded:0,dedN:0};
-    stat[r.project_id].sum+=Number(r.score);
-    stat[r.project_id].n++;
-    const d=Number(r.deduction||0);
-    if(d>0){stat[r.project_id].ded+=d;stat[r.project_id].dedN++;}
+  /* 今日：只算今天；本轮：算当前评比周期（s 已按班级+周期过滤） */
+  const nw=new Date();
+  const tS=new Date(nw.getFullYear(),nw.getMonth(),nw.getDate());
+  const tE=new Date(tS); tE.setDate(tE.getDate()+1);
+  const sToday=state.scores.filter(r=>{
+    if(String(r.class_id)!==String(cid))return false;
+    const t=new Date(r.created_at);
+    return t>=tS && t<tE;
   });
+  const dedOf=(arr,pid)=>n2((arr||[]).filter(r=>r.project_id===pid)
+    .reduce((a,r)=>a+Number(r.deduction||0),0));
+  let todayDed=0, periodDed=0;
   const rows=projs.map(p=>{
-    const x=stat[p.id];
-    const avg=x&&x.n? x.sum/x.n : null;
-    return {name:p.name,avg,ded:x?n2(x.ded):0,dedN:x?x.dedN:0};
-  }).sort((a,b)=>{
-    if(a.avg==null)return 1; if(b.avg==null)return -1;
-    return a.avg-b.avg;
+    const dT=dedOf(sToday,p.id), dP=dedOf(s,p.id);
+    todayDed+=dT; periodDed+=dP;
+    return {name:p.name,dT,dP};
   });
-  $('#todayItems').innerHTML=rows.map(r=>{
-    if(r.avg==null){
-      return `<div class="proj-score"><div class="head"><span class="name">${esc(r.name)}</span><span class="val" style="color:var(--muted);">—</span></div>
-        <div class="track"><div class="fill" style="width:0%;"></div></div>
-        <div class="sub">${rangeLabel(dashFilter.range)}内暂无记录</div></div>`;
-    }
-    const pct=Math.max(0,Math.min(100,(r.avg-90)/10*100));
-    const col=r.avg>=98?'var(--green-600)':r.avg>=95?'var(--blue-700)':'var(--amber-600)';
-    const sub=r.ded>0?`扣 ${r.ded} 分 · ${r.dedN} 次`:'无扣分';
-    return `<div class="proj-score">
-      <div class="head"><span class="name">${esc(r.name)}</span><span class="val" style="color:${col};">${r.avg.toFixed(1)}</span></div>
-      <div class="track"><div class="fill" style="width:${pct}%;background:${col};"></div></div>
-      <div class="sub" style="color:${r.ded>0?'var(--red-600)':'var(--muted)'};">${sub}</div>
-    </div>`;
-  }).join('');
+  const full=projs.length*100;
+  const todayScore=n2(Math.max(0,full-todayDed));
+  const periodScore=n2(Math.max(0,full-periodDed));
+  $('#todayItems').innerHTML=`
+    <div class="kv2">
+      <div class="kv2-box">
+        <div class="k">今日得分</div>
+        <div class="v">${todayScore.toFixed(1)}<small> / ${full}</small></div>
+        <div class="s">${fmtMd(tS)} · 今日共扣 ${todayDed.toFixed(1)} 分</div>
+      </div>
+      <div class="kv2-box">
+        <div class="k">本轮总分</div>
+        <div class="v">${periodScore.toFixed(1)}<small> / ${full}</small></div>
+        <div class="s">${pb?esc(pb.label):'全部时间'} · 累计扣 ${periodDed.toFixed(1)} 分</div>
+      </div>
+    </div>
+    <div class="prow-head"><span>项目</span><span>今日扣分</span><span>本轮累计</span></div>
+    ${rows.map(r=>`<div class="prow">
+        <span class="pn">${esc(r.name)}</span>
+        <span class="pd${r.dT>0?'':' zero'}">${r.dT>0?('−'+r.dT.toFixed(1)):'0'}</span>
+        <span class="pp${r.dP>0?'':' zero'}">${r.dP>0?('−'+r.dP.toFixed(1)):'0'}</span>
+      </div>`).join('')}`;
 }
 function renderTrend(s){
   const days=[];
@@ -1121,18 +1424,25 @@ function renderTrend(s){
     grid+=`<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${w-padR}" y2="${yy.toFixed(1)}" stroke="#f1f5f9"/>`;
     grid+=`<text x="4" y="${(yy+3).toFixed(1)}" font-size="10" fill="#94a3b8">${yv.toFixed(0)}</text>`;
   }
-  let segPath='',areaPath='',dots='';
-  let started=false;
+  let segPath='',dots='';
+  let started=false, lastX=null;
+  const areas=[]; let curArea='';
   pts.forEach((p,i)=>{
-    if(p.y==null){started=false;return;}
+    if(p.y==null){
+      if(curArea){areas.push(curArea+' L'+lastX+' '+(h-padB)+' Z');curArea='';}
+      started=false;lastX=null;
+      return;
+    }
     const x=xOf(i).toFixed(1), y=yOf(p.y).toFixed(1);
     segPath+=(started?'L':'M')+x+' '+y;
-    if(!started){areaPath='M'+x+' '+(h-padB);}
-    areaPath+=' L'+x+' '+y;
+    if(!started){curArea='M'+x+' '+(h-padB)+' L'+x+' '+y;}
+    else{curArea+=' L'+x+' '+y;}
+    lastX=x;
     started=true;
     dots+=`<circle cx="${x}" cy="${y}" r="3" fill="#fff" stroke="#1d4ed8" stroke-width="2"><title>${p.d}: ${p.y.toFixed(1)}</title></circle>`;
   });
-  if(areaPath)areaPath+=' L'+xOf(pts.length-1).toFixed(1)+' '+(h-padB)+' Z';
+  if(curArea){areas.push(curArea+' L'+lastX+' '+(h-padB)+' Z');}
+  const areaPath=areas.join(' ');
   const xlabels=pts.map((p,i)=>`<text x="${xOf(i).toFixed(1)}" y="${h-10}" font-size="10" fill="#94a3b8" text-anchor="middle">${p.d.slice(5)}</text>`).join('');
   $('#trend').innerHTML=`<svg width="100%" viewBox="0 0 ${w} ${h}">
     ${grid}
@@ -1264,7 +1574,7 @@ function renderRecords(){
   const fc=$('#fClass').value, fp=$('#fProject').value;
   let rows=state.scores;
   if(fc)rows=rows.filter(r=>String(r.class_id)===fc);
-  if(fp)rows=rows.filter(r=>String(r.project_id)===fp);
+  if(fp)rows=rows.filter(r=>projectName(r.project_id)===fp);
   rows=rows.slice(0,500);
   if(!rows.length){
     $('#recTable').classList.add('hidden');
@@ -1274,11 +1584,14 @@ function renderRecords(){
   }
   $('#recTable').classList.remove('hidden');
   $('#recEmpty').classList.add('hidden');
+  /* 「对象」列在整批都是「全班」时自动隐藏，避免占地方（想记个人时手填该列会自动出现） */
+  const showStudent=rows.some(r=>r.student_name && r.student_name!=='全班');
+  $('#thStudent').classList.toggle('hidden',!showStudent);
   $('#recBody').innerHTML=rows.map(r=>`<tr>
     <td>${new Date(r.created_at).toLocaleString('zh-CN')}</td>
     <td>${esc(className(r.class_id))}</td>
     <td>${esc(projectName(r.project_id))}</td>
-    <td>${esc(r.student_name)}</td>
+    <td class="${showStudent?'':'hidden'}">${esc(r.student_name)}</td>
     <td>${esc(r.score)}</td>
     <td>${esc(r.deduction||0)}</td>
     <td>${esc(r.note||'')}</td>
@@ -1294,7 +1607,7 @@ function renderRecords(){
     <div class="r1"><b>${esc(className(r.class_id))} · ${esc(projectName(r.project_id))}</b>
       <span class="badge" style="${ded>0?'background:var(--red-100);color:var(--red-600);':'background:var(--green-100);color:var(--green-600);'}">${ded>0?'−'+esc(r.deduction):'满分'}</span></div>
     <div class="r2">${new Date(r.created_at).toLocaleString('zh-CN')} · ${esc(r.scorer||r.operator||'—')}</div>
-    <div class="r3"><span>对象：${esc(r.student_name)}</span><span>得分 ${esc(r.score)}</span></div>
+    <div class="r3">${(r.student_name&&r.student_name!=='全班')?`<span>对象：${esc(r.student_name)}</span>`:''}<span>得分 ${esc(r.score)}</span></div>
     ${r.note?`<div class="r3" style="margin-top:4px;"><span>备注：${esc(r.note)}</span></div>`:''}
     ${(canEdit||canDel)?`<div class="acts">
       ${canEdit?`<button class="ghost small" onclick="editScore(${r.id})">修改</button>`:''}
@@ -1307,7 +1620,9 @@ function fillClassSelects(){
   $('#fClass').innerHTML=allOpt;
   const cOpt=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
   $('#eClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
-  $('#pClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  $('#pClass').innerHTML=(state.classes.length
+    ? '<option value="all">★ 全部班级（推荐）</option>'
+    : '<option value="">（先建班级）</option>')+cOpt;
   $('#mClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
   const pOpt=state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
   const mp=$('#mProject'); if(mp)mp.innerHTML=pOpt||'<option value="">（先建项目）</option>';
@@ -1316,13 +1631,26 @@ function fillClassSelects(){
 function fillProjectFilter(){
   const fc=$('#fClass').value;
   const list=fc?state.projects.filter(p=>String(p.class_id)===fc):state.projects;
+  /* 按「项目名」去重：同名项目在多个班各有一份，下拉里只该出现一次 */
+  const names=[...new Set(list.map(p=>p.name))].sort();
   const cur=$('#fProject').value;
-  $('#fProject').innerHTML='<option value="">全部</option>'+list.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
-  if(cur&&list.some(p=>String(p.id)===cur))$('#fProject').value=cur;
+  $('#fProject').innerHTML='<option value="">全部</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  if(cur&&names.indexOf(cur)>=0)$('#fProject').value=cur;
 }
 function fillScorerSelect(){
+  const sel=$('#eScorer');
+  const prev=sel.value;
   const o=state.scorers.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
-  $('#eScorer').innerHTML=o||'<option value="">（先去「打分人」添加）</option>';
+  sel.innerHTML=o||'<option value="">（先去「打分人」添加）</option>';
+  if(!state.scorers.length)return;
+  /* 记忆上次选择；没记忆过就用登录账号名去名册里匹配 */
+  let want=prev;
+  if(!want){ try{ want=localStorage.getItem('wb_scorer')||''; }catch(e){} }
+  if(!want && state.user && state.user.email){
+    const nm=String(state.user.email).split('@')[0];
+    if(state.scorers.some(s=>s.name===nm)) want=nm;
+  }
+  if(want && state.scorers.some(s=>s.name===want)) sel.value=want;
 }
 function fillDashFilter(){
   const cur=$('#dClass').value;
@@ -1346,29 +1674,68 @@ function renderClasses(){
   }).join('');
 }
 function renderProjects(){
+  if(!state.classes.length){$('#projectList').innerHTML='<div class="empty">还没有班级，先到「班级管理」添加</div>';return;}
+  const byName={};
+  state.projects.forEach(p=>{(byName[p.name]=byName[p.name]||[]).push(p);});
+  const names=Object.keys(byName).sort();
+  const total=state.classes.length;
+  let html='';
+
+  /* 1) 按项目名汇总：一眼看出哪个项目没铺满所有班级，并可一键补齐 */
+  html+='<div class="section-title" style="margin-top:0;">按项目名汇总</div>';
+  if(!names.length){
+    html+='<div class="muted" style="padding:4px 0 8px;">还没有项目。用上方「新增项目」添加，班级建议选「全部班级」。</div>';
+  }else{
+    html+='<div class="muted" style="margin-bottom:6px;">同一名称的项目应当存在于每个班级；框里是覆盖情况。</div>';
+    names.forEach(n=>{
+      const list=byName[n], miss=total-list.length;
+      const badge = miss
+        ? `<span class="badge" style="background:var(--amber-100);color:var(--amber-600);">${list.length}/${total} 个班 · 缺 ${miss}</span>`
+        : `<span class="badge" style="background:var(--green-100);color:var(--green-600);">${list.length}/${total} 个班</span>`;
+      html+=`<div class="kv"><span><b>${esc(n)}</b> ${badge}</span>
+        <span class="row-actions only-admin">
+          ${miss?`<button class="ghost small" data-act="fill" data-pname="${esc(n)}">补齐 ${miss} 个班</button>`:''}
+          <button class="ghost small" data-act="rename" data-pname="${esc(n)}">重命名</button>
+          <button class="danger small" data-act="delall" data-pname="${esc(n)}">全部删除</button>
+        </span></div>`;
+    });
+  }
+
+  /* 2) 按班级查看：单个班级的增删改 */
+  html+='<div class="section-title">按班级查看</div>';
   const byClass={};
   state.projects.forEach(p=>{(byClass[p.class_id]=byClass[p.class_id]||[]).push(p);});
-  let html='';
   state.classes.forEach(c=>{
     const list=byClass[c.id]||[];
-    html+=`<div style="margin:10px 0;"><b style="color:var(--blue-700)">${esc(c.name)}</b></div>`;
+    html+=`<div style="margin:10px 0 4px;"><b style="color:var(--blue-700)">${esc(c.name)}</b> <span class="badge">${list.length} 项</span></div>`;
     if(!list.length)html+='<div class="muted" style="padding:2px 0 6px;">— 暂无项目 —</div>';
     list.forEach(p=>{
       const cnt=state.scores.filter(s=>s.project_id===p.id).length;
       html+=`<div class="kv"><span>${esc(p.name)} <span class="badge">${cnt} 条</span></span>
-        <span class="row-actions only-admin"><button class="ghost small" onclick="renameProject(${p.id})">重命名</button>
-        <button class="danger small" onclick="delProject(${p.id})">删除</button></span></div>`;
+        <span class="row-actions only-admin">
+          <button class="ghost small" data-act="renone" data-pid="${p.id}">重命名</button>
+          <button class="danger small" data-act="delone" data-pid="${p.id}">删除</button>
+        </span></div>`;
     });
   });
-  if(!state.classes.length)html='<div class="empty">还没有班级</div>';
   $('#projectList').innerHTML=html;
 }
+/* 项目列表的统一事件委托（只挂一次，避免每次重渲染叠加） */
+$('#projectList').onclick=function(e){
+  const b=e.target.closest('button[data-act]'); if(!b)return;
+  const act=b.dataset.act, pname=b.dataset.pname||'', pid=Number(b.dataset.pid||0);
+  if(act==='fill')fillProjectClasses(pname);
+  else if(act==='rename')renameProjectAll(pname);
+  else if(act==='delall')delProjectAll(pname);
+  else if(act==='renone')renameProject(pid);
+  else if(act==='delone')delProject(pid);
+};
 function renderUsers(){
   if(!state.isAdmin){$('#userList').innerHTML='<div class="empty">仅总管理员可查看</div>';return;}
   if(!state.profiles.length){$('#userList').innerHTML='<div class="empty">暂无用户</div>';return;}
   $('#userList').innerHTML=state.profiles.map(p=>{
     const me=p.user_id===(state.user?state.user.id:'');
-    const sel=`<select onchange="setRole('${p.user_id}',this.value)" style="min-width:132px;min-height:40px;font-size:15px;">
+    const sel=`<select onchange="setRole('${jsq(p.user_id)}',this.value)" style="min-width:132px;min-height:40px;font-size:15px;">
       <option value="admin"${p.role==='admin'?' selected':''}>总管理员</option>
       <option value="sub"${p.role==='sub'?' selected':''}>子管理员</option>
       <option value="visitor"${(p.role==='visitor'||!p.role)?' selected':''}>访客</option></select>`;
@@ -1402,8 +1769,25 @@ function renderSnapshots(){
   }
   $('#snapshotList').innerHTML=html||'<div class="empty">暂无快照，点击「立即云端快照」</div>';
 }
+/* ---- 行内档位：一个项目一行，直接点档位，不再弹窗 ---- */
+function tierChipsHtml(pid){
+  const ded=batchDed[pid]||0;
+  return TIER_LIST.map(t=>{
+    const on=Math.abs(t-ded)<1e-9;
+    return `<button type="button" class="tier-chip${t===0?' zero':''}${on?' active':''}" data-t="${t}" onclick="setTier(${pid},${t})">${tierLabel(t)}</button>`;
+  }).join('');
+}
+function tierRowHtml(pid,label){
+  const ded=batchDed[pid]||0, cur=Math.max(0,n2(100-ded));
+  return `<div class="tier-row" data-pid="${pid}">
+    <span class="tier-name">${esc(label)}</span>
+    <div class="tier-chips">${tierChipsHtml(pid)}</div>
+    <span class="tier-cur">当前 <b>${cur}</b></span>
+  </div>`;
+}
 function renderItemsForClass(){
-  const cid=Number($('#eClass').value||0);
+  prevClassId=$('#eClass').value||'';
+  const cid=Number(prevClassId||0);
   if(!cid){$('#itemRows').innerHTML='<div class="empty">请先选择班级</div>';return;}
   const list=state.projects.filter(p=>p.class_id===cid);
   if(!list.length){
@@ -1412,27 +1796,115 @@ function renderItemsForClass(){
       :'请联系总管理员在「项目管理」中添加打分项后即可打分。'}</div>`;
     return;
   }
-  $('#itemRows').innerHTML=list.map(p=>{
-    const ded=batchDed[p.id]||0, cur=Math.max(0,n2(100-ded)), on=ded>0;
-    return `<div class="batch-row">
-      <span class="bi-item">${esc(p.name)}</span>
-      <div class="bi-cur">当前：<b id="cur_${p.id}" style="color:${on?'var(--red-600)':'var(--green-600)'}">${cur}</b> / 100</div>
-      <button type="button" class="ded-btn" id="ded_${p.id}" onclick="openTier(${p.id})" style="${on?'background:var(--red-100);border-color:#fca5a5;color:var(--red-600);':''}">${on?('已扣 '+ded):'扣分 0'}</button>
-    </div>`;
-  }).join('');
+  $('#itemRows').innerHTML=list.map(p=>tierRowHtml(p.id,p.name)).join('');
+}
+window.setTier=function(pid,t){
+  if(t)batchDed[pid]=t; else delete batchDed[pid];
+  const row=document.querySelector('.tier-row[data-pid="'+pid+'"]');
+  if(!row)return;
+  const ded=batchDed[pid]||0;
+  row.querySelectorAll('.tier-chip').forEach(b=>b.classList.toggle('active',Math.abs(Number(b.dataset.t)-ded)<1e-9));
+  const cb=row.querySelector('.tier-cur b'); if(cb)cb.textContent=Math.max(0,n2(100-ded));
+};
+/* ---- 按项目横评（巡课）：同一个项目名，跨所有班级 ---- */
+function projectNamesList(){ return [...new Set(state.projects.map(p=>p.name))].sort(); }
+function crossRows(name){
+  return state.classes.map(c=>{
+    const p=state.projects.find(x=>x.class_id===c.id && x.name===name);
+    return p? {classId:c.id,className:c.name,pid:p.id} : null;
+  }).filter(Boolean);
+}
+function fillXProjectSelect(){
+  const cur=$('#xProject').value, names=projectNamesList();
+  $('#xProject').innerHTML=names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')||'<option value="">（先建项目）</option>';
+  if(cur && names.indexOf(cur)>=0)$('#xProject').value=cur;
+}
+function renderCrossRows(){
+  const name=$('#xProject').value;
+  if(!name){$('#xRows').innerHTML='<div class="empty">还没有可横评的项目</div>';return;}
+  const list=crossRows(name);
+  if(!list.length){$('#xRows').innerHTML='<div class="empty">没有班级有「'+esc(name)+'」这个项目</div>';return;}
+  $('#xRows').innerHTML=list.map(r=>tierRowHtml(r.pid,r.className)).join('');
 }
 
 /* ==================================================================
    模块 5/6 · EVENTS
    ================================================================== */
 $('#dClass').onchange=function(){dashFilter.classId=this.value;renderDash();};
-$('#dRange').onchange=function(){dashFilter.range=this.value;renderDash();};
+$('#dRange').onchange=function(){
+  if(this.value==='custom'){ openPeriodModal(); return; }   /* 选「自定义…」先弹窗填日期 */
+  dashFilter.range=this.value;
+  renderDash();
+};
 $('#dashRefresh').onclick=function(){renderDash();toast('看板已刷新');};
+$('#rankSeg').onclick=function(e){
+  const b=e.target.closest('button[data-sort]');
+  if(!b)return;
+  dashSort=b.dataset.sort;
+  renderDash();
+};
+/* ---- 自定义评比周期（用于放假周 / 半月评 / 学期评），存云端全校同步 ---- */
+function openPeriodModal(){
+  if(!state.isAdmin){ $('#dRange').value=dashFilter.range; toast('只有总管理员能设置评比周期'); return; }
+  const b=rangeBounds();
+  $('#pStart').value=(customPeriod&&customPeriod.start)||(b?fmtDay(b.start):todayStr());
+  $('#pEnd').value  =(customPeriod&&customPeriod.end)  ||(b?fmtDay(new Date(b.end-1)):todayStr());
+  $('#periodErr').textContent='';
+  $('#periodBg').classList.remove('hidden');
+}
+$('#pCancel').onclick=function(){
+  $('#periodBg').classList.add('hidden');
+  $('#dRange').value=dashFilter.range;          /* 取消则还原下拉选择 */
+};
+$('#pReset').onclick=async function(){
+  customPeriod=null;
+  try{ localStorage.removeItem('wb_period'); }catch(e){}
+  dashFilter.range='week';
+  $('#dRange').value='week';
+  $('#periodBg').classList.add('hidden');
+  renderDash();
+  toast('已恢复「本周」（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, period_start:null, period_end:null, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('已恢复本周并同步到云端');
+  }catch(e){ toast('已恢复本周，但云端同步失败：'+(e.message||e)); }
+};
+$('#pSave').onclick=async function(){
+  const sv=$('#pStart').value, ev=$('#pEnd').value;
+  if(!sv){ $('#periodErr').textContent='请选择开始日期'; return; }
+  const e2=ev||sv;
+  if(dayStart(e2)<dayStart(sv)){ $('#periodErr').textContent='结束日期不能早于开始日期'; return; }
+  customPeriod={start:sv,end:e2};
+  try{ localStorage.setItem('wb_period',JSON.stringify(customPeriod)); }catch(e){}
+  dashFilter.range='custom';
+  $('#dRange').value='custom';
+  $('#periodBg').classList.add('hidden');
+  renderDash();
+  toast('评比周期已设为 '+sv+' ~ '+e2+'（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, period_start:sv, period_end:e2, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('评比周期已同步到云端');
+  }catch(e){ toast('已本地保存，但云端同步失败：'+(e.message||e)); }
+};
+$('#periodBg').onclick=function(e){ if(e.target===this)$('#pCancel').click(); };
 $('#fClass').onchange=function(){fillProjectFilter();renderRecords();};
 $('#fProject').onchange=renderRecords;
 $('#recRefresh').onclick=function(){renderRecords();toast('已刷新');};
-$('#eClass').onchange=function(){batchDed={};renderItemsForClass();};
-$('#eScorer').onchange=function(){};
+$('#eClass').onchange=function(){
+  const sel=this, next=sel.value;
+  if(Object.keys(batchDed).length){
+    confirmBox('切换班级','当前有未保存的扣分，切换后会清空。确定要切换吗？',
+      ()=>{ batchDed={}; prevClassId=next; renderItemsForClass(); },
+      ()=>{ sel.value=prevClassId; });          /* 取消 → 还原选择 */
+  }else{
+    batchDed={}; prevClassId=next; renderItemsForClass();
+  }
+};
+$('#eScorer').onchange=function(){
+  try{ localStorage.setItem('wb_scorer', this.value||''); }catch(e){}
+};
 
 $('#eSubmit').onclick=async function(){
   const cid=Number($('#eClass').value||0);
@@ -1473,7 +1945,9 @@ $('#eUndo').onclick=async function(){
     .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   if(!mine.length){toast('没有可撤销的记录');return;}
   const t0=mine[0].created_at;
-  const batch=mine.filter(r=>Math.abs(new Date(r.created_at)-new Date(t0))<8000);
+  // 同一笔提交的所有行共享同一个 created_at（Postgres now() 在单条 INSERT 内一致），
+  // 用精确时间戳分组，避免把两次快速提交误合并删除
+  const batch=mine.filter(r=>r.created_at===t0);
   confirmBox('撤销上一笔',`将删除 ${scorer} 于 ${new Date(t0).toLocaleString('zh-CN')} 提交的 ${batch.length} 条记录，确定吗？`,async()=>{
     try{
       const ids=batch.map(r=>r.id);
@@ -1486,34 +1960,85 @@ $('#eUndo').onclick=async function(){
     }catch(e){toast('撤销失败：'+(e.message||e));}
   });
 };
-let tierProjectId=null;
-window.openTier=function(pid){
-  tierProjectId=pid;
-  const cur=batchDed[pid]||0;
-  const grid=$('#tierGrid');
-  grid.innerHTML=TIERS.map(t=>{
-    const active=(Math.abs(t-cur)<1e-9);
-    return `<button type="button" class="tier-opt" onclick="pickTier(${t})" style="${active?'background:var(--blue-700);color:#fff;':''}">${t===0?'0（不扣）':t}</button>`;
-  }).join('');
-  $('#tierTitle').textContent='选择扣分 · '+(projectName(pid)||'')+'（当前 '+cur+'）';
-  $('#tierModalBg').classList.remove('hidden');
+/* ---- 模式切换 / 横评保存 / 档位设置 ---- */
+function applyEntryMode(){
+  const isClass=entryMode==='class';
+  $('#eClassWrap').classList.toggle('hidden',!isClass);
+  $('#eSubmitWrap').classList.toggle('hidden',!isClass);
+  $('#eUndoWrap').classList.toggle('hidden',!isClass);
+  $('#entryClassBox').classList.toggle('hidden',!isClass);
+  $('#xProjectWrap').classList.toggle('hidden',isClass);
+  $('#xSubmitWrap').classList.toggle('hidden',isClass);
+  $('#entryProjBox').classList.toggle('hidden',isClass);
+  $$('#entryModeSeg button').forEach(b=>b.classList.toggle('active',b.dataset.mode===entryMode));
+  $('#entryErr').textContent=''; $('#xErr').textContent='';
+  if(isClass) renderItemsForClass();
+  else { fillXProjectSelect(); renderCrossRows(); }
+}
+function switchEntryMode(mode){
+  if(entryMode===mode)return;
+  const go=()=>{ batchDed={}; entryMode=mode; applyEntryMode(); };
+  if(Object.keys(batchDed).length){
+    confirmBox('切换打分模式','当前有未保存的扣分，切换后会清空。确定吗？',go);
+  }else go();
+}
+$('#entryModeSeg').onclick=function(e){
+  const b=e.target.closest('button[data-mode]'); if(!b)return;
+  switchEntryMode(b.dataset.mode);
 };
-window.pickTier=function(t){
-  if(tierProjectId!=null){
-    if(t)batchDed[tierProjectId]=t; else delete batchDed[tierProjectId];
-    const p=state.projects.find(x=>x.id===tierProjectId);
-    if(p){
-      const curEl=$('#cur_'+tierProjectId), btn=$('#ded_'+tierProjectId);
-      const ded=batchDed[tierProjectId]||0, cur=Math.max(0,n2(100-ded)), on=ded>0;
-      if(curEl){curEl.textContent=cur;curEl.style.color=on?'var(--red-600)':'var(--green-600)';}
-      if(btn){btn.textContent=on?('已扣 '+ded):'扣分 0';
-        btn.style.cssText=on?'background:var(--red-100);border-color:#fca5a5;color:var(--red-600);':'';}
-    }
-  }
-  $('#tierModalBg').classList.add('hidden');
+$('#xProject').onchange=function(){ renderCrossRows(); };
+$('#xSubmit').onclick=async function(){
+  const name=$('#xProject').value;
+  const scorer=$('#eScorer').value.trim();
+  const errEl=$('#xErr'); errEl.textContent='';
+  if(!name){errEl.textContent='请选择项目';return;}
+  if(!scorer){errEl.textContent='请选择打分人（先去「打分人」添加）';return;}
+  const list=crossRows(name);
+  if(!list.length){errEl.textContent='没有可打分的班级';return;}
+  const rows=list.map(r=>{
+    const ded=n2(batchDed[r.pid]||0);
+    return {class_id:r.classId, project_id:r.pid, student_name:'全班',
+      deduction:ded, score:n2(100-ded), scorer, operator:scorer,
+      note:'横评 '+(ded>0?('扣分 '+ded):'满分')};
+  });
+  const btn=this; btn.disabled=true; const old=btn.textContent; btn.textContent='保存中…';
+  try{
+    const {error}=await db.from('scores').insert(rows);
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('横评',`${name}：${scorer} 对 ${rows.length} 个班完成横评（${rows.map(r=>r.deduction>0?r.deduction:'0').join('/')}）`);
+    await refreshScores(true);
+    batchDed={}; renderCrossRows();
+    toast('已保存 '+rows.length+' 个班的「'+name+'」');
+    setTimeout(()=>takeSnapshot(true),800);
+  }catch(e){ errEl.textContent='保存失败：'+(e.message||e); }
+  finally{ btn.disabled=false; btn.textContent=old; }
 };
-$('#tierCancel').onclick=()=>$('#tierModalBg').classList.add('hidden');
-$('#tierClear').onclick=()=>{if(tierProjectId!=null)pickTier(0);};
+function parseTiersInput(s){
+  return String(s||'').split(/[,，;；\s]+/).map(x=>Number(x)).filter(x=>isFinite(x)&&x>=0&&x<=100);
+}
+$('#tiersBtn').onclick=function(){
+  $('#tiersInput').value=TIER_LIST.join(',');
+  $('#tiersErr').textContent='';
+  $('#tiersBg').classList.remove('hidden');
+};
+$('#tiersCancel').onclick=()=>$('#tiersBg').classList.add('hidden');
+$('#tiersDef').onclick=function(){ $('#tiersInput').value=DEFAULT_TIERS.join(','); };
+$('#tiersSave').onclick=async function(){
+  const v=parseTiersInput($('#tiersInput').value);
+  const uniq=[...new Set(v)].sort((a,b)=>a-b);
+  if(uniq.length<2){ $('#tiersErr').textContent='至少要有 2 个档位'; return; }
+  if(uniq[0]!==0){ $('#tiersErr').textContent='必须包含 0（不扣分档）'; return; }
+  setTiers(uniq);
+  $('#tiersBg').classList.add('hidden');
+  if(entryMode==='class') renderItemsForClass(); else renderCrossRows();
+  toast('档位已更新（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, tiers:uniq, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('扣分档位已同步到云端');
+  }catch(e){ toast('已本地生效，但云端同步失败：'+(e.message||e)); }
+};
 
 window.editScore=function(id){
   const r=state.scores.find(x=>x.id===id); if(!r)return;
@@ -1535,7 +2060,9 @@ $('#mClass').onchange=function(){
 $('#scoreCancel').onclick=()=>$('#scoreModalBg').classList.add('hidden');
 $('#scoreSave').onclick=async function(){
   const id=$('#mScoreId').value;
-  const ded=n2($('#mDeduction').value||0);
+  let ded=n2($('#mDeduction').value||0);
+  if(!isFinite(ded)||ded<0||ded>100){ $('#scoreModalErr').textContent='扣分需在 0–100 之间'; return; }
+  ded=n2(Math.min(100,Math.max(0,ded)));
   const payload={
     class_id:Number($('#mClass').value),
     project_id:Number($('#mProject').value),
@@ -1569,11 +2096,20 @@ window.delScore=function(id){
 $('#cAdd').onclick=async function(){
   const name=$('#cName').value.trim(); if(!name){toast('请输入班级名称');return;}
   try{
-    const {error}=await db.from('classes').insert({name});
-    if(error)throw error;
+    const ins=await db.from('classes').insert({name}).select();
+    if(ins.error)throw ins.error;
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    /* 新班级自动继承已有的全部项目名，保证「所有班级都有同一批项目」 */
+    const names=[...new Set(state.projects.map(p=>p.name))];
+    let inherited=0;
+    if(nid && names.length){
+      const r=await db.from('projects').insert(names.map(n=>({class_id:nid,name:n})));
+      if(!r.error)inherited=names.length;
+    }
     $('#cName').value='';
-    await logEvent('新增班级',name);
-    await refreshMeta(true); toast('已添加班级');
+    await logEvent('新增班级',name+(inherited?('（自动继承 '+inherited+' 个项目）'):''));
+    await refreshMeta(true);
+    toast(inherited?('已添加班级，并继承 '+inherited+' 个项目'):'已添加班级');
   }catch(e){toast('添加失败：'+(e.message||e));}
 };
 window.renameClass=function(id){
@@ -1602,15 +2138,22 @@ window.delClass=function(id){
   });
 };
 $('#pAdd').onclick=async function(){
-  const cid=Number($('#pClass').value||0), name=$('#pName').value.trim();
-  if(!cid){toast('请先建班级');return;}
+  const sel=$('#pClass').value, name=$('#pName').value.trim();
+  if(!state.classes.length){toast('请先建班级');return;}
   if(!name){toast('请输入项目名称');return;}
+  const targets = (sel==='all'||!sel) ? state.classes : state.classes.filter(c=>String(c.id)===String(sel));
+  if(!targets.length){toast('请选择班级');return;}
+  /* 跳过已经有同名项目的班，避免重复 */
+  const rows=targets.filter(c=>!state.projects.some(p=>p.class_id===c.id && p.name===name))
+                    .map(c=>({class_id:c.id,name}));
+  if(!rows.length){toast('所选班级都已有「'+name+'」');return;}
   try{
-    const {error}=await db.from('projects').insert({class_id:cid,name});
+    const {error}=await db.from('projects').insert(rows);
     if(error)throw error;
     $('#pName').value='';
-    await logEvent('新增项目',className(cid)+' · '+name);
-    await refreshMeta(true); toast('已添加项目');
+    await logEvent('新增项目',name+'（'+rows.length+' 个班）');
+    await refreshMeta(true);
+    toast('已把「'+name+'」加到 '+rows.length+' 个班');
   }catch(e){toast('添加失败：'+(e.message||e));}
 };
 window.renameProject=function(id){
@@ -1625,26 +2168,72 @@ window.renameProject=function(id){
 };
 window.delProject=function(id){
   const p=state.projects.find(x=>x.id===id);
+  if(!p)return;
   const cnt=state.scores.filter(s=>s.project_id===id).length;
-  confirmBox('删除项目',`确定删除「${p?.name}」？关联 ${cnt} 条打分记录会一并删除。`,async()=>{
+  confirmBox('删除项目（仅本班）',`确定只删除「${className(p.class_id)}」的「${p.name}」？关联 ${cnt} 条打分记录会一并删除。\n（如需所有班级一起删，请用上方汇总区的「全部删除」）`,async()=>{
     try{
       await db.from('scores').delete().eq('project_id',id);
       const {error}=await db.from('projects').delete().eq('id',id);
       if(error)throw error;
       state.watermark.scores=null; lastScoresJson='';
-      await logEvent('删除项目',p?.name+`（含 ${cnt} 条记录）`);
+      await logEvent('删除项目',className(p.class_id)+' · '+p.name+`（含 ${cnt} 条记录）`);
       await refreshMeta(true); await refreshScores(true); toast('已删除');
     }catch(e){toast('删除失败：'+(e.message||e));}
   });
 };
-window.seedDefaults=async function(){
-  const cid=Number($('#eClass').value||0); if(!cid)return;
+/* ---- 项目名级别的全局操作（保证所有班级都有同一批项目）---- */
+window.fillProjectClasses=async function(name){
+  const missing=state.classes.filter(c=>!state.projects.some(p=>p.class_id===c.id && p.name===name));
+  if(!missing.length){toast('所有班级都已有该项');return;}
   try{
-    const rows=ITEMS.map(n=>({class_id:cid,name:n}));
+    const {error}=await db.from('projects').insert(missing.map(c=>({class_id:c.id,name})));
+    if(error)throw error;
+    await logEvent('新增项目',name+' 补齐到 '+missing.length+' 个班');
+    await refreshMeta(true);
+    toast('已把「'+name+'」补齐到 '+missing.length+' 个班');
+  }catch(e){toast('补齐失败：'+(e.message||e));}
+};
+window.renameProjectAll=function(name){
+  const list=state.projects.filter(p=>p.name===name);
+  if(!list.length)return;
+  const nv=prompt('新的项目名称（'+list.length+' 个班一起改）',name); if(nv==null)return;
+  const nn=nv.trim(); if(!nn||nn===name)return;
+  db.from('projects').update({name:nn}).in('id',list.map(p=>p.id)).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名项目',name+' → '+nn+'（所有班级）').then(()=>refreshMeta(true));
+    toast('已重命名 '+list.length+' 个班的「'+name+'」');
+  });
+};
+window.delProjectAll=function(name){
+  const list=state.projects.filter(p=>p.name===name);
+  if(!list.length)return;
+  const ids=list.map(p=>p.id);
+  const cnt=state.scores.filter(s=>ids.indexOf(s.project_id)>=0).length;
+  confirmBox('删除项目（所有班级）',`将删除 ${list.length} 个班的「${name}」，关联的 ${cnt} 条打分记录也会一并删除，不可恢复。确定吗？`,async()=>{
+    try{
+      if(ids.length)await db.from('scores').delete().in('project_id',ids);
+      const {error}=await db.from('projects').delete().in('id',ids);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除项目',name+`（所有班级，含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除所有班级的「'+name+'」');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+window.seedDefaults=async function(){
+  /* 默认四项补齐到所有缺项的班级，而不是只补当前班 */
+  const rows=[];
+  state.classes.forEach(c=>{
+    ITEMS.forEach(n=>{
+      if(!state.projects.some(p=>p.class_id===c.id && p.name===n)) rows.push({class_id:c.id,name:n});
+    });
+  });
+  if(!rows.length){toast('所有班级都已有默认四项');return;}
+  try{
     const {error}=await db.from('projects').insert(rows);
     if(error)throw error;
-    await logEvent('新增项目',className(cid)+' 追加默认四项');
-    await refreshMeta(true); toast('已添加默认四项');
+    await logEvent('新增项目','补齐默认四项（'+rows.length+' 条）');
+    await refreshMeta(true); toast('已补齐 '+rows.length+' 项');
   }catch(e){toast('添加失败：'+(e.message||e));}
 };
 $('#scAdd').onclick=async function(){
@@ -1668,6 +2257,12 @@ window.delScorer=function(id){
 window.setRole=async function(uid,role){
   if(!state.isAdmin)return toast('需要总管理员权限');
   if(uid===(state.user?state.user.id:'')){ return toast('不能修改自己的角色'); }
+  // 防止把最后一名总管理员降级，导致无人能进后台
+  const target=state.profiles.find(p=>p.user_id===uid);
+  if(target && target.role==='admin' && role!=='admin'){
+    const admins=state.profiles.filter(p=>p.role==='admin');
+    if(admins.length<=1){ toast('至少保留一名总管理员，无法降级'); return; }
+  }
   try{
     const {error}=await db.from('profiles').update({role}).eq('user_id',uid);
     if(error)throw error;
@@ -1699,17 +2294,23 @@ async function logEvent(kind,summary){
     await db.from('events').insert({kind,summary,actor:(state.user?.email)||'匿名'});
   }catch(e){}
 }
-let confirmCb=null;
-function confirmBox(title,text,cb){
+let confirmCb=null, confirmCancelCb=null;
+function confirmBox(title,text,cb,onCancel){
   $('#confirmTitle').textContent=title;
   $('#confirmText').textContent=text;
   confirmCb=cb;
+  confirmCancelCb=onCancel||null;
   $('#confirmBg').classList.remove('hidden');
 }
-$('#confirmCancel').onclick=()=>{$('#confirmBg').classList.add('hidden');confirmCb=null;};
+$('#confirmCancel').onclick=()=>{
+  $('#confirmBg').classList.add('hidden');
+  confirmCb=null;
+  const cc=confirmCancelCb; confirmCancelCb=null;
+  if(cc)cc();
+};
 $('#confirmOk').onclick=async function(){
   $('#confirmBg').classList.add('hidden');
-  const cb=confirmCb; confirmCb=null;
+  const cb=confirmCb; confirmCb=null; confirmCancelCb=null;
   if(cb)await cb();
 };
 const MIRROR_KEY = 'wb_mirrors';
@@ -1821,7 +2422,7 @@ async function replaceAllFrom(p){
   return rows.length;
 }
 async function mergePayload(p){
-  const clsByName={};
+  const clsByName={}, clsById={};
   for(const c of (p.classes||[])){
     const {data}=await db.from('classes').select('id').eq('name',c.name).maybeSingle();
     let cid=data&&data.id;
@@ -1829,12 +2430,18 @@ async function mergePayload(p){
       const ins=await db.from('classes').insert({name:c.name}).select();
       cid=ins.data&&ins.data[0]&&ins.data[0].id;
     }
-    if(cid)clsByName[c.name]=cid;
+    if(cid){ clsByName[c.name]=cid; if(c.id!=null)clsById[c.id]=cid; }
   }
+  // 解析班级：优先按名称 → 快照内原 id 映射 → 仅当目标库确实存在该 id 时才沿用
+  const resolveClass=(obj)=>{
+    if(obj.className && clsByName[obj.className]!=null) return clsByName[obj.className];
+    if(obj.class_id!=null && clsById[obj.class_id]!=null) return clsById[obj.class_id];
+    if(obj.class_id!=null && state.classes.some(c=>String(c.id)===String(obj.class_id))) return obj.class_id;
+    return null;
+  };
   const projByKey={}, projById={};
   for(const x of (p.projects||[])){
-    const cid = (x.className&&clsByName[x.className]!=null) ? clsByName[x.className]
-              : (x.class_id!=null ? x.class_id : null);
+    const cid=resolveClass(x);
     if(cid==null)continue;
     const {data}=await db.from('projects').select('id').eq('name',x.name).eq('class_id',cid).maybeSingle();
     let pid=data&&data.id;
@@ -1846,22 +2453,17 @@ async function mergePayload(p){
   }
   const rows=[];
   for(const s of (p.scores||[])){
-    let cid=null;
-    if(s.className){
-      if(clsByName[s.className]==null){
-        const {data}=await db.from('classes').select('id').eq('name',s.className).maybeSingle();
-        if(data)clsByName[s.className]=data.id;
-      }
-      cid=clsByName[s.className]!=null?clsByName[s.className]:null;
+    if(s.className && clsByName[s.className]==null){
+      const {data}=await db.from('classes').select('id').eq('name',s.className).maybeSingle();
+      if(data){ clsByName[s.className]=data.id; }
     }
-    if(cid==null && s.class_id!=null) cid=s.class_id;
+    const cid=resolveClass(s);
     if(cid==null)continue;
-    let pid=null;
     if(s.projectName && projByKey[s.projectName+'@'+cid]==null){
       const {data}=await db.from('projects').select('id').eq('name',s.projectName).eq('class_id',cid).maybeSingle();
       if(data)projByKey[s.projectName+'@'+cid]=data.id;
     }
-    pid = pickProjectId(s,cid,projById,projByKey);
+    const pid=pickProjectId(s,cid,projById,projByKey);
     if(pid==null)continue;
     rows.push(scoreRow(s,cid,pid));
   }
@@ -2016,7 +2618,7 @@ $('#bClear').onclick=function(){
 };
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
-  ['#scoreModalBg','#confirmBg','#tierModalBg','#moreBg','#auth'].forEach(s=>{const el=$(s);if(el)el.classList.add('hidden');});
+  ['#scoreModalBg','#confirmBg','#periodBg','#tiersBg','#moreBg','#auth'].forEach(s=>{const el=$(s);if(el)el.classList.add('hidden');});
 });
 
 /* ==================================================================
@@ -2024,6 +2626,10 @@ document.addEventListener('keydown',e=>{
    ================================================================== */
 async function boot(){
   try{
+    if(!_sb){
+      document.body.insertAdjacentHTML('afterbegin','<div id="fatal">依赖加载失败：无法连接 Supabase SDK，请检查网络后刷新页面重试。</div>');
+      return;
+    }
     if($('#fatal'))$('#fatal').remove();
     bindNavDelegates();
     let sess=null;
