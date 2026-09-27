@@ -2,119 +2,136 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1d4ed8" />
 <title>班级打分台 · 学生管理工作台</title>
 <style>
   :root{
-    --blue:#1d4ed8; --blue2:#3b82f6; --blue3:#60a5fa; --blue-bg:#eff4ff;
-    --gold:#f5b301; --ink:#1e293b; --muted:#64748b; --line:#e2e8f0;
-    --bg:#f4f7fb; --card:#ffffff; --red:#ef4444; --amber:#f59e0b; --green:#16a34a;
+    --blue-700:#1d4ed8; --blue-600:#2563eb; --blue-500:#3b82f6; --blue-400:#60a5fa; --blue-100:#dbeafe; --blue-50:#eff4ff;
+    --gold:#f5b301; --gold-100:#fef3c7;
+    --red-600:#dc2626; --red-500:#ef4444; --red-100:#fee2e2; --red-50:#fef2f2;
+    --green-600:#15803d; --green-500:#16a34a; --green-100:#dcfce7; --green-50:#f0fdf4;
+    --amber-600:#d97706; --amber-500:#f59e0b; --amber-100:#fef3c7; --amber-50:#fffbeb;
+    --ink-900:#0f172a; --ink:#1e293b; --muted:#64748b; --muted-2:#94a3b8;
+    --line:#e2e8f0; --line-2:#f1f5f9; --card:#ffffff; --bg:#f4f7fb;
+    --s1:#1d4ed8; --s2:#f59e0b; --s3:#16a34a; --s4:#9333ea; --s5:#0891b2; --s6:#e11d48; --s7:#65a30d; --s8:#db2777;
+    --r-sm:8px; --r-md:12px; --r-lg:14px; --r-xl:18px;
     --shadow:0 6px 22px rgba(29,78,216,.08);
+    --shadow-sm:0 4px 14px rgba(29,78,216,.06);
+    --touch:44px;
+    --safe-b:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;}
-  #fatal{position:fixed;inset:0;background:#fff;z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:15px;line-height:1.7;color:#b91c1c;}
+  #fatal{position:fixed;inset:0;background:#fff;z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:15px;line-height:1.7;color:var(--red-600);}
   h1,h2,h3{font-weight:700;letter-spacing:.3px;}
-  button{font-family:inherit;cursor:pointer;border:none;border-radius:8px;padding:8px 14px;font-size:14px;background:var(--blue);color:#fff;transition:.15s;}
-  button:hover{background:var(--blue2);}
-  button.ghost{background:transparent;color:var(--blue);border:1px solid var(--blue2);}
-  button.ghost:hover{background:var(--blue-bg);}
-  button.danger{background:var(--red);}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:var(--r-sm);padding:10px 14px;min-height:var(--touch);font-size:15px;background:var(--blue-700);color:#fff;transition:.15s;}
+  button:hover{background:var(--blue-500);}
+  button.ghost{background:transparent;color:var(--blue-700);border:1px solid var(--blue-500);}
+  button.ghost:hover{background:var(--blue-50);}
+  button.danger{background:var(--red-500);}
+  button.danger:hover{background:var(--red-600);}
   button:disabled{opacity:.5;cursor:not-allowed;}
-  input,select,textarea{font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%;}
-  input:focus,select:focus,textarea:focus{outline:2px solid var(--blue3);border-color:var(--blue3);}
-  label{font-size:13px;color:var(--muted);display:block;margin:8px 0 4px;}
+  input,select,textarea{font-family:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink);width:100%;min-height:var(--touch);}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--blue-400);border-color:var(--blue-400);}
+  label{font-size:14px;color:var(--muted);display:block;margin:8px 0 4px;}
   .hidden{display:none !important;}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px;}
   .grid{display:grid;gap:14px;}
-
   #auth{position:fixed;inset:0;background:rgba(29,78,216,.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
-  .auth-box{background:#fff;border-radius:18px;padding:28px;width:min(420px,92vw);box-shadow:var(--shadow);}
-  .auth-box h1{color:var(--blue);text-align:center;margin:0 0 4px;}
-  .auth-sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px;}
+  .auth-box{background:#fff;border-radius:var(--r-xl);padding:28px;width:min(420px,92vw);box-shadow:var(--shadow);}
+  .auth-box h1{color:var(--blue-700);text-align:center;margin:0 0 4px;}
+  .auth-sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:14px;}
   .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
-  .tabs button{flex:1;background:var(--blue-bg);color:var(--blue);border:1px solid var(--line);}
-  .tabs button.active{background:var(--blue);color:#fff;}
-  .err{color:var(--red);font-size:13px;min-height:18px;margin-top:6px;}
-  .linkish{color:var(--blue2);font-size:13px;cursor:pointer;text-decoration:underline;}
-
-  header.top{background:var(--blue);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  header.top .title{font-weight:700;font-size:18px;}
+  .tabs button{flex:1;background:var(--blue-50);color:var(--blue-700);border:1px solid var(--line);}
+  .tabs button.active{background:var(--blue-700);color:#fff;}
+  .err{color:var(--red-600);font-size:14px;min-height:18px;margin-top:6px;}
+  .linkish{color:var(--blue-500);font-size:14px;cursor:pointer;text-decoration:underline;}
+  header.top{background:var(--blue-700);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:30;}
+  header.top .title{font-weight:700;font-size:18px;display:flex;align-items:center;gap:8px;}
+  header.top .title svg{width:22px;height:22px;}
   header.top .spacer{flex:1;}
-  .pill{background:rgba(255,255,255,.18);border-radius:20px;padding:4px 10px;font-size:12px;}
-  .pill.role-admin{background:#f5b301;color:#1e293b;}
+  .pill{background:rgba(255,255,255,.18);border-radius:20px;padding:4px 10px;font-size:13px;}
+  .pill.role-admin{background:var(--gold);color:var(--ink);}
   .pill.role-visitor{background:rgba(255,255,255,.25);}
-  .sync{display:flex;align-items:center;gap:6px;font-size:12px;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:20px;}
-  .dot{width:8px;height:8px;border-radius:50%;background:#7CFC9B;}
-  .dot.busy{background:#ffd166;animation:pulse 1s infinite;}
+  .pill.role-super{background:var(--gold);color:var(--ink);}
+  .pill.role-sub{background:var(--green-500);color:#fff;}
+  .sync{display:flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:20px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green-500);flex:0 0 8px;}
+  .dot.busy{background:var(--gold);animation:pulse 1s infinite;}
+  .dot.off{background:var(--red-500);}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-  nav.tabs-nav{display:flex;gap:6px;padding:8px 12px;background:#fff;overflow-x:auto;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(29,78,216,.04);}
-  nav.tabs-nav button{background:transparent;color:var(--blue);border:1px solid transparent;white-space:nowrap;}
-  nav.tabs-nav button.active{background:var(--blue);color:#fff;}
-  main{padding:16px;max-width:1200px;margin:0 auto;}
+  nav.tabs-nav{display:flex;gap:6px;padding:8px 12px;background:#fff;overflow-x:auto;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(29,78,216,.04);position:sticky;top:52px;z-index:29;-webkit-overflow-scrolling:touch;}
+  nav.tabs-nav::-webkit-scrollbar{height:0;}
+  nav.tabs-nav button{background:transparent;color:var(--blue-700);border:1px solid transparent;white-space:nowrap;font-size:15px;}
+  nav.tabs-nav button.active{background:var(--blue-700);color:#fff;}
+  main{padding:16px;max-width:1200px;margin:0 auto;padding-bottom:calc(16px + var(--safe-b));}
   section.view{display:none;}
   section.view.active{display:block;}
-
+  nav.bottom-nav{display:none;}
   .stat-row{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
-  .stat{background:#fff;border:1px solid var(--gold);border-radius:14px;padding:13px 12px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 14px rgba(29,78,216,.06);}
-  .stat-ic{width:30px;height:30px;color:var(--blue);}
+  .stat{background:#fff;border:1px solid var(--gold);border-radius:var(--r-lg);padding:13px 12px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow-sm);}
+  .stat-ic{width:30px;height:30px;color:var(--blue-700);}
   .stat-ic svg{width:30px;height:30px;}
-  .stat-v{font-size:26px;font-weight:700;color:var(--blue);line-height:1.1;}
-  .stat-k{font-size:12px;color:var(--muted);}
-
+  .stat-v{font-size:24px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .stat-k{font-size:13px;color:var(--muted);}
   .two{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;}
   .two-eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   @media(max-width:900px){.two,.two-eq{grid-template-columns:1fr;}}
-
   .dash-filter{margin-bottom:14px;}
-  .dash-filter label{font-size:26px;color:var(--ink);margin:0 0 6px;}
-  .dash-filter select{font-size:28px;padding:10px 14px;height:56px;}
-  .dash-filter button{font-size:22px;padding:12px 20px;}
-  table{width:100%;border-collapse:collapse;font-size:14px;background:#fff;border-radius:10px;overflow:hidden;}
+  .dash-filter label{font-size:15px;color:var(--muted);margin:0 0 6px;}
+  .dash-filter select{font-size:15px;padding:8px 10px;height:var(--touch);}
+  .dash-filter button{font-size:15px;padding:8px 14px;}
+  table{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border-radius:var(--r-md);overflow:hidden;}
   th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
-  th{background:var(--blue-bg);color:var(--blue);position:sticky;top:0;}
+  th{background:var(--blue-50);color:var(--blue-700);position:sticky;top:0;}
   tr:hover td{background:#f7faff;}
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;}
   .toolbar > div{flex:1;min-width:120px;}
-  .small{padding:5px 9px;font-size:13px;}
+  .small{padding:6px 10px;font-size:14px;min-height:36px;}
   .row-actions{display:flex;gap:6px;}
-
   .donut-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
-  .legend{font-size:13px;color:var(--ink);}
+  .legend{font-size:14px;color:var(--ink);}
   .legend div{display:flex;align-items:center;gap:6px;margin:3px 0;}
-  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block;}
-  .event{font-size:13px;padding:6px 0;border-bottom:1px dashed var(--line);}
-  .event .t{color:var(--muted);font-size:11px;}
-
-  .bar-row{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:13px;}
+  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block;flex:0 0 12px;}
+  .event{font-size:14px;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .event .t{color:var(--muted);font-size:12px;}
+  .bar-row{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:14px;}
   .bar-label{width:110px;flex:0 0 110px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .bar-track{flex:1;background:var(--blue-bg);border-radius:8px;height:22px;position:relative;overflow:hidden;}
-  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue3),var(--blue));border-radius:8px;transition:width .4s;}
-  .bar-val{position:absolute;right:8px;top:2px;font-size:12px;color:var(--ink);font-weight:600;}
-
+  .bar-track{flex:1;background:var(--blue-50);border-radius:var(--r-sm);height:22px;position:relative;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue-400),var(--blue-700));border-radius:var(--r-sm);transition:width .4s;}
+  .bar-val{position:absolute;right:8px;top:2px;font-size:13px;color:var(--ink);font-weight:600;}
+  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .heat-table{border-collapse:separate;border-spacing:4px;min-width:520px;}
+  .heat-table th{background:transparent;color:var(--muted);font-size:13px;font-weight:600;position:static;text-align:center;padding:4px 6px;white-space:nowrap;}
+  .heat-table th.rowh{text-align:left;color:var(--ink);font-size:14px;}
+  .heat-cell{width:64px;height:46px;border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;line-height:1.15;}
+  .heat-cell small{font-size:10px;font-weight:400;opacity:.85;}
+  .heat-cell.na{background:var(--line-2);color:var(--muted-2);font-weight:400;}
+  .heat-legend{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+  .heat-legend .scale{display:flex;gap:2px;}
+  .heat-legend .scale i{width:24px;height:12px;border-radius:3px;display:block;}
   .batch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:6px;}
-  .batch-row{display:flex;align-items:center;gap:10px;background:var(--blue-bg);border-radius:10px;padding:10px 12px;}
-  .bi-item{font-weight:600;color:var(--blue);min-width:84px;flex:0 0 84px;}
-  .batch-row label{margin:0;font-size:12px;flex:1;color:var(--muted);}
+  .batch-row{display:flex;align-items:center;gap:10px;background:var(--blue-50);border-radius:var(--r-md);padding:10px 12px;}
+  .bi-item{font-weight:600;color:var(--blue-700);min-width:84px;flex:0 0 84px;}
+  .batch-row label{margin:0;font-size:13px;flex:1;color:var(--muted);}
   .batch-row input{margin-top:2px;}
-  .bi-cur{font-size:13px;color:var(--ink);min-width:96px;flex:0 0 96px;}
-  .bi-cur b{color:var(--blue);font-size:15px;}
-  .ded-btn{background:#fff;color:var(--red);border:1px solid var(--red);white-space:nowrap;min-height:44px;}
-  .ded-btn:hover{background:#fff0f0;}
-  .tier-opt{background:#fff;border:1px solid var(--blue2);color:var(--blue);font-size:16px;font-weight:600;padding:14px 0;min-height:48px;}
-  .tier-opt:hover{background:var(--blue-bg);}
-
+  .bi-cur{font-size:14px;color:var(--ink);min-width:96px;flex:0 0 96px;}
+  .bi-cur b{color:var(--blue-700);font-size:16px;}
+  .ded-btn{background:#fff;color:var(--red-600);border:1px solid var(--red-500);white-space:nowrap;min-height:var(--touch);}
+  .ded-btn:hover{background:var(--red-50);}
+  .tier-opt{background:#fff;border:1px solid var(--blue-500);color:var(--blue-700);font-size:18px;font-weight:600;padding:14px 0;min-height:48px;}
+  .tier-opt:hover{background:var(--blue-50);}
   .modal-bg{position:fixed;inset:0;background:rgba(29,78,216,.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
-  .modal{background:#fff;border-radius:16px;padding:22px;width:min(460px,94vw);box-shadow:var(--shadow);max-height:90vh;overflow:auto;}
-  .modal h3{margin:0 0 10px;color:var(--blue);}
-  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:80;font-size:14px;opacity:0;transition:.25s;pointer-events:none;}
+  .modal{background:#fff;border-radius:var(--r-xl);padding:22px;width:min(460px,94vw);box-shadow:var(--shadow);max-height:90vh;overflow:auto;}
+  .modal h3{margin:0 0 10px;color:var(--blue-700);}
+  .toast{position:fixed;bottom:calc(18px + var(--safe-b));left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-md);z-index:80;font-size:15px;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;}
   .toast.show{opacity:1;}
-  .muted{color:var(--muted);font-size:13px;}
-  .kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;gap:8px;}
-  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;background:var(--blue-bg);color:var(--blue);}
+  .muted{color:var(--muted);font-size:14px;}
+  .kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px;gap:8px;align-items:center;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:13px;background:var(--blue-50);color:var(--blue-700);}
   .empty{padding:30px;text-align:center;color:var(--muted);}
-  .section-title{color:var(--blue);border-left:4px solid var(--blue2);padding-left:8px;margin:18px 0 10px;}
+  .section-title{color:var(--blue-700);border-left:4px solid var(--blue-500);padding-left:8px;margin:18px 0 10px;font-weight:700;}
   .only-admin,.only-staff{display:none;}
   body.is-admin .only-admin,body.is-staff .only-staff{display:inline-block;}
   body.is-admin td.only-admin,body.is-admin th.only-admin,body.is-staff td.only-staff,body.is-staff th.only-staff{display:table-cell;}
@@ -122,12 +139,89 @@
   .only-admin-block,.only-staff-block{display:none;}
   body:not(.is-admin) .only-admin-view{display:none !important;}
   body:not(.is-staff) .only-staff-view{display:none !important;}
-  .pill.role-super{background:#f5b301;color:#1e293b;}
-  .pill.role-sub{background:#22c55e;color:#fff;}
   #eventStream{max-height:280px;overflow-y:auto;padding-right:6px;}
   #eventStream::-webkit-scrollbar{width:8px;}
   #eventStream::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
-  #eventStream::-webkit-scrollbar-track{background:#f1f5f9;border-radius:4px;}
+  #eventStream::-webkit-scrollbar-track{background:var(--line-2);border-radius:4px;}
+  .rec-cards{display:none;}
+
+  .dash-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .dash-hero h2{margin:0;font-size:22px;color:var(--ink);letter-spacing:.3px;}
+  .dash-sub{font-size:14px;color:var(--muted);margin-top:4px;}
+  .dash-hero-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .hero-select{width:auto;min-width:130px;font-size:15px;padding:8px 10px;height:42px;}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  @media(max-width:768px){.hero-stats{grid-template-columns:repeat(2,1fr);}}
+  .hero-stat{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow-sm);}
+  .hero-stat .k{font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .hero-stat .v{font-size:28px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .hero-stat .v small{font-size:14px;color:var(--muted);font-weight:400;margin-left:2px;}
+  .hero-stat .v .up{font-size:13px;color:var(--red-600);margin-left:6px;}
+  .hero-stat .v .down{font-size:13px;color:var(--green-600);margin-left:6px;}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+  @media(max-width:900px){.dash-grid{grid-template-columns:1fr;}}
+  .proj-score{margin:12px 0;}
+  .proj-score .head{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;margin-bottom:6px;gap:8px;}
+  .proj-score .name{font-weight:600;color:var(--ink);}
+  .proj-score .val{font-weight:700;font-size:18px;}
+  .proj-score .track{background:var(--line-2);height:10px;border-radius:5px;overflow:hidden;}
+  .proj-score .fill{height:100%;border-radius:5px;transition:width .5s;}
+  .proj-score .sub{font-size:12px;color:var(--muted);margin-top:4px;}
+  .ded-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line);gap:8px;}
+  .ded-row:last-child{border-bottom:none;}
+  .ded-row .txt{flex:1;min-width:0;}
+  .ded-row .txt b{font-size:15px;color:var(--ink);font-weight:600;}
+  .ded-row .txt .m{font-size:12px;color:var(--muted);margin-top:2px;}
+  .ded-row .num{color:var(--red-600);font-weight:700;font-size:16px;white-space:nowrap;}
+  .rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-md);margin-bottom:6px;background:#fff;border:1px solid var(--line);}
+  .rank-row.me{background:var(--blue-50);border-color:var(--blue-400);}
+  .rank-row .rk{flex:0 0 26px;height:26px;line-height:26px;text-align:center;border-radius:8px;background:var(--line);color:var(--muted);font-weight:700;font-size:13px;}
+  .rank-row.top1 .rk{background:var(--gold);color:#fff;}
+  .rank-row.top2 .rk{background:#94a3b8;color:#fff;}
+  .rank-row.top3 .rk{background:#cd7f32;color:#fff;}
+  .rank-row .nm{flex:1;font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rank-row .me-tag{font-size:11px;color:var(--blue-700);background:#fff;border:1px solid var(--blue-400);border-radius:8px;padding:1px 6px;margin-left:6px;font-weight:400;}
+  .rank-row .sc{font-size:17px;font-weight:700;color:var(--blue-700);white-space:nowrap;}
+  .trend-summary{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7;}
+  .trend-summary b{color:var(--ink);}
+
+  @media(max-width:768px){
+    main{padding:12px;padding-bottom:calc(74px + var(--safe-b));}
+    header.top{padding:8px 12px;gap:8px;}
+    header.top .title{font-size:16px;}
+    .sync{font-size:12px;padding:3px 8px;}
+    #userPill{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    nav.tabs-nav{top:48px;}
+    nav.bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:4px 4px var(--safe-b);box-shadow:0 -2px 12px rgba(29,78,216,.08);}
+    nav.bottom-nav button{flex:1;background:transparent;color:var(--muted);border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;padding:6px 2px;min-height:52px;border-radius:var(--r-sm);}
+    nav.bottom-nav button svg{width:22px;height:22px;}
+    nav.bottom-nav button.active{color:var(--blue-700);background:var(--blue-50);}
+    .card.table-card{padding:0;border:none;box-shadow:none;background:transparent;max-height:none !important;overflow:visible !important;}
+    .card.table-card table{display:none;}
+    .rec-cards{display:grid;gap:10px;}
+    .rec-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:12px;box-shadow:var(--shadow-sm);}
+    .rec-card .r1{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;}
+    .rec-card .r1 b{font-size:15px;color:var(--blue-700);}
+    .rec-card .r2{font-size:14px;color:var(--muted);margin-bottom:6px;}
+    .rec-card .r3{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+    .rec-card .acts{display:flex;gap:8px;margin-top:10px;}
+    .rec-card .acts button{flex:1;}
+    .heat-table{min-width:460px;}
+    .bar-label{width:84px;flex:0 0 84px;font-size:13px;}
+    .toolbar > div{min-width:calc(50% - 4px);}
+    .batch-grid{grid-template-columns:1fr;}
+    .modal{padding:18px;width:min(460px,94vw);}
+    .stat-row{grid-template-columns:repeat(2,1fr);}
+    .stat-v{font-size:21px;}
+    .dash-hero h2{font-size:18px;}
+    .hero-stat .v{font-size:24px;}
+  }
+  #moreBg{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:70;display:flex;align-items:flex-end;}
+  #moreSheet{background:#fff;width:100%;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:16px 16px calc(16px + var(--safe-b));max-height:70vh;overflow:auto;}
+  #moreSheet h3{margin:0 0 12px;color:var(--blue-700);}
+  #moreList{display:grid;gap:8px;}
+  #moreList button{width:100%;text-align:left;background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;gap:10px;font-size:15px;}
+  #moreList button svg{width:20px;height:20px;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.js"></script>
 </head>
@@ -155,13 +249,16 @@
 
 <div id="main" class="hidden">
   <header class="top">
-    <span class="title">班级打分台</span>
+    <span class="title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>
+      班级打分台
+    </span>
     <span class="sync" id="syncPill"><span class="dot" id="syncDot"></span><span id="syncText">同步中…</span></span>
     <span class="spacer"></span>
     <span class="pill hidden" id="userPill">—</span>
     <span class="pill hidden" id="rolePill">—</span>
-    <button class="ghost" id="adminLoginBtn" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">管理员登录</button>
-    <button class="ghost hidden" id="syncNow" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">立即同步</button>
+    <button class="ghost hidden" id="adminLoginBtn" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">管理员登录</button>
+    <button class="ghost hidden" id="syncNow" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">同步</button>
     <button class="ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">退出</button>
   </header>
 
@@ -178,46 +275,62 @@
 
   <main>
     <section class="view active" id="view-dash">
-      <div class="card dash-filter">
-        <div class="toolbar">
-          <div><label>班级</label><select id="dClass"><option value="">全部班级</option></select></div>
-          <div><label>时间范围</label>
-            <select id="dRange">
-              <option value="all">全部</option>
-              <option value="today">今日</option>
-              <option value="week">近 7 天</option>
-              <option value="month">近 30 天</option>
-            </select>
-          </div>
-          <div style="flex:0 0 auto;"><label>&nbsp;</label><button class="ghost" id="dashRefresh">刷新</button></div>
+      <div class="dash-hero">
+        <div>
+          <h2>班级每日常规得分看板</h2>
+          <div class="dash-sub" id="dashSub">—</div>
+        </div>
+        <div class="dash-hero-actions">
+          <select id="dClass" class="hero-select"><option value="">全部班级</option></select>
+          <select id="dRange" class="hero-select">
+            <option value="today">今日</option>
+            <option value="week">近 7 天</option>
+            <option value="month">近 30 天</option>
+            <option value="all">全部</option>
+          </select>
+          <button class="ghost" id="dashRefresh" style="min-height:42px;">刷新</button>
         </div>
       </div>
 
-      <div class="grid stat-row" id="statRow"></div>
+      <div class="hero-stats" id="heroStats"></div>
 
-      <div class="two" style="margin-top:14px;">
+      <div class="dash-grid">
         <div class="card">
-          <h3 id="rankTitle">班级平均分排行</h3>
+          <h3 id="todayItemsTitle">各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span></h3>
+          <div id="todayItems"></div>
+        </div>
+        <div class="card">
+          <h3 id="trendTitle">近 7 日常规均分趋势</h3>
+          <div id="trend"></div>
+          <div id="trendSummary" class="trend-summary"></div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <h3>扣分明细 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">按时间倒序</span></h3>
+          <div id="todayDeductions"></div>
+        </div>
+        <div class="card">
+          <h3 id="rankTitle">班级排名</h3>
           <div id="classRank"></div>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>易失分热力图（班级 × 项目）</h3>
+        <div class="muted" style="margin:6px 0 10px;">颜色越深＝该项目扣分越多，用来定位「哪个班的哪个项目最需要盯」。</div>
+        <div class="heat-wrap" id="heatmap"></div>
+        <div class="heat-legend" id="heatLegend"></div>
+      </div>
+
+      <div class="dash-grid">
         <div class="card">
           <h3>扣分分布（按项目）</h3>
           <div class="donut-wrap">
             <div id="donut"></div>
             <div class="legend" id="donutLegend"></div>
           </div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:14px;">
-        <h3>各项目余额（满分 100，红色=已扣）</h3>
-        <div id="balance"></div>
-      </div>
-
-      <div class="two-eq" style="margin-top:14px;">
-        <div class="card">
-          <h3>评分趋势（日均分）</h3>
-          <div id="trend"></div>
         </div>
         <div class="card">
           <h3>实时动态流</h3>
@@ -252,12 +365,13 @@
         <div><label>按项目筛选</label><select id="fProject"><option value="">全部</option></select></div>
         <div style="flex:0 0 auto;"><label>&nbsp;</label><button class="ghost" id="recRefresh">刷新</button></div>
       </div>
-      <div class="card" style="padding:0;overflow:auto;max-height:70vh;">
+      <div class="card table-card" style="padding:0;overflow:auto;max-height:70vh;">
         <table id="recTable"><thead><tr>
           <th>时间</th><th>班级</th><th>项目</th><th>对象</th><th>分值</th><th>扣分</th><th>备注</th><th>打分人</th><th class="only-staff">操作</th>
         </tr></thead><tbody id="recBody"></tbody></table>
-        <div id="recEmpty" class="empty hidden">暂无记录</div>
       </div>
+      <div class="rec-cards" id="recCards"></div>
+      <div id="recEmpty" class="empty hidden">暂无记录</div>
     </section>
 
     <section class="view only-admin-view" id="view-classes">
@@ -297,7 +411,7 @@
       </div>
       <div class="card only-admin-block" style="margin-top:14px;">
         <h3>子管理员预授权（邮箱白名单）</h3>
-        <div class="muted" style="margin-bottom:8px;">填入对方邮箱，对方用该邮箱登录后自动成为子管理员（该邮箱需能收到验证码）。从名单移除即停用其子管理员身份。</div>
+        <div class="muted" style="margin-bottom:8px;">填入对方邮箱，对方用该邮箱登录后自动成为子管理员。从名单移除即停用其子管理员身份。</div>
         <div class="toolbar">
           <div><label>邮箱</label><input id="invEmail" placeholder="name@example.com"/></div>
           <div><label>备注</label><input id="invNote" placeholder="如：九年（1）班 班长"/></div>
@@ -359,6 +473,16 @@
       </div>
     </section>
   </main>
+
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<div id="moreBg" class="hidden">
+  <div id="moreSheet">
+    <h3>更多功能</h3>
+    <div id="moreList"></div>
+    <button class="ghost" id="moreClose" style="width:100%;margin-top:12px;">关闭</button>
+  </div>
 </div>
 
 <div id="scoreModalBg" class="modal-bg hidden">
@@ -368,7 +492,7 @@
     <label>班级</label><select id="mClass"></select>
     <label>项目</label><select id="mProject"></select>
     <label>对象</label><input id="mStudent"/>
-    <label>扣分（满分100，得分=100-扣分）</label><input id="mDeduction" type="number" step="0.1" min="0" max="100"/>
+    <label>扣分（满分100，得分=100-扣分）</label><input id="mDeduction" type="number" step="0.1" min="0" max="100" inputmode="decimal"/>
     <label>备注</label><input id="mNote"/>
     <div class="err" id="scoreModalErr"></div>
     <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
@@ -403,10 +527,11 @@
 <div id="toast" class="toast"></div>
 
 <script>
-/* ============ CONFIG ============ */
+/* ==================================================================
+   模块 1/6 · CORE
+   ================================================================== */
 const SUPABASE_URL = 'https://kvammejmkzxffulrmubs.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_yI90MQ_Qkg9KoMBF3aOr4Q_1R3eAKhm';
-
 const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const _u = s => s?.user ? { ...s.user, id: s.user.id, email: s.user.email || '', raw: s.user } : null;
@@ -434,32 +559,67 @@ const cloud = {
 };
 const db = _sb;
 
-/* ============ STATE ============ */
 const state = {
   user:null, role:'visitor', isAdmin:false, isStaff:false,
   classes:[], projects:[], scores:[], events:[], profiles:[], backups:[], scorers:[], invites:[],
   sig:{}, lastSync:null,
+  watermark:{ scores:null, events:null, meta:null },
+  online:true,
 };
 const dashFilter = { classId:'', range:'all' };
 const ITEMS = ['卫生','眼保健操','午休纪律','晨操'];
 const TIERS = [0,0.1,0.2,0.3,0.4,0.5,1];
-const EV_ROWS = 6;
 const ROLE_LABEL = {admin:'总管理员', sub:'子管理员', visitor:'访客'};
 const BK_CHECK_MS = 30*60*1000;
 const BK_MIN_GAP  = 10*60*1000;
 const BK_KEEP     = 30;
 const SS_LIMIT    = 2000;
+const POLL_FAST   = 5000;
+const POLL_META   = 30000;
 let bkLastSig='', bkLastAt=0;
-let autoBackupTimer=null;
+let autoBackupTimer=null, pollFastTimer=null, pollMetaTimer=null;
 let batchDed={};
+let lastScoresJson='';
+
+const VIEWS = [
+  {id:'dash',     label:'看板',   perm:'all',   icon:'chart'},
+  {id:'entry',    label:'打分',   perm:'staff', icon:'edit'},
+  {id:'records',  label:'记录',   perm:'all',   icon:'list'},
+  {id:'scorers',  label:'打分人', perm:'staff', icon:'users'},
+  {id:'classes',  label:'班级',   perm:'admin', icon:'school'},
+  {id:'projects', label:'项目',   perm:'admin', icon:'folder'},
+  {id:'users',    label:'权限',   perm:'admin', icon:'shield'},
+  {id:'backup',   label:'备份',   perm:'admin', icon:'db'},
+];
+const BOTTOM_PRIMARY = ['dash','entry','records'];
 
 const $ = (s)=>document.querySelector(s);
 const $$ = (s)=>document.querySelectorAll(s);
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);}
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function showSync(busy,text){$('#syncDot').className='dot'+(busy?' busy':'');$('#syncText').textContent=text||(busy?'同步中…':'已同步');}
+function showSync(mode,text){
+  const dot=$('#syncDot'); dot.className='dot'+(mode==='busy'?' busy':(mode==='off'?' off':''));
+  $('#syncText').textContent=text||(mode==='busy'?'同步中…':(mode==='off'?'离线模式':'已同步'));
+}
 function className(id){return (state.classes.find(c=>c.id===id)?.name)||'—';}
 function projectName(id){return (state.projects.find(p=>p.id===id)?.name)||'—';}
+function n2(v){return Math.round(Number(v||0)*100)/100;}
+function scoreColor(pct){return pct>=90?'var(--green-600)':pct>=70?'var(--amber-600)':'var(--red-600)';}
+function pad2(n){return String(n).padStart(2,'0');}
+function ymd(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function todayStr(){return ymd(new Date());}
+function stamp(){return new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');}
+function csvCell(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function download(name,content,type){
+  const blob=new Blob([content],{type});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function mergeById(oldArr,newArr){
+  const map=new Map();
+  (oldArr||[]).forEach(r=>map.set(r.id,r));
+  (newArr||[]).forEach(r=>map.set(r.id,r));
+  return Array.from(map.values());
+}
 
 const ICON = {
   avg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 5-6"/></svg>',
@@ -468,18 +628,139 @@ const ICON = {
   cnt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
   cls:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>',
   prj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+  school:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+  medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M9 9l-3-6M15 9l3-6M12 12v3l1.5 1.5"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>',
 };
 
-/* ============ AUTH ============ */
-let authTab='password';
+function rangeStart(range){
+  const now=new Date();
+  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(range==='today')return start;
+  if(range==='week'){const w=new Date(start);w.setDate(w.getDate()-6);return w;}
+  if(range==='month'){const m=new Date(start);m.setDate(m.getDate()-29);return m;}
+  return null;
+}
+function inRange(ts){
+  const st=rangeStart(dashFilter.range);
+  if(!st)return true;
+  return new Date(ts)>=st;
+}
+function rangeLabel(range){
+  return {all:'全部时间',today:'今日',week:'近 7 天',month:'近 30 天'}[range]||'全部时间';
+}
 
+/* ==================================================================
+   模块 3/6 · DATA
+   ================================================================== */
+async function loadAll(force){
+  await Promise.all([refreshScores(force),refreshMeta(force)]);
+}
+async function refreshScores(force){
+  if(!navigator.onLine){ state.online=false; showSync('off','离线模式'); return; }
+  state.online=true;
+  showSync('busy');
+  try{
+    const wm=state.watermark;
+    let q=db.from('scores').select('*').order('updated_at',{ascending:false}).limit(SS_LIMIT);
+    if(!force && wm.scores) q=q.gt('updated_at',wm.scores);
+    const {data:scores}=await q;
+    const {data:events}=await db.from('events').select('*').order('created_at',{ascending:false}).limit(50);
+    const rows=scores||[];
+    const evs=events||[];
+    const prevSigS=state.sig.scores, prevSigE=state.sig.events;
+    const sigS=rows.length+':'+((rows[0]?.updated_at)||'');
+    const sigE=evs.length+':'+((evs[0]?.created_at)||'');
+    let dirtyScores=false;
+    if(sigS!==prevSigS){
+      state.scores=(force||!wm.scores)?rows:mergeById(state.scores,rows);
+      state.sig.scores=sigS; dirtyScores=true;
+    }
+    if(sigE!==prevSigE){ state.events=evs; state.sig.events=sigE; }
+    if(rows.length){ const m=rows.reduce((a,r)=>(r.updated_at&&r.updated_at>a?r.updated_at:a),wm.scores||''); if(m)wm.scores=m; }
+    state.lastSync=new Date();
+    showSync('ok','已同步 '+state.lastSync.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}));
+    if(dirtyScores||sigE!==prevSigE){
+      const j=state.scores.length+':'+state.sig.scores;
+      if(j!==lastScoresJson){
+        lastScoresJson=j;
+        if(window._vw==='dash')renderDash();
+        if(window._vw==='records')renderRecords();
+      }
+    }
+  }catch(e){
+    state.online=false;
+    showSync('off','同步失败，重试中');
+  }
+}
+async function refreshMeta(force){
+  try{
+    const safe=async(p)=>{ try{ return await p; }catch(e){ return {data:[]}; } };
+    const [c,p,pr,b,sc,iv]=await Promise.all([
+      safe(db.from('classes').select('*').order('name')),
+      safe(db.from('projects').select('*').order('name')),
+      state.isAdmin? safe(db.from('profiles').select('*').order('email')) : Promise.resolve({data:[]}),
+      state.isAdmin? safe(db.from('backups').select('id,created_at,kind').order('created_at',{ascending:false}).limit(40)) : Promise.resolve({data:[]}),
+      state.isStaff? safe(db.from('scorers').select('*').order('name')) : Promise.resolve({data:[]}),
+      state.isAdmin? safe(db.from('staff_invites').select('*').order('created_at',{ascending:false})) : Promise.resolve({data:[]}),
+    ]);
+    const sigC=(c.data||[]).length+':'+((c.data||[]).map(x=>x.name).join('|'));
+    const sigP=(p.data||[]).length+':'+((p.data||[]).map(x=>x.name+x.class_id).join('|'));
+    const sigU=(pr.data||[]).length+':'+((pr.data||[]).map(x=>x.role).join('|'));
+    const sigB=(b.data||[]).length+':'+((b.data||[])[0]?.created_at||'');
+    const sigSC=(sc.data||[]).length+':'+((sc.data||[]).map(x=>x.name).join('|'));
+    const sigIV=(iv.data||[]).length;
+    if(sigC!==state.sig.classes){
+      state.classes=c.data||[];state.sig.classes=sigC;
+      renderClasses();fillClassSelects();fillDashFilter();
+    }
+    if(sigP!==state.sig.projects){
+      state.projects=p.data||[];state.sig.projects=sigP;
+      renderProjects();fillClassSelects();fillDashFilter();renderItemsForClass();
+      if(window._vw==='dash')renderDash();
+    }
+    if(sigU!==state.sig.profiles){state.profiles=pr.data||[];state.sig.profiles=sigU;renderUsers();}
+    if(sigB!==state.sig.backups){state.backups=b.data||[];state.sig.backups=sigB;renderSnapshots();}
+    if(sigSC!==state.sig.scorers){state.scorers=sc.data||[];state.sig.scorers=sigSC;renderScorers();fillScorerSelect();}
+    if(sigIV!==state.sig.invites){state.invites=iv.data||[];state.sig.invites=sigIV;renderInvites();}
+  }catch(e){}
+}
+function startPolling(){
+  if(pollFastTimer)return;
+  pollFastTimer=setInterval(()=>{ if(!document.hidden) refreshScores(); },POLL_FAST);
+  pollMetaTimer=setInterval(()=>{ if(!document.hidden) refreshMeta(); },POLL_META);
+  autoBackupTimer=setInterval(()=>{ if(!document.hidden) takeSnapshot(true); },BK_CHECK_MS);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden){ refreshScores(); refreshMeta(); takeSnapshot(true); }
+  });
+  window.addEventListener('online',()=>{ state.online=true; state.watermark={scores:null,events:null,meta:null}; lastScoresJson=''; refreshScores(true); refreshMeta(true); toast('网络已恢复'); });
+  window.addEventListener('offline',()=>{ state.online=false; showSync('off','离线模式'); });
+}
+function filteredScores(){
+  return state.scores.filter(r=>(!dashFilter.classId||String(r.class_id)===dashFilter.classId)&&inRange(r.created_at));
+}
+function todayScores(){
+  const t=todayStr();
+  return state.scores.filter(r=>(r.created_at||'').slice(0,10)===t);
+}
+
+/* ==================================================================
+   模块 2/6 · AUTH
+   ================================================================== */
+let authTab='password';
 $$('#authTabs button').forEach(b=>b.onclick=()=>{
   authTab=b.dataset.tab;
   $$('#authTabs button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   resetAuthStep1();
 });
-
 function resetAuthStep1(){
   $('#authStep1').classList.remove('hidden');
   $('#authErr').textContent='';
@@ -487,13 +768,13 @@ function resetAuthStep1(){
   if(authTab==='password'){ $('#authSubmit').textContent='登录';$('#switchHint').innerHTML='没有账号？切到「注册」'; }
   else { $('#authSubmit').textContent='注册';$('#switchHint').innerHTML='已有账号？切到「登录」'; }
 }
-
 $('#authSubmit').onclick = async ()=>{
   const raw=$('#authEmail').value.trim();
   if(!raw){$('#authErr').textContent='请输入账号';return;}
-  // 账号自动拼成假邮箱；如果已带 @ 就原样用
   const email = raw.includes('@') ? raw : (raw + '@myapp.local');
   $('#authErr').textContent='';
+  const btn=$('#authSubmit'); const oldTxt=btn.textContent;
+  btn.disabled=true; btn.textContent='处理中…';
   try{
     if(authTab==='password'){
       const pwd=$('#authPwd').value;
@@ -513,9 +794,8 @@ $('#authSubmit').onclick = async ()=>{
         }
         return;
       }
-      if(data && data.user){
-        afterLogin(data.user);
-      } else {
+      if(data && data.user){ afterLogin(data.user); }
+      else{
         $('#authErr').textContent='注册成功，请切换到「登录」';
         authTab='password';
         $$('#authTabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab==='password'));
@@ -523,8 +803,10 @@ $('#authSubmit').onclick = async ()=>{
       }
     }
   }catch(e){$('#authErr').textContent='出错了：'+(e.message||e);}
+  finally{ btn.disabled=false; if(authTab==='password')btn.textContent='登录'; else btn.textContent='注册'; }
 };
-
+$('#authEmail').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authSubmit').click();});
+$('#authPwd').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authSubmit').click();});
 $('#logoutBtn').onclick=async()=>{
   try { await cloud.auth.signOut(); } catch(e) {}
   try {
@@ -536,7 +818,7 @@ $('#logoutBtn').onclick=async()=>{
   } catch(e) {}
   location.reload();
 };
-$('#syncNow').onclick=()=>{refreshScores();refreshMeta();toast('已触发同步');};
+$('#syncNow').onclick=()=>{state.watermark={scores:null,events:null,meta:null};state.sig={};refreshScores(true);refreshMeta(true);toast('已触发同步');};
 $('#adminLoginBtn').onclick=()=>{resetAuthStep1();$('#auth').classList.remove('hidden');};
 $('#authClose').onclick=()=>$('#auth').classList.add('hidden');
 
@@ -550,14 +832,15 @@ async function afterLogin(user){
   $('#logoutBtn').classList.remove('hidden');
   $('#userPill').classList.remove('hidden');
   $('#rolePill').classList.remove('hidden');
-  $('#userPill').textContent=user.email||user.id;
-  showSync(true);
+  $('#userPill').textContent=(user.email||user.id).split('@')[0];
+  showSync('busy');
   await ensureProfile(user);
   try{ await db.rpc('claim_staff_role',{p_email:user.email||''}); }catch(e){}
   await loadProfile();
   applyRole();
+  buildNav();
   renderItemsForClass();
-  await loadAll();
+  await loadAll(true);
   startPolling();
   setTimeout(()=>takeSnapshot(true,true),1500);
 }
@@ -568,9 +851,15 @@ function applyRole(){
   document.body.classList.toggle('is-staff',state.isStaff);
   $('#rolePill').textContent=ROLE_LABEL[state.role]||'访客';
   $('#rolePill').className='pill '+(state.isAdmin?'role-super':(state.role==='sub'?'role-sub':'role-visitor'));
-  const cur=($('#nav button.active')||{}).dataset?.view||'dash';
-  const deny=((cur==='entry'||cur==='scorers')&&!state.isStaff)||(['classes','projects','users','backup'].includes(cur)&&!state.isAdmin);
-  if(deny){const b=$('#nav button[data-view="dash"]');if(b)b.click();}
+  buildNav();
+  const cur=window._vw||'dash';
+  if(!viewAllowed(cur)){ switchView('dash'); }
+}
+function viewAllowed(vid){
+  const v=VIEWS.find(x=>x.id===vid); if(!v)return false;
+  if(v.perm==='all')return true;
+  if(v.perm==='staff')return state.isStaff;
+  return state.isAdmin;
 }
 function enterPublicMode(){
   state.user=null;state.role='visitor';state.isAdmin=false;state.isStaff=false;
@@ -583,11 +872,11 @@ function enterPublicMode(){
   $('#logoutBtn').classList.add('hidden');
   $('#userPill').classList.add('hidden');
   $('#rolePill').classList.add('hidden');
-  showSync(false,'公开数据 · 游客只读');
-  loadAll();
+  showSync('ok','公开数据 · 游客只读');
+  buildNav();
+  loadAll(true);
   startPolling();
 }
-
 async function ensureProfile(user){
   try{
     const {data:me}=await db.from('profiles').select('email').eq('user_id',user.id).maybeSingle();
@@ -601,347 +890,451 @@ async function loadProfile(){
   state.isAdmin=state.role==='admin';
   state.isStaff=state.isAdmin||state.role==='sub';
 }
-
-/* ============ DATA LOAD ============ */
-async function loadAll(){
-  await Promise.all([refreshScores(),refreshMeta()]);
-}
-async function refreshScores(){
-  showSync(true);
-  try{
-    const {data:scores}=await db.from('scores').select('*').order('updated_at',{ascending:false}).limit(SS_LIMIT);
-    const {data:events}=await db.from('events').select('*').order('created_at',{ascending:false}).limit(50);
-    const sigS=(scores||[]).length+':'+((scores||[])[0]?.updated_at||'');
-    const sigE=(events||[]).length+':'+((events||[])[0]?.created_at||'');
-    if(sigS!==state.sig.scores||sigE!==state.sig.events){
-      state.scores=scores||[];state.events=events||[];
-      state.sig.scores=sigS;state.sig.events=sigE;
-      renderDash();renderRecords();
-    }
-    state.lastSync=new Date();
-    showSync(false,'已同步 '+state.lastSync.toLocaleTimeString());
-  }catch(e){showSync(false,'同步失败');}
-}
-async function refreshMeta(){
-  try{
-    const adminOnly=async(q)=>{ if(!state.isAdmin)return {data:[]}; try{return await q;}catch(e){return {data:[]};} };
-    const staffOnly=async(q)=>{ if(!state.isStaff)return {data:[]}; try{return await q;}catch(e){return {data:[]};} };
-    const [c,p,pr,b,sc,iv]=await Promise.all([
-      db.from('classes').select('*').order('name'),
-      db.from('projects').select('*').order('name'),
-      adminOnly(db.from('profiles').select('*').order('email')),
-      adminOnly(db.from('backups').select('id,created_at,kind').order('created_at',{ascending:false}).limit(40)),
-      staffOnly(db.from('scorers').select('*').order('name')),
-      adminOnly(db.from('staff_invites').select('*').order('created_at',{ascending:false})),
-    ]);
-    const sigC=(c.data||[]).length+':'+((c.data||[])[0]?.updated_at||'');
-    const sigP=(p.data||[]).length+':'+((p.data||[])[0]?.updated_at||'');
-    const sigU=(pr.data||[]).length;
-    const sigB=(b.data||[]).length+':'+((b.data||[])[0]?.created_at||'');
-    const sigSC=(sc.data||[]).length+':'+((sc.data||[])[0]?.updated_at||'');
-    const sigIV=(iv.data||[]).length+':'+((iv.data||[])[0]?.created_at||'');
-    if(sigC!==state.sig.classes){state.classes=c.data||[];state.sig.classes=sigC;renderClasses();fillClassSelects();fillDashFilter();}
-    if(sigP!==state.sig.projects){state.projects=p.data||[];state.sig.projects=sigP;renderProjects();fillClassSelects();fillDashFilter();renderItemsForClass();}
-    if(sigU!==state.sig.profiles){state.profiles=pr.data||[];state.sig.profiles=sigU;renderUsers();}
-    if(sigB!==state.sig.backups){state.backups=b.data||[];state.sig.backups=sigB;renderSnapshots();}
-    if(sigSC!==state.sig.scorers){state.scorers=sc.data||[];state.sig.scorers=sigSC;renderScorers();fillScorerSelect();}
-    if(sigIV!==state.sig.invites){state.invites=iv.data||[];state.sig.invites=sigIV;renderInvites();}
-  }catch(e){}
-}
-
-function startPolling(){
-  if(autoBackupTimer)return;
-  setInterval(()=>{if(!document.hidden)refreshScores();},1000);
-  setInterval(()=>{if(!document.hidden)refreshMeta();},10000);
-  autoBackupTimer=setInterval(()=>{if(!document.hidden)takeSnapshot(true);},BK_CHECK_MS);
-  document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden){refreshScores();takeSnapshot(true);}
+function buildNav(){
+  $$('#nav button').forEach(b=>{
+    const v=VIEWS.find(x=>x.id===b.dataset.view);
+    if(v) b.classList.toggle('hidden',!viewAllowed(v.id));
   });
+  const nav=$('#bottomNav');
+  const primary=BOTTOM_PRIMARY.filter(viewAllowed);
+  const rest=VIEWS.filter(v=>!BOTTOM_PRIMARY.includes(v.id)&&viewAllowed(v.id));
+  let html=primary.map(v=>`<button data-view="${v.id}" class="${window._vw===v.id?'active':''}">${ICON[v.icon]}<span>${v.label}</span></button>`).join('');
+  if(rest.length){
+    const anyActive=rest.some(v=>v.id===window._vw);
+    html+=`<button id="moreBtn" class="${anyActive?'active':''}">${ICON.more}<span>更多</span></button>`;
+  }
+  nav.innerHTML=html;
+  const mb=$('#moreBtn'); if(mb) mb.onclick=openMore;
+  $('#moreList').innerHTML=rest.map(v=>`<button data-view="${v.id}">${ICON[v.icon]}<span>${v.label}</span></button>`).join('')||'<div class="muted">当前权限下没有更多功能</div>';
 }
+function bindNavDelegates(){
+  const onNavClick=(e)=>{
+    const btn=e.target.closest('button[data-view]');
+    if(!btn)return;
+    if(btn.closest('#moreBg'))closeMore();
+    if(btn.dataset.view)switchView(btn.dataset.view);
+  };
+  const bn=$('#bottomNav'); if(bn) bn.addEventListener('click',onNavClick);
+  const ml=$('#moreList'); if(ml) ml.addEventListener('click',onNavClick);
+  const nv=$('#nav'); if(nv) nv.addEventListener('click',onNavClick);
+}
+function openMore(){$('#moreBg').classList.remove('hidden');}
+function closeMore(){$('#moreBg').classList.add('hidden');}
+$('#moreClose').onclick=closeMore;
+$('#moreBg').onclick=(e)=>{if(e.target.id==='moreBg')closeMore();};
 
-/* ============ FILTER HELPERS ============ */
-function inRange(ts){
-  if(dashFilter.range==='all')return true;
-  const d=new Date(ts), now=new Date();
-  const start=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  if(dashFilter.range==='today')return d>=start;
-  if(dashFilter.range==='week'){const w=new Date(start);w.setDate(w.getDate()-7);return d>=w;}
-  if(dashFilter.range==='month'){const m=new Date(start);m.setDate(m.getDate()-30);return d>=m;}
-  return true;
+function switchView(vid){
+  if(!viewAllowed(vid)){toast('无权限访问该模块');return;}
+  window._vw=vid;
+  $$('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===vid));
+  $$('section.view').forEach(s=>s.classList.remove('active'));
+  const sec=$('#view-'+vid); if(sec)sec.classList.add('active');
+  if(vid==='records')renderRecords();
+  if(vid==='classes')renderClasses();
+  if(vid==='projects')renderProjects();
+  if(vid==='users'){renderUsers();renderInvites();}
+  if(vid==='scorers')renderScorers();
+  if(vid==='backup')renderSnapshots();
+  if(vid==='entry')renderItemsForClass();
+  if(vid==='dash')renderDash();
+  buildNav();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function filteredScores(){
-  return state.scores.filter(r=>(!dashFilter.classId||String(r.class_id)===dashFilter.classId)&&inRange(r.created_at));
-}
+window._vw='dash';
 
-/* ============ RENDER: DASHBOARD ============ */
+/* ==================================================================
+   模块 4/6 · RENDER
+   ================================================================== */
 function renderDash(){
   const s=filteredScores();
   const valid=s.filter(r=>r.score!=null&&r.score!=='');
   const avg=valid.length? valid.reduce((a,r)=>a+Number(r.score),0)/valid.length:0;
-  const max=valid.length? Math.max(...valid.map(r=>Number(r.score))):0;
-  const ded=Math.round(s.reduce((a,r)=>a+Number(r.deduction||0),0)*100)/100;
-  const clsN = dashFilter.classId? 1 : state.classes.length;
-  const prjN = dashFilter.classId? state.projects.filter(p=>String(p.class_id)===dashFilter.classId).length : state.projects.length;
-  $('#statRow').innerHTML=`
-    <div class="stat"><div class="stat-ic">${ICON.avg}</div><div class="stat-v">${avg.toFixed(1)}</div><div class="stat-k">平均分</div></div>
-    <div class="stat"><div class="stat-ic">${ICON.top}</div><div class="stat-v">${max||0}</div><div class="stat-k">最高分</div></div>
-    <div class="stat"><div class="stat-ic">${ICON.ded}</div><div class="stat-v">${ded}</div><div class="stat-k">扣分合计</div></div>
-    <div class="stat"><div class="stat-ic">${ICON.cnt}</div><div class="stat-v">${s.length}</div><div class="stat-k">记录条数</div></div>
-    <div class="stat"><div class="stat-ic">${ICON.cls}</div><div class="stat-v">${clsN}</div><div class="stat-k">班级数</div></div>
-    <div class="stat"><div class="stat-ic">${ICON.prj}</div><div class="stat-v">${prjN}</div><div class="stat-k">项目数</div></div>`;
-  renderClassRank();
+  const dedTotal=n2(s.reduce((a,r)=>a+Number(r.deduction||0),0));
+  const dedCount=s.filter(r=>Number(r.deduction)>0).length;
+  const scoredProjects=new Set(s.map(r=>r.project_id)).size;
+  const curClassName=dashFilter.classId? className(Number(dashFilter.classId)) : '全部班级';
+
+  const d=new Date();
+  const weekday=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  const dateStr=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+weekday;
+  $('#dashSub').textContent=dateStr+' · '+curClassName+' · '+rangeLabel(dashFilter.range);
+
+  const allClassAvgs=calcClassAvgs(s);
+  let rankHtml='—';
+  if(dashFilter.classId && allClassAvgs.length){
+    const idx=allClassAvgs.findIndex(x=>String(x.id)===dashFilter.classId);
+    rankHtml=(idx>=0?idx+1:'—')+'<small>/'+allClassAvgs.length+'</small>';
+  } else {
+    rankHtml=allClassAvgs.length+'<small>个班</small>';
+  }
+  const tScores=todayScores();
+  const y=new Date(); y.setDate(y.getDate()-1);
+  const yStr=ymd(y);
+  const yScores=state.scores.filter(r=>(r.created_at||'').slice(0,10)===yStr);
+  const yValid=yScores.filter(r=>r.score!=null);
+  const yAvg=yValid.length? yValid.reduce((a,r)=>a+Number(r.score),0)/yValid.length : null;
+  const tValid=tScores.filter(r=>r.score!=null);
+  const curTodayAvg=tValid.length? tValid.reduce((a,r)=>a+Number(r.score),0)/tValid.length : null;
+  let deltaHtml='';
+  if(curTodayAvg!=null && yAvg!=null){
+    const dlt=n2(curTodayAvg-yAvg);
+    deltaHtml = dlt>0 ? '<span class="up">↑'+dlt.toFixed(1)+'</span>'
+             : dlt<0 ? '<span class="down">↓'+Math.abs(dlt).toFixed(1)+'</span>'
+             : '<span class="up" style="color:var(--muted);">持平</span>';
+  }
+
+  $('#heroStats').innerHTML=`
+    <div class="hero-stat"><div class="k">常规均分${dashFilter.range==='today'?'（今日）':''}</div><div class="v">${avg.toFixed(1)}${deltaHtml}</div></div>
+    <div class="hero-stat"><div class="k">扣分事件</div><div class="v">${dedCount}<small>次</small></div></div>
+    <div class="hero-stat"><div class="k">已打分项目</div><div class="v">${scoredProjects}<small>/ ${dashFilter.classId? state.projects.filter(p=>String(p.class_id)===dashFilter.classId).length : state.projects.length}</small></div></div>
+    <div class="hero-stat"><div class="k">${dashFilter.classId?'年级排名':'班级数'}</div><div class="v">${rankHtml}</div></div>`;
+
+  renderTodayItems(s);
+  renderTrend(s);
+  renderTodayDeductions(s);
+  renderTodayRanking(s, allClassAvgs);
   renderDonut();
-  renderBalance();
-  renderTrend();
+  renderHeatmap();
   renderEvents();
 }
-function renderBalance(){
-  const s=filteredScores();
-  const dedByProject={};
-  s.forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;dedByProject[r.project_id]=(dedByProject[r.project_id]||0)+d;});
-  if(dashFilter.classId){
-    const cid=Number(dashFilter.classId);
-    const projs=state.projects.filter(p=>p.class_id===cid);
-    const rows=projs.map(p=>{
-      const ded=Math.round((dedByProject[p.id]||0)*100)/100;
-      const cur=Math.max(0,100-ded);
-      return {label:p.name,cur,ded,max:100};
-    });
-    $('#balance').innerHTML=rows.map(r=>balanceRow(r.label,r.cur,r.ded,r.max)).join('')||'<div class="empty">该班级暂无项目，去「项目管理」添加后此处显示余额</div>';
-  }else{
-    const rows=state.classes.map(c=>{
-      const projs=state.projects.filter(p=>p.class_id===c.id);
-      let cur=0,max=0;
-      projs.forEach(p=>{const ded=Math.round((dedByProject[p.id]||0)*100)/100;cur+=Math.max(0,100-ded);max+=100;});
-      return {label:c.name,cur,ded:max-cur,max};
-    });
-    if(!rows.length){$('#balance').innerHTML='<div class="empty">暂无班级</div>';return;}
-    $('#balance').innerHTML=rows.map(r=>balanceRow(r.label,r.cur,r.ded,r.max)).join('');
-  }
+function calcClassAvgs(s){
+  const map={};
+  s.forEach(r=>{
+    if(r.score==null||r.score==='')return;
+    if(!map[r.class_id])map[r.class_id]={sum:0,n:0};
+    map[r.class_id].sum+=Number(r.score);map[r.class_id].n++;
+  });
+  return Object.entries(map)
+    .map(([cid,v])=>({id:Number(cid),name:className(Number(cid)),avg:v.sum/v.n,n:v.n}))
+    .sort((a,b)=>b.avg-a.avg);
 }
-function balanceRow(label,cur,ded,max){
-  const pct=(max>0?cur/max*100:0).toFixed(1);
-  const dedPct=(max>0?ded/max*100:0).toFixed(1);
-  return `<div class="bar-row"><div class="bar-label" title="${esc(label)}">${esc(label)}</div>
-    <div class="bar-track" style="background:#fde8e8;">
-      <div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--blue3),var(--blue));"></div>
-      <span class="bar-val">${cur.toFixed(1)}<span style="color:var(--muted);font-weight:400;"> / ${max}</span> <span style="color:var(--red);">(-${dedPct}%)</span></span>
-    </div></div>`;
-}
-function renderClassRank(){
-  if(!dashFilter.classId){
-    const s=filteredScores();
+function renderTodayItems(s){
+  const isClassMode = !!dashFilter.classId;
+
+  /* 模式一：全部班级 → 班级总分排行 */
+  if(!isClassMode){
+    $('#todayItemsTitle').innerHTML='班级总分排行 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">满分=100×项目数</span>';
     const dedByProject={};
     s.forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;dedByProject[r.project_id]=(dedByProject[r.project_id]||0)+d;});
-    const items=state.classes.map(c=>{
+    const rows=state.classes.map(c=>{
       const projs=state.projects.filter(p=>p.class_id===c.id);
-      let cur=0,max=0;
-      projs.forEach(p=>{const ded=Math.round((dedByProject[p.id]||0)*100)/100;cur+=Math.max(0,100-ded);max+=100;});
-      return {name:c.name,cur,ded:max-cur,max};
-    }).filter(x=>x.max>0).sort((a,b)=>b.cur-a.cur);
-    $('#rankTitle').textContent='各班总分（满分=100×项目数）';
-    $('#classRank').innerHTML=items.length?svgVBars(items):'<div class="empty">暂无数据</div>';
+      let cur=0,tot=0;
+      projs.forEach(p=>{const dd=n2(dedByProject[p.id]||0);cur+=Math.max(0,100-dd);tot+=100;});
+      return {id:c.id,name:c.name,cur:n2(cur),tot,pct:tot>0?cur/tot*100:0};
+    }).filter(x=>x.tot>0).sort((a,b)=>b.cur-a.cur);
+
+    if(!rows.length){
+      $('#todayItems').innerHTML='<div class="empty">暂无班级或项目，请先到「班级管理」「项目管理」添加</div>';
+      return;
+    }
+    $('#todayItems').innerHTML=rows.map((r,i)=>{
+      const rank=i+1;
+      const rankBg = rank===1?'var(--gold)':rank===2?'#94a3b8':rank===3?'#cd7f32':'var(--line)';
+      const rankColor = rank<=3?'#fff':'var(--muted)';
+      const col = r.pct>=98?'var(--green-600)':r.pct>=95?'var(--blue-700)':'var(--amber-600)';
+      const pctBar = r.tot>0 ? (r.cur/r.tot*100) : 0;
+      return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);">
+        <div style="flex:0 0 32px;height:32px;border-radius:8px;background:${rankBg};color:${rankColor};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;">${rank}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px;">
+            <b style="font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(r.name)}</b>
+            <span style="font-size:20px;font-weight:700;color:${col};white-space:nowrap;">${r.cur.toFixed(1)}<span style="font-size:12px;color:var(--muted);font-weight:400;"> / ${r.tot}</span></span>
+          </div>
+          <div style="background:var(--line-2);border-radius:5px;height:8px;overflow:hidden;">
+            <div style="height:100%;width:${pctBar.toFixed(1)}%;background:${col};border-radius:5px;transition:width .5s;"></div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
     return;
   }
-  $('#rankTitle').textContent='班级平均分排行';
-  const map={};
-  filteredScores().forEach(r=>{if(r.score==null)return;if(!map[r.class_id])map[r.class_id]={sum:0,n:0};map[r.class_id].sum+=Number(r.score);map[r.class_id].n++;});
-  const rows=Object.entries(map).map(([cid,v])=>({name:className(Number(cid)),avg:v.sum/v.n,n:v.n})).sort((a,b)=>b.avg-a.avg);
-  if(!rows.length){$('#classRank').innerHTML='<div class="empty">暂无数据</div>';return;}
-  const max=Math.max(...rows.map(r=>r.avg),1);
-  $('#classRank').innerHTML=rows.map(r=>`<div class="bar-row"><div class="bar-label" title="${esc(r.name)}">${esc(r.name)}</div><div class="bar-track"><div class="bar-fill" style="width:${(r.avg/max*100).toFixed(1)}%"></div><span class="bar-val">${r.avg.toFixed(1)}</span></div></div>`).join('');
+
+  /* 模式二：单个班级 → 各项得分明细 */
+  const cid=Number(dashFilter.classId);
+  $('#todayItemsTitle').innerHTML='「'+esc(className(cid))+'」各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span>';
+  const projs=state.projects.filter(p=>p.class_id===cid);
+  if(!projs.length){
+    $('#todayItems').innerHTML='<div class="empty">该班级暂无项目，去「项目管理」添加</div>';
+    return;
+  }
+  const stat={};
+  s.forEach(r=>{
+    if(r.score==null||r.score==='')return;
+    if(!stat[r.project_id])stat[r.project_id]={sum:0,n:0,ded:0,dedN:0};
+    stat[r.project_id].sum+=Number(r.score);
+    stat[r.project_id].n++;
+    const d=Number(r.deduction||0);
+    if(d>0){stat[r.project_id].ded+=d;stat[r.project_id].dedN++;}
+  });
+  const rows=projs.map(p=>{
+    const x=stat[p.id];
+    const avg=x&&x.n? x.sum/x.n : null;
+    return {name:p.name,avg,ded:x?n2(x.ded):0,dedN:x?x.dedN:0};
+  }).sort((a,b)=>{
+    if(a.avg==null)return 1; if(b.avg==null)return -1;
+    return a.avg-b.avg;
+  });
+  $('#todayItems').innerHTML=rows.map(r=>{
+    if(r.avg==null){
+      return `<div class="proj-score"><div class="head"><span class="name">${esc(r.name)}</span><span class="val" style="color:var(--muted);">—</span></div>
+        <div class="track"><div class="fill" style="width:0%;"></div></div>
+        <div class="sub">${rangeLabel(dashFilter.range)}内暂无记录</div></div>`;
+    }
+    const pct=Math.max(0,Math.min(100,(r.avg-90)/10*100));
+    const col=r.avg>=98?'var(--green-600)':r.avg>=95?'var(--blue-700)':'var(--amber-600)';
+    const sub=r.ded>0?`扣 ${r.ded} 分 · ${r.dedN} 次`:'无扣分';
+    return `<div class="proj-score">
+      <div class="head"><span class="name">${esc(r.name)}</span><span class="val" style="color:${col};">${r.avg.toFixed(1)}</span></div>
+      <div class="track"><div class="fill" style="width:${pct}%;background:${col};"></div></div>
+      <div class="sub" style="color:${r.ded>0?'var(--red-600)':'var(--muted)'};">${sub}</div>
+    </div>`;
+  }).join('');
 }
-function svgVBars(items,w=560,h=280){
-  const padL=52,padR=12,padT=26,padB=42;
-  const plotW=w-padL-padR, plotH=h-padT-padB;
-  const max=Math.max(...items.map(i=>i.max),1);
-  const step=plotW/items.length;
-  const bw=Math.min(64,step*0.55);
+function renderTrend(s){
+  const days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(ymd(d));}
+  const map={};
+  state.scores.forEach(r=>{
+    if(r.score==null)return;
+    const day=(r.created_at||'').slice(0,10);
+    if(days.indexOf(day)<0)return;
+    if(dashFilter.classId && String(r.class_id)!==dashFilter.classId)return;
+    if(!map[day])map[day]={sum:0,n:0};
+    map[day].sum+=Number(r.score);map[day].n++;
+  });
+  const pts=days.map(d=>map[d]?{d, y:map[d].sum/map[d].n}:{d,y:null});
+  const valid=pts.filter(p=>p.y!=null);
+  if(!valid.length){
+    $('#trend').innerHTML='<div class="empty">近 7 日暂无数据</div>';
+    $('#trendSummary').innerHTML='';
+    return;
+  }
+  const w=560,h=220,padL=34,padR=14,padT=14,padB=32;
+  const max=Math.max(...valid.map(p=>p.y),100);
+  const min=Math.min(...valid.map(p=>p.y),95);
+  const span=(max-min)||1;
+  const xOf=i=>padL+(w-padL-padR)*(i/(days.length-1||1));
+  const yOf=v=>padT+(h-padT-padB)*(1-(v-min)/span);
   let grid='';
   for(let g=0;g<=4;g++){
-    const v=max*g/4, y=h-padB-plotH*g/4;
-    grid+=`<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="#eef2f7"/><text x="${padL-6}" y="${y+4}" font-size="11" fill="#94a3b8" text-anchor="end">${Math.round(v)}</text>`;
+    const yv=min+span*g/4, yy=yOf(yv);
+    grid+=`<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${w-padR}" y2="${yy.toFixed(1)}" stroke="#f1f5f9"/>`;
+    grid+=`<text x="4" y="${(yy+3).toFixed(1)}" font-size="10" fill="#94a3b8">${yv.toFixed(0)}</text>`;
   }
-  let bars='';
-  items.forEach((it,i)=>{
-    const x=padL+step*i+(step-bw)/2;
-    const hhCur=it.max>0?plotH*(it.cur/it.max):0;
-    const hhDed=it.max>0?plotH*(it.ded/it.max):0;
-    const yCur=h-padB-hhCur;
-    const yDed=yCur-hhDed;
-    bars+=`<rect x="${x}" y="${yCur}" width="${bw}" height="${Math.max(hhCur,0)}" rx="4" fill="#1d4ed8"><title>${it.name}：当前 ${it.cur.toFixed(1)} / 满分 ${it.max}</title></rect>`;
-    if(hhDed>0.5)bars+=`<rect x="${x}" y="${yDed}" width="${bw}" height="${hhDed}" rx="2" fill="#ef4444" opacity="0.85"><title>${it.name}：已扣 ${it.ded.toFixed(1)}</title></rect>`;
-    bars+=`<text x="${x+bw/2}" y="${yDed-6}" font-size="13" font-weight="700" fill="#1d4ed8" text-anchor="middle">${it.cur.toFixed(0)}</text>`;
-    bars+=`<text x="${x+bw/2}" y="${h-padB+16}" font-size="12" fill="#475569" text-anchor="middle">${esc(it.name).slice(0,6)}</text>`;
+  let segPath='',areaPath='',dots='';
+  let started=false;
+  pts.forEach((p,i)=>{
+    if(p.y==null){started=false;return;}
+    const x=xOf(i).toFixed(1), y=yOf(p.y).toFixed(1);
+    segPath+=(started?'L':'M')+x+' '+y;
+    if(!started){areaPath='M'+x+' '+(h-padB);}
+    areaPath+=' L'+x+' '+y;
+    started=true;
+    dots+=`<circle cx="${x}" cy="${y}" r="3" fill="#fff" stroke="#1d4ed8" stroke-width="2"><title>${p.d}: ${p.y.toFixed(1)}</title></circle>`;
   });
-  return `<svg width="100%" viewBox="0 0 ${w} ${h}">${grid}${bars}</svg>`;
+  if(areaPath)areaPath+=' L'+xOf(pts.length-1).toFixed(1)+' '+(h-padB)+' Z';
+  const xlabels=pts.map((p,i)=>`<text x="${xOf(i).toFixed(1)}" y="${h-10}" font-size="10" fill="#94a3b8" text-anchor="middle">${p.d.slice(5)}</text>`).join('');
+  $('#trend').innerHTML=`<svg width="100%" viewBox="0 0 ${w} ${h}">
+    ${grid}
+    ${areaPath?`<path d="${areaPath}" fill="#1d4ed8" opacity="0.10"/>`:''}
+    ${segPath?`<path d="${segPath}" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>`:''}
+    ${dots}${xlabels}
+  </svg>`;
+  const cur=valid[valid.length-1], best=valid.reduce((a,b)=>a.y>=b.y?a:b);
+  const prev=valid.length>1?valid[valid.length-2]:null;
+  let delta='';
+  if(prev){
+    const dlt=n2(cur.y-prev.y);
+    delta = dlt>0 ? `较前一记录 +${dlt.toFixed(1)}` : dlt<0 ? `较前一记录 ${dlt.toFixed(1)}` : '较前一记录持平';
+  }
+  $('#trendSummary').innerHTML=`近 7 日最高 <b>${best.y.toFixed(1)}</b>（${best.d.slice(5)}）· 当前 <b>${cur.y.toFixed(1)}</b>${delta?'，'+delta:''}`;
+}
+function renderTodayDeductions(s){
+  const rows=s.filter(r=>Number(r.deduction)>0)
+    .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
+    .slice(0,12);
+  if(!rows.length){$('#todayDeductions').innerHTML='<div class="empty">暂无扣分记录</div>';return;}
+  $('#todayDeductions').innerHTML=rows.map(r=>{
+    const t=new Date(r.created_at);
+    const hm=pad2(t.getHours())+':'+pad2(t.getMinutes());
+    const who=r.scorer||r.operator||'—';
+    return `<div class="ded-row">
+      <div class="txt">
+        <b>${esc(className(r.class_id))} · ${esc(projectName(r.project_id))}</b>
+        <div class="m">打分人 ${esc(who)} · ${hm}${r.note?' · '+esc(r.note):''}</div>
+      </div>
+      <div class="num">−${Number(r.deduction).toFixed(1)}</div>
+    </div>`;
+  }).join('');
+}
+function renderTodayRanking(s, allClassAvgs){
+  $('#rankTitle').textContent = dashFilter.classId ? '班级排名（本班高亮）' : '班级排名';
+  if(!allClassAvgs.length){$('#classRank').innerHTML='<div class="empty">暂无数据</div>';return;}
+  const curId=String(dashFilter.classId||'');
+  $('#classRank').innerHTML=allClassAvgs.map((x,i)=>{
+    const rk=i+1;
+    const cls='rank-row'+(String(x.id)===curId?' me':'')+(rk===1?' top1':rk===2?' top2':rk===3?' top3':'');
+    return `<div class="${cls}">
+      <div class="rk">${rk}</div>
+      <div class="nm">${esc(x.name)}${String(x.id)===curId?'<span class="me-tag">本班</span>':''}</div>
+      <div class="sc">${x.avg.toFixed(1)}</div>
+    </div>`;
+  }).join('');
 }
 function renderDonut(){
   const groups={};
-  filteredScores().forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;const key=projectName(r.project_id);groups[key]=(groups[key]||0)+d;});
-  const palette=['#1d4ed8','#3b82f6','#60a5fa','#93c5fd','#c7d9f7','#f5b301','#f59e0b','#ef4444'];
-  const segs=Object.entries(groups).map(([k,v])=>({label:k,value:Math.round(v*100)/100})).sort((a,b)=>b.value-a.value).slice(0,8);
-  const total=segs.reduce((a,s)=>a+s.value,0);
+  filteredScores().forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;const k=projectName(r.project_id);groups[k]=(groups[k]||0)+d;});
+  const rawPal=['#1d4ed8','#f59e0b','#16a34a','#9333ea','#0891b2','#e11d48','#65a30d','#db2777'];
+  const segs=Object.entries(groups).map(([k,v])=>({label:k,value:n2(v)})).sort((a,b)=>b.value-a.value).slice(0,8);
+  const total=n2(segs.reduce((a,s)=>a+s.value,0));
   const size=160,r=size/2-16,cx=size/2,cy=size/2,inner=r*0.62;
   let a=-Math.PI/2,paths='';
-  if(total<=0){paths=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#eef2ff"/><circle cx="${cx}" cy="${cy}" r="${inner}" fill="#fff"/>`;}
-  else{
-    segs.forEach((seg,i)=>{const v=seg.value;if(v<=0)return;const ang=v/total*Math.PI*2,a2=a+ang;
+  if(total<=0){
+    paths=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f1f5f9"/><circle cx="${cx}" cy="${cy}" r="${inner}" fill="#fff"/>`;
+  }else{
+    segs.forEach((seg,i)=>{
+      const v=seg.value; if(v<=0)return;
+      const ang=v/total*Math.PI*2, a2=a+ang;
       const x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
       const xi2=cx+inner*Math.cos(a2),yi2=cy+inner*Math.sin(a2),xi1=cx+inner*Math.cos(a),yi1=cy+inner*Math.sin(a);
-      const large=ang>Math.PI?1:0;
-      paths+=`<path d="M${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2} L${xi2} ${yi2} A${inner} ${inner} 0 ${large} 0 ${xi1} ${yi1} Z" fill="${palette[i%palette.length]}"><title>${seg.label}: ${seg.value}</title></path>`;
-      a=a2;});
+      const lg=ang>Math.PI?1:0;
+      paths+=`<path d="M${x1.toFixed(2)} ${y1.toFixed(2)} A${r} ${r} 0 ${lg} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} L${xi2.toFixed(2)} ${yi2.toFixed(2)} A${inner} ${inner} 0 ${lg} 0 ${xi1.toFixed(2)} ${yi1.toFixed(2)} Z" fill="${rawPal[i%rawPal.length]}"><title>${esc(seg.label)}: ${seg.value}</title></path>`;
+      a=a2;
+    });
   }
-  $('#donut').innerHTML=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}<text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="18" fill="#1d4ed8" font-weight="700">${total}</text><text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="10" fill="#64748b">扣分合计</text></svg>`;
-  if(!segs.length){$('#donutLegend').innerHTML='<div class="muted">暂无扣分记录</div>';return;}
-  $('#donutLegend').innerHTML=segs.map((s,i)=>`<div><span class="swatch" style="background:${palette[i%palette.length]}"></span>${esc(s.label)}：${s.value}</div>`).join('');
+  $('#donut').innerHTML=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}<text x="${cx}" y="${cy-1}" text-anchor="middle" font-size="19" fill="#1d4ed8" font-weight="700">${total}</text><text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="10" fill="#64748b">扣分合计</text></svg>`;
+  $('#donutLegend').innerHTML=segs.length
+    ? segs.map((s,i)=>`<div><span class="swatch" style="background:${rawPal[i%rawPal.length]}"></span>${esc(s.label)}：${s.value}</div>`).join('')
+    : '<div class="muted">暂无扣分记录</div>';
 }
-function renderTrend(){
-  const map={};
-  filteredScores().forEach(r=>{if(r.score==null)return;const d=(r.created_at||'').slice(0,10);if(!d)return;if(!map[d])map[d]={sum:0,n:0};map[d].sum+=Number(r.score);map[d].n++;});
-  const days=Object.keys(map).sort();
-  if(days.length===0){$('#trend').innerHTML='<div class="empty">暂无趋势数据</div>';return;}
-  const pts=days.map(d=>({label:d.slice(5),y:map[d].sum/map[d].n}));
-  $('#trend').innerHTML=svgLine(pts);
-}
-function svgLine(pts,w=560,h=210,color='#1d4ed8'){
-  const pad=30,max=Math.max(...pts.map(p=>p.y),1),min=0;
-  const stepX=pts.length>1?(w-pad*2)/(pts.length-1):0;
-  const yOf=v=>h-pad-(v-min)/(max-min)*(h-pad*2);
-  const xOf=i=>pad+stepX*i;
-  const coords=pts.map((p,i)=>[xOf(i),yOf(p.y)]);
-  const line=coords.map((c,i)=>(i?'L':'M')+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ');
-  const area='M'+coords[0][0].toFixed(1)+' '+(h-pad)+' '+coords.map(c=>'L'+c[0].toFixed(1)+' '+c[1].toFixed(1)).join(' ')+' L'+coords[coords.length-1][0].toFixed(1)+' '+(h-pad)+' Z';
-  const dots=coords.map((c,i)=>`<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="3" fill="${color}"><title>${pts[i].label}: ${pts[i].y.toFixed(1)}</title></circle>`).join('');
-  let grid='';
-  for(let g=0;g<=4;g++){const yv=min+(max-min)*g/4,yy=yOf(yv);grid+=`<line x1="${pad}" y1="${yy}" x2="${w-pad}" y2="${yy}" stroke="#eef2f7"/><text x="4" y="${yy+3}" font-size="9" fill="#94a3b8">${Math.round(yv)}</text>`;}
-  const every=Math.max(1,Math.ceil(pts.length/7));
-  let xlabels=pts.map((p,i)=>i%every===0?`<text x="${xOf(i)}" y="${h-8}" font-size="9" fill="#94a3b8" text-anchor="middle">${p.label}</text>`:'').join('');
-  return `<svg width="100%" viewBox="0 0 ${w} ${h}">${grid}<path d="${area}" fill="${color}" opacity="0.08"/><path d="${line}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>${dots}${xlabels}</svg>`;
+function renderHeatmap(){
+  const box=$('#heatmap'), lg=$('#heatLegend');
+  if(!box)return;
+  if(!state.projects.length||!state.classes.length){
+    box.innerHTML='<div class="empty">暂无班级或项目</div>'; lg.innerHTML=''; return;
+  }
+  const scores=filteredScores();
+  const projNames=[...new Set(state.projects.map(p=>p.name))];
+  const matrix=state.classes.map(c=>{
+    const cells=projNames.map(pn=>{
+      const pids=new Set(state.projects.filter(p=>p.class_id===c.id&&p.name===pn).map(p=>p.id));
+      if(!pids.size)return null;
+      let ded=0; scores.forEach(r=>{if(r.class_id===c.id&&pids.has(r.project_id))ded+=Number(r.deduction||0);});
+      return n2(ded);
+    });
+    return {name:c.name,cells};
+  });
+  const allVals=[]; matrix.forEach(r=>r.cells.forEach(v=>{if(v!=null)allVals.push(v);}));
+  const maxV=Math.max(...allVals,0.1);
+  const colorOf=v=>{
+    if(v==null)return {bg:'#f1f5f9',fg:'#94a3b8'};
+    if(v<=0)return {bg:'#f0fdf4',fg:'#15803d'};
+    const t=Math.min(1,v/maxV);
+    const stops=[[254,243,199],[253,186,116],[239,68,68],[185,28,28]];
+    const seg=t*(stops.length-1), i=Math.min(stops.length-2,Math.floor(seg)), f=seg-i;
+    const c1=stops[i],c2=stops[i+1];
+    const rgb=c1.map((v0,k)=>Math.round(v0+(c2[k]-v0)*f));
+    return {bg:`rgb(${rgb.join(',')})`,fg:(t>0.35?'#fff':'#7c2d12')};
+  };
+  let html='<table class="heat-table"><thead><tr><th></th>';
+  projNames.forEach(pn=>{html+=`<th>${esc(pn)}</th>`;});
+  html+='</tr></thead><tbody>';
+  matrix.forEach(r=>{
+    html+=`<tr><th class="rowh">${esc(r.name)}</th>`;
+    r.cells.forEach(v=>{
+      const c=colorOf(v);
+      html+= v==null
+        ? '<td><div class="heat-cell na">—</div></td>'
+        : `<td><div class="heat-cell" style="background:${c.bg};color:${c.fg};">${v<=0?'0':'−'+v}${v>0?'<small>扣分</small>':''}</div></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  box.innerHTML=html;
+  const steps=[0,0.25,0.5,0.75,1].map(t=>colorOf(t*maxV));
+  lg.innerHTML=`<span>扣分少</span><span class="scale">${steps.map(c=>`<i style="background:${c.bg}"></i>`).join('')}</span><span>扣分多（最多 ${n2(maxV)}）</span>`;
 }
 function renderEvents(){
-  const all=state.events, ev=all.slice(0,20);
+  const all=state.events||[], ev=all.slice(0,20);
   if(!ev.length){$('#eventStream').innerHTML='<div class="empty">暂无动态</div>';return;}
-  $('#eventStream').innerHTML=ev.map(e=>`<div class="event"><div>${esc(e.summary)}</div><div class="t">${new Date(e.created_at).toLocaleString()} · ${esc(e.actor||'')}</div></div>`).join('')
-    +`<div class="muted" style="text-align:center;padding:8px 0 2px;font-size:12px;">共 ${all.length} 条 · 滚动查看</div>`;
+  $('#eventStream').innerHTML=ev.map(e=>`<div class="event"><div>${esc(e.summary)}</div><div class="t">${new Date(e.created_at).toLocaleString('zh-CN')} · ${esc(e.actor||'')}</div></div>`).join('')
+    +`<div class="muted" style="text-align:center;padding:8px 0 2px;font-size:12px;">共 ${all.length} 条</div>`;
 }
-
-/* ============ RENDER: RECORDS ============ */
 function renderRecords(){
   const fc=$('#fClass').value, fp=$('#fProject').value;
   let rows=state.scores;
   if(fc)rows=rows.filter(r=>String(r.class_id)===fc);
   if(fp)rows=rows.filter(r=>String(r.project_id)===fp);
   rows=rows.slice(0,500);
-  if(!rows.length){$('#recTable').classList.add('hidden');$('#recEmpty').classList.remove('hidden');return;}
-  $('#recTable').classList.remove('hidden');$('#recEmpty').classList.add('hidden');
+  if(!rows.length){
+    $('#recTable').classList.add('hidden');
+    $('#recCards').innerHTML='';
+    $('#recEmpty').classList.remove('hidden');
+    return;
+  }
+  $('#recTable').classList.remove('hidden');
+  $('#recEmpty').classList.add('hidden');
   $('#recBody').innerHTML=rows.map(r=>`<tr>
-    <td>${new Date(r.created_at).toLocaleString()}</td>
+    <td>${new Date(r.created_at).toLocaleString('zh-CN')}</td>
     <td>${esc(className(r.class_id))}</td>
     <td>${esc(projectName(r.project_id))}</td>
     <td>${esc(r.student_name)}</td>
     <td>${esc(r.score)}</td>
     <td>${esc(r.deduction||0)}</td>
     <td>${esc(r.note||'')}</td>
-    <td>${esc(r.scorer||r.operator||'')}${r.scorer&&r.operator?`<div class="muted" style="font-size:11px;">登录：${esc(r.operator)}</div>`:''}</td>
+    <td>${esc(r.scorer||r.operator||'')}</td>
     <td class="only-staff"><div class="row-actions">
       <button class="ghost small" onclick="editScore(${r.id})">改</button>
       <button class="danger small only-admin" onclick="delScore(${r.id})">删</button>
     </div></td></tr>`).join('');
+  const canEdit=state.isStaff, canDel=state.isAdmin;
+  $('#recCards').innerHTML=rows.map(r=>{
+    const ded=Number(r.deduction||0);
+    return `<div class="rec-card">
+    <div class="r1"><b>${esc(className(r.class_id))} · ${esc(projectName(r.project_id))}</b>
+      <span class="badge" style="${ded>0?'background:var(--red-100);color:var(--red-600);':'background:var(--green-100);color:var(--green-600);'}">${ded>0?'−'+esc(r.deduction):'满分'}</span></div>
+    <div class="r2">${new Date(r.created_at).toLocaleString('zh-CN')} · ${esc(r.scorer||r.operator||'—')}</div>
+    <div class="r3"><span>对象：${esc(r.student_name)}</span><span>得分 ${esc(r.score)}</span></div>
+    ${r.note?`<div class="r3" style="margin-top:4px;"><span>备注：${esc(r.note)}</span></div>`:''}
+    ${(canEdit||canDel)?`<div class="acts">
+      ${canEdit?`<button class="ghost small" onclick="editScore(${r.id})">修改</button>`:''}
+      ${canDel?`<button class="danger small" onclick="delScore(${r.id})">删除</button>`:''}
+    </div>`:''}
+  </div>`;}).join('');
 }
-
-/* ============ RENDER: CLASSES / PROJECTS ============ */
 function fillClassSelects(){
-  const opts='<option value="">全部</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  $('#fClass').innerHTML=opts;
-  $('#eClass').innerHTML=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">（先建班级）</option>';
-  $('#pClass').innerHTML=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">（先建班级）</option>';
-  const po=state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
-  $('#mClass').innerHTML=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  const mpo=$('#mProject'); if(mpo) mpo.innerHTML=po||'<option value="">（先建项目）</option>';
+  const allOpt='<option value="">全部</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  $('#fClass').innerHTML=allOpt;
+  const cOpt=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  $('#eClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  $('#pClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  $('#mClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  const pOpt=state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  const mp=$('#mProject'); if(mp)mp.innerHTML=pOpt||'<option value="">（先建项目）</option>';
+  fillProjectFilter();
+}
+function fillProjectFilter(){
+  const fc=$('#fClass').value;
+  const list=fc?state.projects.filter(p=>String(p.class_id)===fc):state.projects;
+  const cur=$('#fProject').value;
+  $('#fProject').innerHTML='<option value="">全部</option>'+list.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  if(cur&&list.some(p=>String(p.id)===cur))$('#fProject').value=cur;
 }
 function fillScorerSelect(){
-  const opts=state.scorers.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
-  $('#eScorer').innerHTML=opts||'<option value="">（先去「打分人」添加）</option>';
+  const o=state.scorers.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+  $('#eScorer').innerHTML=o||'<option value="">（先去「打分人」添加）</option>';
+}
+function fillDashFilter(){
+  const cur=$('#dClass').value;
+  $('#dClass').innerHTML='<option value="">全部班级</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  if(cur&&state.classes.some(c=>String(c.id)===cur)){$('#dClass').value=cur;}
+  else{dashFilter.classId='';}
 }
 function renderScorers(){
   if(!state.scorers.length){$('#scorerList').innerHTML='<div class="empty">还没有打分人，先在上方添加</div>';return;}
   $('#scorerList').innerHTML=state.scorers.map(s=>`<div class="kv"><span><b>${esc(s.name)}</b></span>
     <button class="danger small only-staff" onclick="delScorer(${s.id})">删除</button></div>`).join('');
 }
-window.delScorer=async(id)=>{
-  confirmDialog('删除打分人','删除名单中的打分人，历史记录仍保留其名字。',async()=>{
-    const {data}=await db.from('scorers').delete().eq('id',id).select();
-    if(!data||!data.length){toast('删除失败或无权限');return;}
-    toast('已删除');refreshMeta();
-  });
-};
-$('#scAdd').onclick=async()=>{
-  const name=$('#scName').value.trim();if(!name)return;
-  await db.from('scorers').insert({name});
-  $('#scName').value='';refreshMeta();
-};
-$('#tierCancel').onclick=()=>$('#tierModalBg').classList.add('hidden');
-$('#tierClear').onclick=()=>{
-  const pid=window._tierPid; batchDed[pid]=0;
-  const d=$('#ded_'+pid), c=$('#cur_'+pid);
-  if(d){d.textContent='扣分 0';d.style.background='';d.style.borderColor='';d.style.color='';}
-  if(c){c.textContent='100';c.style.color='#16a34a';}
-  $('#tierModalBg').classList.add('hidden');
-};
-function fillDashFilter(){
-  const cur=$('#dClass').value;
-  $('#dClass').innerHTML='<option value="">全部班级</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  if(cur)$('#dClass').value=cur;
-}
-function renderItemsForClass(){
-  const cid=Number($('#eClass').value||0);
-  if(!cid){$('#itemRows').innerHTML='<div class="empty">请先选择班级</div>';return;}
-  const list=state.projects.filter(p=>p.class_id===cid);
-  if(!list.length){
-    $('#itemRows').innerHTML=`<div class="empty">该班级暂无打分项。${state.isAdmin
-      ?'可在「项目管理」中添加，或 <button class="ghost small" onclick="seedDefaults()">一键添加默认四项</button>'
-      :'请联系总管理员在「项目管理」中添加打分项后即可打分。'}</div>`;
-    return;
-  }
-  $('#itemRows').innerHTML=list.map(p=>{
-    const ded=batchDed[p.id]||0, cur=Math.max(0,100-ded);
-    const on=ded>0;
-    return `<div class="batch-row">
-      <span class="bi-item">${esc(p.name)}</span>
-      <div class="bi-cur">当前：<b id="cur_${p.id}" style="color:${on?'#dc2626':'#16a34a'}">${cur}</b> / 100</div>
-      <button type="button" class="ded-btn" id="ded_${p.id}" onclick="openTier(${p.id})" style="${on?'background:#fee2e2;border-color:#fca5a5;color:#b91c1c;':''}">${on?('已扣 '+ded):'扣分 0'}</button>
-    </div>`;
-  }).join('');
-}
-function openTier(pid){
-  window._tierPid=pid;
-  const p=state.projects.find(x=>x.id===pid);
-  $('#tierTitle').textContent='选择「'+(p?p.name:'项目')+'」扣分（满分 100）';
-  $('#tierGrid').innerHTML=TIERS.map(t=>`<button type="button" class="tier-opt" onclick="selectTier(${t})">${t===0?'0<span style="font-size:11px;">（不扣）</span>':'-'+t}</button>`).join('');
-  $('#tierModalBg').classList.remove('hidden');
-}
-function selectTier(t){
-  const pid=window._tierPid; batchDed[pid]=t;
-  const d=$('#ded_'+pid), c=$('#cur_'+pid);
-  if(d){d.textContent=t>0?('已扣 '+t):'扣分 0';d.style.background=t>0?'#fee2e2':'';d.style.borderColor=t>0?'#fca5a5':'';d.style.color=t>0?'#b91c1c':'';}
-  if(c){c.textContent=Math.max(0,100-t);c.style.color=t>0?'#dc2626':'#16a34a';}
-  $('#tierModalBg').classList.add('hidden');
-}
-function resetBatch(){batchDed={};renderItemsForClass();}
-window.seedDefaults=async()=>{
-  const cid=Number($('#eClass').value||0);
-  if(!cid){toast('请先选择班级');return;}
-  try{
-    for(const name of ITEMS){
-      const {data}=await db.from('projects').select('id').eq('class_id',cid).eq('name',name).maybeSingle();
-      if(!data)await db.from('projects').insert({class_id:cid,name});
-    }
-    await logEvent('项目',`为 ${className(cid)} 添加默认四项常规项目`);
-    toast('已添加默认四项');refreshMeta();
-  }catch(e){toast('添加失败：'+(e.message||e));}
-};
 function renderClasses(){
   if(!state.classes.length){$('#classList').innerHTML='<div class="empty">还没有班级，先在上方添加</div>';return;}
   $('#classList').innerHTML=state.classes.map(c=>{
@@ -958,8 +1351,8 @@ function renderProjects(){
   let html='';
   state.classes.forEach(c=>{
     const list=byClass[c.id]||[];
-    html+=`<div style="margin:10px 0;"><b style="color:var(--blue)">${esc(c.name)}</b></div>`;
-    if(!list.length)html+='<div class="muted">— 暂无项目 —</div>';
+    html+=`<div style="margin:10px 0;"><b style="color:var(--blue-700)">${esc(c.name)}</b></div>`;
+    if(!list.length)html+='<div class="muted" style="padding:2px 0 6px;">— 暂无项目 —</div>';
     list.forEach(p=>{
       const cnt=state.scores.filter(s=>s.project_id===p.id).length;
       html+=`<div class="kv"><span>${esc(p.name)} <span class="badge">${cnt} 条</span></span>
@@ -970,223 +1363,366 @@ function renderProjects(){
   if(!state.classes.length)html='<div class="empty">还没有班级</div>';
   $('#projectList').innerHTML=html;
 }
-
-/* ============ RENDER: USERS ============ */
 function renderUsers(){
+  if(!state.isAdmin){$('#userList').innerHTML='<div class="empty">仅总管理员可查看</div>';return;}
   if(!state.profiles.length){$('#userList').innerHTML='<div class="empty">暂无用户</div>';return;}
   $('#userList').innerHTML=state.profiles.map(p=>{
-    const isMe=p.user_id===(state.user?state.user.id:'');
-    const sel=state.isAdmin?`<select onchange="setRole('${esc(p.user_id)}',this.value)">
+    const me=p.user_id===(state.user?state.user.id:'');
+    const sel=`<select onchange="setRole('${p.user_id}',this.value)" style="min-width:132px;min-height:40px;font-size:15px;">
       <option value="admin"${p.role==='admin'?' selected':''}>总管理员</option>
       <option value="sub"${p.role==='sub'?' selected':''}>子管理员</option>
-      <option value="visitor"${(p.role==='visitor'||!p.role)?' selected':''}>访客</option></select>`
-      :(ROLE_LABEL[p.role]||'访客');
-    return `<div class="kv"><span>${esc(p.email||p.user_id)} ${isMe?'<span class="badge">我</span>':''}</span>
-      <span class="only-admin">${sel}</span></div>`;
+      <option value="visitor"${(p.role==='visitor'||!p.role)?' selected':''}>访客</option></select>`;
+    return `<div class="kv"><span>${esc((p.email||p.user_id).split('@')[0])} ${me?'<span class="badge">我</span>':''}</span>${sel}</div>`;
   }).join('');
 }
 function renderInvites(){
   if(!state.isAdmin)return;
   const list=state.invites||[];
-  if(!list.length){$('#inviteList').innerHTML='<div class="muted">白名单为空。也可以让对方先登录一次，再在上方用户列表里直接改为「子管理员」。</div>';return;}
+  if(!list.length){$('#inviteList').innerHTML='<div class="muted">白名单为空。也可让对方先登录一次，再在上方用户列表里改为「子管理员」。</div>';return;}
   $('#inviteList').innerHTML=list.map(v=>`<div class="kv"><span><b>${esc(v.email)}</b>${v.note?` <span class="badge">${esc(v.note)}</span>`:''}</span>
     <button class="danger small" onclick="delInvite(${v.id})">移除</button></div>`).join('');
 }
-window.delInvite=async(id)=>{
-  confirmDialog('移出白名单','移除后该邮箱不再自动获得子管理员身份（若该账号已存在，请在上方用户列表里改为「访客」）。',async()=>{
-    const {data}=await db.from('staff_invites').delete().eq('id',id).select();
-    if(!data||!data.length){toast('删除失败或无权限');return;}
-    await logEvent('权限',`移出子管理员白名单 #${id}`);
-    toast('已移除');refreshMeta();
-  });
-};
-$('#invAdd').onclick=async()=>{
-  const email=$('#invEmail').value.trim().toLowerCase();
-  const note=$('#invNote').value.trim();
-  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('请输入正确的邮箱');return;}
-  try{
-    const {error}=await db.from('staff_invites').insert({email,note:note||null});
-    if(error){toast('添加失败：'+error.message);return;}
-    await logEvent('权限',`新增子管理员白名单 ${email}`);
-    $('#invEmail').value='';$('#invNote').value='';
-    toast('已加入白名单');refreshMeta();
-  }catch(e){toast('添加失败：'+(e.message||e));}
-};
-
-/* ============ RENDER: SNAPSHOTS ============ */
 function renderSnapshots(){
-  $('#bCloudN').textContent=(state.backups.length)+' / '+BK_KEEP;
-  const localN=localMirrors().length;
-  $('#bLocalN').textContent=localN+' / 3';
+  if(!state.isAdmin)return;
+  $('#bCloudN').textContent=state.backups.length+' / '+BK_KEEP;
+  $('#bLocalN').textContent=localMirrors().length+' / 3';
   let html='';
   if(state.backups.length){
     html+='<div class="section-title">云端快照</div>';
     html+='<div class="muted" style="margin-bottom:6px;">由服务器生成，含全部记录（不受页面显示上限影响）。</div>';
-    html+=state.backups.slice(0,BK_KEEP).map(b=>`<div class="kv"><span>${new Date(b.created_at).toLocaleString()}</span>
-      <button class="ghost small only-admin" onclick="restoreSnapshot(${b.id})">恢复</button></div>`).join('');
+    html+=state.backups.slice(0,BK_KEEP).map(b=>`<div class="kv"><span>${new Date(b.created_at).toLocaleString('zh-CN')}</span>
+      <button class="ghost small" onclick="restoreSnapshot(${b.id})">恢复</button></div>`).join('');
   }
   const lm=localMirrors();
   if(lm.length){
     html+='<div class="section-title">本机镜像</div>';
-    html+='<div class="muted" style="margin-bottom:6px;">存于本机浏览器、容量有限，只作离线应急；可能不含全部历史记录，不要当主备份用。</div>';
-    html+=lm.map((m,i)=>`<div class="kv"><span>镜像 #${i+1} · ${(m.at||'').slice(0,19).replace('T',' ')}</span>
-      <button class="ghost small only-admin" onclick="restoreLocal(${i})">恢复</button></div>`).join('');
+    html+='<div class="muted" style="margin-bottom:6px;">存于本机浏览器、容量有限，仅作离线应急；可能不含全部历史记录，不要当主备份。</div>';
+    html+=lm.map((m,i)=>`<div class="kv"><span>镜像 #${i+1} · ${esc((m.at||'').slice(0,19).replace('T',' '))}</span>
+      <button class="ghost small" onclick="restoreLocal(${i})">恢复</button></div>`).join('');
   }
   $('#snapshotList').innerHTML=html||'<div class="empty">暂无快照，点击「立即云端快照」</div>';
 }
-
-/* ============ ACTIONS: SCORE ============ */
-async function logEvent(type,summary){
-  try{await db.from('events').insert({type,summary,actor:state.user.email});}catch(e){}
+function renderItemsForClass(){
+  const cid=Number($('#eClass').value||0);
+  if(!cid){$('#itemRows').innerHTML='<div class="empty">请先选择班级</div>';return;}
+  const list=state.projects.filter(p=>p.class_id===cid);
+  if(!list.length){
+    $('#itemRows').innerHTML=`<div class="empty">该班级暂无打分项。${state.isAdmin
+      ?'可在「项目管理」中添加，或 <button class="ghost small" onclick="seedDefaults()">一键添加默认四项</button>'
+      :'请联系总管理员在「项目管理」中添加打分项后即可打分。'}</div>`;
+    return;
+  }
+  $('#itemRows').innerHTML=list.map(p=>{
+    const ded=batchDed[p.id]||0, cur=Math.max(0,n2(100-ded)), on=ded>0;
+    return `<div class="batch-row">
+      <span class="bi-item">${esc(p.name)}</span>
+      <div class="bi-cur">当前：<b id="cur_${p.id}" style="color:${on?'var(--red-600)':'var(--green-600)'}">${cur}</b> / 100</div>
+      <button type="button" class="ded-btn" id="ded_${p.id}" onclick="openTier(${p.id})" style="${on?'background:var(--red-100);border-color:#fca5a5;color:var(--red-600);':''}">${on?('已扣 '+ded):'扣分 0'}</button>
+    </div>`;
+  }).join('');
 }
-$('#eSubmit').onclick=async()=>{
-  const class_id=Number($('#eClass').value);
+
+/* ==================================================================
+   模块 5/6 · EVENTS
+   ================================================================== */
+$('#dClass').onchange=function(){dashFilter.classId=this.value;renderDash();};
+$('#dRange').onchange=function(){dashFilter.range=this.value;renderDash();};
+$('#dashRefresh').onclick=function(){renderDash();toast('看板已刷新');};
+$('#fClass').onchange=function(){fillProjectFilter();renderRecords();};
+$('#fProject').onchange=renderRecords;
+$('#recRefresh').onclick=function(){renderRecords();toast('已刷新');};
+$('#eClass').onchange=function(){batchDed={};renderItemsForClass();};
+$('#eScorer').onchange=function(){};
+
+$('#eSubmit').onclick=async function(){
+  const cid=Number($('#eClass').value||0);
   const scorer=$('#eScorer').value.trim();
-  if(!class_id){$('#entryErr').textContent='请选择班级';return;}
-  if(!scorer){$('#entryErr').textContent='请先在「打分人」中创建名单并选择打分人';return;}
-  const list=state.projects.filter(p=>p.class_id===class_id);
-  if(!list.length){$('#entryErr').textContent='该班级暂无项目，请先在「项目管理」添加';return;}
   const note=$('#eNote').value.trim();
-  $('#entryErr').textContent='';
+  const errEl=$('#entryErr'); errEl.textContent='';
+  if(!cid){errEl.textContent='请选择班级';return;}
+  if(!scorer){errEl.textContent='请选择打分人（先去「打分人」添加）';return;}
+  const list=state.projects.filter(p=>p.class_id===cid);
+  if(!list.length){errEl.textContent='该班级没有打分项目';return;}
+  const rows=list.map(p=>{
+    const ded=n2(batchDed[p.id]||0);
+    return {
+      class_id:cid, project_id:p.id, student_name:'全班',
+      deduction:ded, score:n2(100-ded), scorer, operator:scorer,
+      note:(note?note+' ':'')+(ded>0?('扣分 '+ded):'满分'),
+    };
+  });
+  const btn=this; btn.disabled=true; const old=btn.textContent; btn.textContent='保存中…';
   try{
-    for(const p of list){
-      const deduction=Number(batchDed[p.id]||0), score=Math.max(0,100-deduction);
-      await db.from('scores').insert({class_id,project_id:p.id,student_name:'全班',score,deduction,scorer,note,operator:state.user?state.user.email:''});
+    const {data,error}=await db.from('scores').insert(rows).select();
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('打分',`${className(cid)}：${scorer} 完成常规评分（${rows.map(r=>r.deduction>0?r.deduction:'0').join('/')}）`);
+    await refreshScores(true);
+    batchDed={}; $('#eNote').value='';
+    renderItemsForClass();
+    toast('已保存 '+rows.length+' 条');
+    setTimeout(()=>takeSnapshot(true),800);
+  }catch(e){ errEl.textContent='保存失败：'+(e.message||e); }
+  finally{ btn.disabled=false; btn.textContent=old; }
+};
+$('#eUndo').onclick=async function(){
+  const cid=Number($('#eClass').value||0);
+  const scorer=$('#eScorer').value.trim();
+  if(!cid||!scorer){toast('请先选班级和打分人');return;}
+  const mine=state.scores.filter(r=>r.class_id===cid&&(r.scorer===scorer||r.operator===scorer))
+    .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  if(!mine.length){toast('没有可撤销的记录');return;}
+  const t0=mine[0].created_at;
+  const batch=mine.filter(r=>Math.abs(new Date(r.created_at)-new Date(t0))<8000);
+  confirmBox('撤销上一笔',`将删除 ${scorer} 于 ${new Date(t0).toLocaleString('zh-CN')} 提交的 ${batch.length} 条记录，确定吗？`,async()=>{
+    try{
+      const ids=batch.map(r=>r.id);
+      const {error}=await db.from('scores').delete().in('id',ids);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('撤销',`${className(cid)}：撤销 ${scorer} 的一笔评分（${ids.length} 条）`);
+      await refreshScores(true);
+      toast('已撤销 '+ids.length+' 条');
+    }catch(e){toast('撤销失败：'+(e.message||e));}
+  });
+};
+let tierProjectId=null;
+window.openTier=function(pid){
+  tierProjectId=pid;
+  const cur=batchDed[pid]||0;
+  const grid=$('#tierGrid');
+  grid.innerHTML=TIERS.map(t=>{
+    const active=(Math.abs(t-cur)<1e-9);
+    return `<button type="button" class="tier-opt" onclick="pickTier(${t})" style="${active?'background:var(--blue-700);color:#fff;':''}">${t===0?'0（不扣）':t}</button>`;
+  }).join('');
+  $('#tierTitle').textContent='选择扣分 · '+(projectName(pid)||'')+'（当前 '+cur+'）';
+  $('#tierModalBg').classList.remove('hidden');
+};
+window.pickTier=function(t){
+  if(tierProjectId!=null){
+    if(t)batchDed[tierProjectId]=t; else delete batchDed[tierProjectId];
+    const p=state.projects.find(x=>x.id===tierProjectId);
+    if(p){
+      const curEl=$('#cur_'+tierProjectId), btn=$('#ded_'+tierProjectId);
+      const ded=batchDed[tierProjectId]||0, cur=Math.max(0,n2(100-ded)), on=ded>0;
+      if(curEl){curEl.textContent=cur;curEl.style.color=on?'var(--red-600)':'var(--green-600)';}
+      if(btn){btn.textContent=on?('已扣 '+ded):'扣分 0';
+        btn.style.cssText=on?'background:var(--red-100);border-color:#fca5a5;color:var(--red-600);':'';}
     }
-    await logEvent('批量打分',`${scorer} 录入 ${className(class_id)} ${list.length} 项常规评分（备注：${note||'无'}）`);
-    resetBatch(); $('#eNote').value='';
-    toast('已保存全班评分');refreshScores();
-  }catch(e){$('#entryErr').textContent='保存失败：'+(e.message||e);}
+  }
+  $('#tierModalBg').classList.add('hidden');
 };
-$('#eClass').onchange=()=>{resetBatch();};
-$('#eUndo').onclick=()=>{
-  if(!state.isStaff){toast('无权限');return;}
-  const scorer=($('#eScorer').value||'').trim();
-  const last=state.scores.find(r=>Number(r.deduction)>0&&(!scorer||r.scorer===scorer));
-  if(!last){toast('没有可撤销的扣分记录');return;}
-  confirmDialog('撤销上一笔',
-    `将撤销：${new Date(last.created_at).toLocaleString()} · ${className(last.class_id)} / ${projectName(last.project_id)} · 打分人 ${last.scorer||'—'} 扣 ${last.deduction} 分。该记录扣分归零，记录本身保留（子管理员无删除权限）。`,
-    async()=>{
-      const newNote=((last.note||'')+'（已撤销）');
-      const {data}=await db.from('scores').update({deduction:0,score:100,note:newNote,updated_at:new Date().toISOString()}).eq('id',last.id).select();
-      if(!data||!data.length){toast('撤销失败或无权限');return;}
-      await logEvent('撤销',`撤销 ${className(last.class_id)}/${projectName(last.project_id)} 的 ${last.deduction} 分扣分`);
-      toast('已撤销该笔扣分');refreshScores();
-    });
-};
-window.editScore=async(id)=>{
-  const r=state.scores.find(x=>x.id===id);if(!r)return;
-  $('#mScoreId').value=id;$('#scoreModalTitle').textContent='编辑记录';
-  $('#mClass').value=r.class_id;$('#mProject').value=r.project_id;
-  $('#mStudent').value=r.student_name;
-  $('#mDeduction').value=r.deduction||0;$('#mNote').value=r.note||'';
+$('#tierCancel').onclick=()=>$('#tierModalBg').classList.add('hidden');
+$('#tierClear').onclick=()=>{if(tierProjectId!=null)pickTier(0);};
+
+window.editScore=function(id){
+  const r=state.scores.find(x=>x.id===id); if(!r)return;
+  $('#mScoreId').value=id;
+  $('#mClass').value=String(r.class_id);
+  const po=state.projects.filter(p=>String(p.class_id)===String(r.class_id));
+  $('#mProject').innerHTML=po.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  $('#mProject').value=String(r.project_id);
+  $('#mStudent').value=r.student_name||'';
+  $('#mDeduction').value=r.deduction||0;
+  $('#mNote').value=r.note||'';
   $('#scoreModalErr').textContent='';
   $('#scoreModalBg').classList.remove('hidden');
 };
-window.delScore=async(id)=>{
-  if(!state.isAdmin){toast('子管理员无删除权限：请用「改」修正，或用「撤销上一笔」冲正');return;}
-  confirmDialog('删除记录','确定删除这条打分记录吗？不可撤销。',async()=>{
-    const {data}=await db.from('scores').delete().eq('id',id).select();
-    if(!data||!data.length){toast('删除失败或无权限');return;}
-    await logEvent('删除','删除一条打分记录');refreshScores();
-  });
+$('#mClass').onchange=function(){
+  const po=state.projects.filter(p=>String(p.class_id)===this.value);
+  $('#mProject').innerHTML=po.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
 };
 $('#scoreCancel').onclick=()=>$('#scoreModalBg').classList.add('hidden');
-$('#scoreSave').onclick=async()=>{
-  const id=Number($('#mScoreId').value);
-  const class_id=Number($('#mClass').value),project_id=Number($('#mProject').value);
-  const student_name=$('#mStudent').value.trim();
-  const deduction=Number($('#mDeduction').value||0);
-  const score=Math.max(0,100-deduction);
-  const note=$('#mNote').value.trim();
-  if(!class_id||!project_id||!student_name){$('#scoreModalErr').textContent='请填写完整';return;}
-  const {data}=await db.from('scores').update({class_id,project_id,student_name,score,deduction,note,updated_at:new Date().toISOString()}).eq('id',id).select();
-  if(!data||!data.length){$('#scoreModalErr').textContent='保存失败或无权限';return;}
-  await logEvent('编辑',`编辑 ${student_name} 的记录`);
-  $('#scoreModalBg').classList.add('hidden');refreshScores();
+$('#scoreSave').onclick=async function(){
+  const id=$('#mScoreId').value;
+  const ded=n2($('#mDeduction').value||0);
+  const payload={
+    class_id:Number($('#mClass').value),
+    project_id:Number($('#mProject').value),
+    student_name:$('#mStudent').value.trim()||'全班',
+    deduction:ded, score:n2(100-ded),
+    note:$('#mNote').value.trim(),
+    updated_at:new Date().toISOString(),
+  };
+  try{
+    const {error}=await db.from('scores').update(payload).eq('id',id);
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('修改',`修改记录 #${id}（${className(payload.class_id)} · ${projectName(payload.project_id)}）扣分 ${ded}`);
+    await refreshScores(true);
+    $('#scoreModalBg').classList.add('hidden');
+    toast('已保存');
+  }catch(e){$('#scoreModalErr').textContent='保存失败：'+(e.message||e);}
 };
-
-/* ============ ACTIONS: CLASS / PROJECT ============ */
-$('#cAdd').onclick=async()=>{
-  const name=$('#cName').value.trim();if(!name)return;
-  await db.from('classes').insert({name});
-  await logEvent('班级',`新建班级 ${name}`);
-  $('#cName').value='';refreshMeta();
-};
-window.renameClass=async(id)=>{
-  const c=state.classes.find(x=>x.id===id);const old=c?.name||'';
-  const name=prompt('重命名班级：',old);if(!name||!name.trim())return;
-  const {data}=await db.from('classes').update({name:name.trim(),updated_at:new Date().toISOString()}).eq('id',id).select();
-  if(!data||!data.length){toast('无权限');return;}
-  await logEvent('班级',`班级重命名为 ${name.trim()}`);
-  refreshMeta();
-};
-window.delClass=async(id)=>{
-  const c=state.classes.find(x=>x.id===id);if(!c)return;
-  confirmDialog('删除班级',`删除「${c.name}」将同时删除其下所有项目与打分记录，不可撤销。`,async()=>{
-    await db.from('scores').delete().eq('class_id',id);
-    await db.from('projects').delete().eq('class_id',id);
-    const {data}=await db.from('classes').delete().eq('id',id).select();
-    if(!data||!data.length){toast('无权限');return;}
-    await logEvent('班级',`删除班级 ${c.name}`);refreshMeta();refreshScores();
+window.delScore=function(id){
+  const r=state.scores.find(x=>x.id===id);
+  confirmBox('删除记录',`确定删除「${className(r?.class_id)} · ${projectName(r?.project_id)}」该条记录？删除后不可恢复。`,async()=>{
+    try{
+      const {error}=await db.from('scores').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除',`删除记录 #${id}（${className(r?.class_id)} · ${projectName(r?.project_id)}）`);
+      await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
   });
 };
-$('#pAdd').onclick=async()=>{
-  const class_id=Number($('#pClass').value),name=$('#pName').value.trim();if(!class_id||!name)return;
-  await db.from('projects').insert({class_id,name});
-  await logEvent('项目',`新建项目 ${name}`);
-  $('#pName').value='';refreshMeta();
+$('#cAdd').onclick=async function(){
+  const name=$('#cName').value.trim(); if(!name){toast('请输入班级名称');return;}
+  try{
+    const {error}=await db.from('classes').insert({name});
+    if(error)throw error;
+    $('#cName').value='';
+    await logEvent('新增班级',name);
+    await refreshMeta(true); toast('已添加班级');
+  }catch(e){toast('添加失败：'+(e.message||e));}
 };
-window.renameProject=async(id)=>{
-  const p=state.projects.find(x=>x.id===id);const old=p?.name||'';
-  const name=prompt('重命名项目：',old);if(!name||!name.trim())return;
-  const {data}=await db.from('projects').update({name:name.trim(),updated_at:new Date().toISOString()}).eq('id',id).select();
-  if(!data||!data.length){toast('无权限');return;}
-  await logEvent('项目',`项目重命名为 ${name.trim()}`);refreshMeta();
-};
-window.delProject=async(id)=>{
-  const p=state.projects.find(x=>x.id===id);if(!p)return;
-  confirmDialog('删除项目',`删除「${p.name}」将同时删除其下打分记录。`,async()=>{
-    await db.from('scores').delete().eq('project_id',id);
-    const {data}=await db.from('projects').delete().eq('id',id).select();
-    if(!data||!data.length){toast('无权限');return;}
-    await logEvent('项目',`删除项目 ${p.name}`);refreshMeta();refreshScores();
+window.renameClass=function(id){
+  const c=state.classes.find(x=>x.id===id); if(!c)return;
+  const nv=prompt('新的班级名称',c.name); if(nv==null)return;
+  const name=nv.trim(); if(!name)return;
+  db.from('classes').update({name}).eq('id',id).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名班级',c.name+' → '+name).then(()=>refreshMeta(true));
+    toast('已重命名');
   });
 };
-window.setRole=async(uid,role)=>{
-  if(!state.isAdmin){toast('仅总管理员可修改权限');return;}
-  const me=state.user?state.user.id:'';
-  if(uid===me&&role!=='admin'){
-    confirmDialog('降低自己的权限',`你将把自己改为「${ROLE_LABEL[role]||role}」，确认后立即失去管理入口。确定继续？`,async()=>{
-      const {data}=await db.from('profiles').update({role}).eq('user_id',uid).select();
-      if(!data||!data.length){toast('保存失败或无权限');return;}
-      await logEvent('权限',`角色改为 ${role}`);
-      toast('权限已更新');await loadProfile();applyRole();refreshMeta();
-    });
-    return;
-  }
-  const {data}=await db.from('profiles').update({role}).eq('user_id',uid).select();
-  if(!data||!data.length){toast('保存失败或无权限');return;}
-  await logEvent('权限',`账号角色改为 ${role}`);
-  toast('权限已更新');refreshMeta();
+window.delClass=function(id){
+  const c=state.classes.find(x=>x.id===id);
+  const cnt=state.scores.filter(s=>s.class_id===id).length;
+  confirmBox('删除班级',`确定删除「${c?.name}」？其下 ${cnt} 条打分记录与该班项目也会一并删除，不可恢复。`,async()=>{
+    try{
+      await db.from('scores').delete().eq('class_id',id);
+      await db.from('projects').delete().eq('class_id',id);
+      const {error}=await db.from('classes').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除班级',c?.name+`（含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
 };
-
-/* ============ DASHBOARD FILTERS ============ */
-$('#dClass').onchange=()=>{dashFilter.classId=$('#dClass').value;renderDash();};
-$('#dRange').onchange=()=>{dashFilter.range=$('#dRange').value;renderDash();};
-$('#dashRefresh').onclick=()=>{refreshScores();refreshMeta();};
-
-/* ============ RECORDS FILTERS ============ */
-$('#fClass').onchange=()=>{fillProjectFilter();renderRecords();};
-$('#fProject').onchange=renderRecords;
-function fillProjectFilter(){
-  const fc=$('#fClass').value;
-  const list=fc?state.projects.filter(p=>String(p.class_id)===fc):state.projects;
-  $('#fProject').innerHTML='<option value="">全部</option>'+list.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+$('#pAdd').onclick=async function(){
+  const cid=Number($('#pClass').value||0), name=$('#pName').value.trim();
+  if(!cid){toast('请先建班级');return;}
+  if(!name){toast('请输入项目名称');return;}
+  try{
+    const {error}=await db.from('projects').insert({class_id:cid,name});
+    if(error)throw error;
+    $('#pName').value='';
+    await logEvent('新增项目',className(cid)+' · '+name);
+    await refreshMeta(true); toast('已添加项目');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.renameProject=function(id){
+  const p=state.projects.find(x=>x.id===id); if(!p)return;
+  const nv=prompt('新的项目名称',p.name); if(nv==null)return;
+  const name=nv.trim(); if(!name)return;
+  db.from('projects').update({name}).eq('id',id).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名项目',p.name+' → '+name).then(()=>refreshMeta(true));
+    toast('已重命名');
+  });
+};
+window.delProject=function(id){
+  const p=state.projects.find(x=>x.id===id);
+  const cnt=state.scores.filter(s=>s.project_id===id).length;
+  confirmBox('删除项目',`确定删除「${p?.name}」？关联 ${cnt} 条打分记录会一并删除。`,async()=>{
+    try{
+      await db.from('scores').delete().eq('project_id',id);
+      const {error}=await db.from('projects').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除项目',p?.name+`（含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+window.seedDefaults=async function(){
+  const cid=Number($('#eClass').value||0); if(!cid)return;
+  try{
+    const rows=ITEMS.map(n=>({class_id:cid,name:n}));
+    const {error}=await db.from('projects').insert(rows);
+    if(error)throw error;
+    await logEvent('新增项目',className(cid)+' 追加默认四项');
+    await refreshMeta(true); toast('已添加默认四项');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+$('#scAdd').onclick=async function(){
+  const name=$('#scName').value.trim(); if(!name){toast('请输入姓名');return;}
+  try{
+    const {error}=await db.from('scorers').insert({name});
+    if(error)throw error;
+    $('#scName').value='';
+    await logEvent('新增打分人',name);
+    await refreshMeta(true); toast('已添加');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.delScorer=function(id){
+  const s=state.scorers.find(x=>x.id===id);
+  confirmBox('删除打分人',`确定删除「${s?.name}」？历史记录里的名字会保留。`,async()=>{
+    const {error}=await db.from('scorers').delete().eq('id',id);
+    if(error)return toast('删除失败：'+error.message);
+    await refreshMeta(true); toast('已删除');
+  });
+};
+window.setRole=async function(uid,role){
+  if(!state.isAdmin)return toast('需要总管理员权限');
+  if(uid===(state.user?state.user.id:'')){ return toast('不能修改自己的角色'); }
+  try{
+    const {error}=await db.from('profiles').update({role}).eq('user_id',uid);
+    if(error)throw error;
+    await logEvent('权限变更',`用户 ${uid} → ${ROLE_LABEL[role]||role}`);
+    await refreshMeta(true); toast('已更新为'+(ROLE_LABEL[role]||role));
+  }catch(e){toast('更新失败：'+(e.message||e));}
+};
+$('#invAdd').onclick=async function(){
+  const email=$('#invEmail').value.trim().toLowerCase();
+  const note=$('#invNote').value.trim();
+  if(!email||!email.includes('@')){toast('请输入有效邮箱');return;}
+  try{
+    const {error}=await db.from('staff_invites').insert({email,note});
+    if(error)throw error;
+    $('#invEmail').value='';$('#invNote').value='';
+    await logEvent('新增白名单',email);
+    await refreshMeta(true); toast('已加入白名单');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.delInvite=function(id){
+  confirmBox('移出白名单','确定移出该邮箱？对方将失去子管理员身份。',async()=>{
+    const {error}=await db.from('staff_invites').delete().eq('id',id);
+    if(error)return toast('操作失败：'+error.message);
+    await refreshMeta(true); toast('已移出');
+  });
+};
+async function logEvent(kind,summary){
+  try{
+    await db.from('events').insert({kind,summary,actor:(state.user?.email)||'匿名'});
+  }catch(e){}
 }
-$('#recRefresh').onclick=refreshScores;
-
-/* ============ BACKUP ============ */
+let confirmCb=null;
+function confirmBox(title,text,cb){
+  $('#confirmTitle').textContent=title;
+  $('#confirmText').textContent=text;
+  confirmCb=cb;
+  $('#confirmBg').classList.remove('hidden');
+}
+$('#confirmCancel').onclick=()=>{$('#confirmBg').classList.add('hidden');confirmCb=null;};
+$('#confirmOk').onclick=async function(){
+  $('#confirmBg').classList.add('hidden');
+  const cb=confirmCb; confirmCb=null;
+  if(cb)await cb();
+};
+const MIRROR_KEY = 'wb_mirrors';
+function localMirrors(){ try{ return JSON.parse(localStorage.getItem(MIRROR_KEY)||'[]'); }catch(e){ return []; } }
+function writeLocalMirror(){
+  try{
+    const p={at:new Date().toISOString(),classes:state.classes,projects:state.projects,scores:state.scores};
+    const lm=localMirrors(); lm.unshift(p);
+    while(lm.length>3)lm.pop();
+    while(lm.length>1 && JSON.stringify(lm).length>2000000)lm.pop();
+    localStorage.setItem(MIRROR_KEY,JSON.stringify(lm));
+  }catch(e){}
+}
 async function fetchFullPayload(){
   const {data,error}=await db.rpc('dump_payload');
   if(error)throw error;
@@ -1194,210 +1730,322 @@ async function fetchFullPayload(){
 }
 function backupSig(){
   let h=5381;
-  const add=s=>{for(let i=0;i<s.length;i++)h=((h*33)^s.charCodeAt(i))|0;};
+  const add=s=>{ for(let i=0;i<s.length;i++)h=((h*33)^s.charCodeAt(i))|0; };
   (state.classes||[]).forEach(c=>add('c'+c.id+'|'+c.name+'|'+(c.updated_at||'')));
-  (state.projects||[]).forEach(p=>add('p'+p.id+'|'+p.class_id+'|'+p.name+'|'+(p.updated_at||'')));
+  (state.projects||[]).forEach(p=>add('p'+p.id+'|'+p.class_id+'|'+p.name));
   (state.scores||[]).forEach(r=>add('s'+r.id+'|'+r.project_id+'|'+r.score+'|'+r.deduction+'|'+(r.updated_at||'')));
   add('#'+(state.classes||[]).length+'/'+(state.projects||[]).length+'/'+(state.scores||[]).length);
   return String(h);
-}
-function writeLocalMirror(){
-  try{
-    const p={at:new Date().toISOString(),classes:state.classes,projects:state.projects,scores:state.scores};
-    const lm=localMirrors();lm.unshift(p);
-    while(lm.length>3)lm.pop();
-    while(lm.length>1&&JSON.stringify(lm).length>2000000)lm.pop();
-    localStorage.setItem('wb_mirrors',JSON.stringify(lm));
-  }catch(e){}
 }
 async function takeSnapshot(silent,force){
   if(!state.isAdmin)return;
   const sig=backupSig(), now=Date.now();
   if(!force){
     if(sig===bkLastSig)return;
-    if(bkLastAt&&now-bkLastAt<BK_MIN_GAP)return;
+    if(bkLastAt && now-bkLastAt<BK_MIN_GAP)return;
   }
   try{
     const {error}=await db.rpc('make_snapshot',{p_kind:'snapshot',p_keep:BK_KEEP});
     if(error)throw error;
-    bkLastSig=sig;bkLastAt=now;
+    bkLastSig=sig; bkLastAt=now;
     writeLocalMirror();
-    if(!silent)toast('已备份');refreshMeta();
-  }catch(e){if(!silent)toast('备份失败：'+(e.message||e));}
+    if(!silent)toast('已备份');
+    refreshMeta(true);
+  }catch(e){ if(!silent)toast('备份失败：'+(e.message||e)); }
 }
 $('#bSnapshot').onclick=()=>takeSnapshot(false,true);
-
-function localMirrors(){try{return JSON.parse(localStorage.getItem('wb_mirrors')||'[]');}catch(e){return [];}}
-
-$('#bJson').onclick=async()=>{
+function pickClassId(s,clsById,clsByName){
+  if(s.className && clsByName[s.className]!=null) return clsByName[s.className];
+  if(s.class_id!=null && clsById[s.class_id]!=null) return clsById[s.class_id];
+  return null;
+}
+function pickProjectId(s,cid,projById,projByKey){
+  if(s.projectName && projByKey[s.projectName+'@'+cid]!=null) return projByKey[s.projectName+'@'+cid];
+  if(s.project_id!=null && projById[s.project_id]!=null) return projById[s.project_id];
+  return null;
+}
+function scoreRow(s,class_id,project_id){
+  const ded=n2(s.deduction||0);
+  return {
+    class_id, project_id,
+    student_name: s.student_name||'全班',
+    score: (s.score!=null && s.score!=='') ? Number(s.score) : n2(100-ded),
+    deduction: ded,
+    note: s.note||'',
+    scorer: s.scorer||s.operator||'',
+    operator: s.operator||s.scorer||(state.user?state.user.email:'')||'',
+    created_at: s.created_at||new Date().toISOString(),
+  };
+}
+async function insertChunks(rows){
+  for(let i=0;i<rows.length;i+=200){
+    const {error}=await db.from('scores').insert(rows.slice(i,i+200));
+    if(error)throw error;
+  }
+  state.watermark.scores=null; lastScoresJson='';
+}
+async function replaceAllFrom(p){
+  await db.from('scores').delete().neq('id',0);
+  await db.from('projects').delete().neq('id',0);
+  await db.from('classes').delete().neq('id',0);
+  const clsById={}, clsByName={};
+  for(const c of (p.classes||[])){
+    const ins=await db.from('classes').insert({name:c.name}).select();
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    if(!nid)continue;
+    clsByName[c.name]=nid;
+    if(c.id!=null)clsById[c.id]=nid;
+  }
+  const projById={}, projByKey={};
+  for(const x of (p.projects||[])){
+    const cid = (x.className&&clsByName[x.className]!=null) ? clsByName[x.className]
+              : (x.class_id!=null ? clsById[x.class_id] : null);
+    if(cid==null)continue;
+    const ins=await db.from('projects').insert({class_id:cid,name:x.name}).select();
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    if(!nid)continue;
+    projByKey[x.name+'@'+cid]=nid;
+    if(x.id!=null)projById[x.id]=nid;
+  }
+  const rows=[];
+  for(const s of (p.scores||[])){
+    const cid=pickClassId(s,clsById,clsByName);
+    if(cid==null)continue;
+    const pid=pickProjectId(s,cid,projById,projByKey);
+    if(pid==null)continue;
+    rows.push(scoreRow(s,cid,pid));
+  }
+  await insertChunks(rows);
+  await logEvent('恢复','全量替换 '+rows.length+' 条记录');
+  await refreshMeta(true); await refreshScores(true);
+  return rows.length;
+}
+async function mergePayload(p){
+  const clsByName={};
+  for(const c of (p.classes||[])){
+    const {data}=await db.from('classes').select('id').eq('name',c.name).maybeSingle();
+    let cid=data&&data.id;
+    if(!cid){
+      const ins=await db.from('classes').insert({name:c.name}).select();
+      cid=ins.data&&ins.data[0]&&ins.data[0].id;
+    }
+    if(cid)clsByName[c.name]=cid;
+  }
+  const projByKey={}, projById={};
+  for(const x of (p.projects||[])){
+    const cid = (x.className&&clsByName[x.className]!=null) ? clsByName[x.className]
+              : (x.class_id!=null ? x.class_id : null);
+    if(cid==null)continue;
+    const {data}=await db.from('projects').select('id').eq('name',x.name).eq('class_id',cid).maybeSingle();
+    let pid=data&&data.id;
+    if(!pid){
+      const ins=await db.from('projects').insert({class_id:cid,name:x.name}).select();
+      pid=ins.data&&ins.data[0]&&ins.data[0].id;
+    }
+    if(pid){ projByKey[x.name+'@'+cid]=pid; if(x.id!=null)projById[x.id]=pid; }
+  }
+  const rows=[];
+  for(const s of (p.scores||[])){
+    let cid=null;
+    if(s.className){
+      if(clsByName[s.className]==null){
+        const {data}=await db.from('classes').select('id').eq('name',s.className).maybeSingle();
+        if(data)clsByName[s.className]=data.id;
+      }
+      cid=clsByName[s.className]!=null?clsByName[s.className]:null;
+    }
+    if(cid==null && s.class_id!=null) cid=s.class_id;
+    if(cid==null)continue;
+    let pid=null;
+    if(s.projectName && projByKey[s.projectName+'@'+cid]==null){
+      const {data}=await db.from('projects').select('id').eq('name',s.projectName).eq('class_id',cid).maybeSingle();
+      if(data)projByKey[s.projectName+'@'+cid]=data.id;
+    }
+    pid = pickProjectId(s,cid,projById,projByKey);
+    if(pid==null)continue;
+    rows.push(scoreRow(s,cid,pid));
+  }
+  await insertChunks(rows);
+  return rows.length;
+}
+window.restoreSnapshot=function(id){
+  confirmBox('恢复云端快照','将用该快照覆盖当前数据（恢复前会自动再备份当前状态）。确定吗？',async()=>{
+    try{
+      await takeSnapshot(true,true);
+      const {data,error}=await db.from('backups').select('payload').eq('id',id).maybeSingle();
+      if(error)throw error;
+      if(!data||!data.payload){toast('快照不存在');return;}
+      await replaceAllFrom(data.payload);
+      toast('已恢复');
+    }catch(e){toast('恢复失败：'+(e.message||e));}
+  });
+};
+window.restoreLocal=function(i){
+  const m=localMirrors()[i]; if(!m)return;
+  confirmBox('恢复本机镜像','将用本机镜像覆盖当前数据（恢复前会自动再备份当前状态）。确定吗？',async()=>{
+    try{
+      await takeSnapshot(true,true);
+      await replaceAllFrom(m);
+      toast('已恢复本机镜像');
+    }catch(e){toast('恢复失败：'+(e.message||e));}
+  });
+};
+$('#bJson').onclick=async function(){
   try{
     const data=await fetchFullPayload();
-    download('班级打分台_'+stamp()+'.json',JSON.stringify(data,null,2),'application/json');
+    download('班级打分台_备份_'+stamp()+'.json',JSON.stringify(data,null,2),'application/json');
     toast('已导出 JSON（'+((data.scores||[]).length)+' 条）');
   }catch(e){toast('导出失败：'+(e.message||e));}
 };
-$('#bCsv').onclick=async()=>{
+$('#bCsv').onclick=async function(){
   try{
     const data=await fetchFullPayload();
-    const rows=(data.scores||[]).map(r=>[className(r.class_id),projectName(r.project_id),r.student_name,r.score,r.deduction,r.note||'',r.operator||'']);
-    const csv='班级,项目,对象,分值,扣分,备注,录入人\n'+rows.map(r=>r.map(csvCell).join(',')).join('\n');
-    download('班级打分台_'+stamp()+'.csv',csv,'text/csv;charset=utf-8');
-    toast('已导出 CSV（'+rows.length+' 条）');
+    const head=['时间','班级','项目','对象','分值','扣分','备注','录入人'];
+    const lines=[head.join(',')].concat((data.scores||[]).map(r=>[
+      r.created_at?new Date(r.created_at).toLocaleString('zh-CN'):'',
+      className(r.class_id),projectName(r.project_id),r.student_name,
+      r.score,r.deduction||0,r.note||'',r.scorer||r.operator||''
+    ].map(csvCell).join(',')));
+    download('班级打分台_记录_'+stamp()+'.csv','\ufeff'+lines.join('\r\n'),'text/csv;charset=utf-8');
+    toast('已导出 CSV（'+(data.scores||[]).length+' 条）');
   }catch(e){toast('导出失败：'+(e.message||e));}
 };
-function csvCell(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
-function stamp(){return new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');}
-function download(name,content,type){
-  const blob=new Blob([content],{type});const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);
+function parseCSV(txt){
+  const rows=[];let cur=[],cell='',q=false;
+  for(let i=0;i<txt.length;i++){
+    const ch=txt[i];
+    if(q){
+      if(ch==='"'){ if(txt[i+1]==='"'){cell+='"';i++;} else q=false; }
+      else cell+=ch;
+    }else{
+      if(ch==='"')q=true;
+      else if(ch===','){cur.push(cell);cell='';}
+      else if(ch==='\n'){cur.push(cell);rows.push(cur);cur=[];cell='';}
+      else if(ch!=='\r')cell+=ch;
+    }
+  }
+  if(cell!==''||cur.length){cur.push(cell);rows.push(cur);}
+  return rows.filter(r=>r.some(c=>String(c).trim()!==''));
 }
-
-$('#bImportMerge').onclick=()=>importFile(false);
-$('#bImportOver').onclick=()=>importFile(true);
-async function importFile(overwrite){
-  const f=$('#bFile').files[0];if(!f){toast('请先选择文件');return;}
-  const text=await f.text();
+function csvToPayload(txt){
+  const rows=parseCSV(txt);
+  if(rows.length<2)return {classes:[],projects:[],scores:[]};
+  const head=rows[0].map(s=>String(s).trim());
+  const pick=(c,names)=>{
+    for(const n of names){
+      const i=head.findIndex(h=>h.includes(n));
+      if(i>=0 && c[i]!=null && String(c[i]).trim()!=='') return String(c[i]).trim();
+    }
+    return '';
+  };
+  const classes={},projects={},scores=[];
+  for(let i=1;i<rows.length;i++){
+    const c=rows[i];
+    const cn=pick(c,['班级']);
+    const pn=pick(c,['项目']);
+    if(!cn||!pn)continue;
+    if(!classes[cn])classes[cn]={name:cn};
+    if(!projects[cn+'>'+pn])projects[cn+'>'+pn]={name:pn,className:cn};
+    const ded=n2(Number(pick(c,['扣分'])||0));
+    const rawScore=pick(c,['分值','得分']);
+    let created_at=new Date().toISOString();
+    const tRaw=pick(c,['时间']);
+    if(tRaw){ const d=new Date(tRaw.replace(/\//g,'-')); if(!isNaN(d.getTime()))created_at=d.toISOString(); }
+    scores.push({
+      className:cn, projectName:pn,
+      student_name: pick(c,['对象','学生'])||'全班',
+      score: rawScore==='' ? n2(100-ded) : Number(rawScore),
+      deduction: ded,
+      note: pick(c,['备注']),
+      scorer: pick(c,['录入人','打分人']),
+      operator: pick(c,['录入人','打分人']),
+      created_at,
+    });
+  }
+  return {classes:Object.values(classes),projects:Object.values(projects),scores};
+}
+async function doImport(mode){
+  const f=$('#bFile').files[0]; if(!f){toast('请先选择文件');return;}
+  const txt=await f.text();
   let payload;
-  if(f.name.endsWith('.json')){payload=JSON.parse(text);}
-  else{payload=csvToPayload(text);}
-  if(overwrite){
-    confirmDialog('覆盖导入',`将清空现有「班级/项目/打分」后写入文件内容，不可撤销。`,async()=>{
+  try{
+    const t=txt.trim();
+    if(/\.json$/i.test(f.name)||t.startsWith('{')||t.startsWith('[')){
+      const parsed=JSON.parse(txt);
+      payload=Array.isArray(parsed)?{scores:parsed}:parsed;
+    }else{
+      payload=csvToPayload(txt);
+    }
+  }catch(e){ toast('文件解析失败：'+(e.message||e)); return; }
+  const run=async()=>{
+    try{
+      await takeSnapshot(true,true);
+      if(mode==='overwrite'){
+        const n=await replaceAllFrom(payload);
+        toast('覆盖导入完成：'+n+' 条');
+      }else{
+        const n=await mergePayload(payload);
+        await logEvent('合并导入','写入 '+n+' 条记录');
+        await refreshMeta(true); await refreshScores(true);
+        toast(n?('合并导入完成：'+n+' 条'):'没有可导入的新行（班级/项目未匹配）');
+      }
+    }catch(e){toast('导入失败：'+(e.message||e));}
+    finally{ $('#bFile').value=''; }
+  };
+  if(mode==='overwrite'){
+    confirmBox('覆盖导入','将清空现有「班级 / 项目 / 打分记录」后写入文件内容，不可撤销。确定吗？',run);
+  }else{
+    await run();
+  }
+}
+$('#bImportMerge').onclick=()=>doImport('merge');
+$('#bImportOver').onclick=()=>doImport('overwrite');
+$('#bClear').onclick=function(){
+  confirmBox('清空全部数据','将删除所有打分记录、项目与班级（账户与权限保留）。此操作不可恢复，确定吗？',async()=>{
+    try{
       await takeSnapshot(true,true);
       await db.from('scores').delete().neq('id',0);
       await db.from('projects').delete().neq('id',0);
       await db.from('classes').delete().neq('id',0);
-      await applyPayload(payload);
-    });
-  }else{
-    await applyPayload(payload);
-  }
-}
-function csvToPayload(text){
-  const lines=text.split(/\r?\n/).filter(l=>l.trim());
-  const head=lines[0].split(',').map(s=>s.trim());
-  const classes={},projects={},scores=[];
-  for(let i=1;i<lines.length;i++){
-    const cells=lines[i].split(',');
-    const obj={};head.forEach((h,j)=>obj[h]=cells[j]);
-    const cn=obj['班级']||'',pn=obj['项目']||'';
-    if(cn&&!classes[cn])classes[cn]={name:cn};
-    if(pn&&!projects[cn+'>'+pn])projects[cn+'>'+pn]={name:pn,className:cn};
-    scores.push({className:cn,projectName:pn,student_name:obj['对象']||obj['学生']||'',score:obj['分值']===''||obj['分值']==null?null:Number(obj['分值']),
-      deduction:Number(obj['扣分']||0),note:obj['备注']||'',operator:obj['录入人']||''});
-  }
-  return {classes:Object.values(classes),projects:Object.values(projects),scores};
-}
-async function applyPayload(payload){
-  try{
-    const clsMap={};
-    for(const c of (payload.classes||[])){
-      const {data}=await db.from('classes').select('id').eq('name',c.name).maybeSingle();
-      let cid;
-      if(data){cid=data.id;}else{const ins=await db.from('classes').insert({name:c.name}).select();cid=ins.data?.[0]?.id;}
-      if(cid)clsMap[c.name]=cid;
-    }
-    const projMap={};
-    for(const p of (payload.projects||[])){
-      const cid=clsMap[p.className]||(p.class_id!=null?Number(p.class_id):null);
-      if(cid==null)continue;
-      const {data}=await db.from('projects').select('id').eq('name',p.name).eq('class_id',cid).maybeSingle();
-      let pid;
-      if(data){pid=data.id;}else{const ins=await db.from('projects').insert({class_id:cid,name:p.name}).select();pid=ins.data?.[0]?.id;}
-      if(pid)projMap[p.name+'@'+cid]=pid;
-    }
-    for(const s of (payload.scores||[])){
-      const cid=clsMap[s.className]||(s.class_id!=null?Number(s.class_id):null);
-      const pid=projMap[s.projectName+'@'+cid]||(s.project_id!=null?Number(s.project_id):null);
-      if(cid==null||pid==null)continue;
-      await db.from('scores').insert({class_id:cid,project_id:pid,student_name:s.student_name,score:s.score,deduction:s.deduction||0,note:s.note||'',operator:s.operator||state.user.email});
-    }
-    await logEvent('导入',`导入数据（${overwrite?'覆盖':'合并'}）`);
-    toast('导入完成');refreshMeta();refreshScores();
-  }catch(e){toast('导入失败：'+(e.message||e));}
-}
-
-window.restoreSnapshot=async(id)=>{
-  confirmDialog('恢复云端快照',`将用该快照覆盖当前数据，恢复前会自动再备份当前状态。`,async()=>{
-    await takeSnapshot(true,true);
-    const {data}=await db.from('backups').select('payload').eq('id',id).maybeSingle();
-    if(!data){toast('快照不存在');return;}
-    await db.from('scores').delete().neq('id',0);
-    await db.from('projects').delete().neq('id',0);
-    await db.from('classes').delete().neq('id',0);
-    const clsMap={};
-    for(const c of (data.payload.classes||[])){const ins=await db.from('classes').insert({name:c.name}).select();clsMap[c.id]=ins.data?.[0]?.id;}
-    const projMap={};
-    for(const p of (data.payload.projects||[])){const cid=clsMap[p.class_id];if(!cid)continue;const ins=await db.from('projects').insert({class_id:cid,name:p.name}).select();projMap[p.id]=ins.data?.[0]?.id;}
-    for(const s of (data.payload.scores||[])){const cid=clsMap[s.class_id];const pid=projMap[s.project_id];if(!cid||!pid)continue;await db.from('scores').insert({class_id:cid,project_id:pid,student_name:s.student_name,score:s.score,deduction:s.deduction||0,note:s.note||'',operator:s.operator||''});}
-    await logEvent('恢复','从云端快照恢复数据');toast('已恢复');refreshMeta();refreshScores();
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('清空数据','清空了全部记录 / 项目 / 班级');
+      await refreshMeta(true); await refreshScores(true);
+      toast('已清空');
+    }catch(e){toast('清空失败：'+(e.message||e));}
   });
 };
-window.restoreLocal=async(i)=>{
-  const lm=localMirrors();const payload=lm[i];if(!payload)return;
-  confirmDialog('恢复本机镜像',`将用本机镜像覆盖当前数据，恢复前会自动再备份当前状态。`,async()=>{
-    await takeSnapshot(true,true);
-    await db.from('scores').delete().neq('id',0);
-    await db.from('projects').delete().neq('id',0);
-    await db.from('classes').delete().neq('id',0);
-    const clsMap={};
-    for(const c of (payload.classes||[])){const ins=await db.from('classes').insert({name:c.name}).select();clsMap[c.id]=ins.data?.[0]?.id;}
-    const projMap={};
-    for(const p of (payload.projects||[])){const cid=clsMap[p.class_id];if(!cid)continue;const ins=await db.from('projects').insert({class_id:cid,name:p.name}).select();projMap[p.id]=ins.data?.[0]?.id;}
-    for(const s of (payload.scores||[])){const cid=clsMap[s.class_id];const pid=projMap[s.project_id];if(!cid||!pid)continue;await db.from('scores').insert({class_id:cid,project_id:pid,student_name:s.student_name,score:s.score,deduction:s.deduction||0,note:s.note||'',operator:s.operator||''});}
-    await logEvent('恢复','从本机镜像恢复数据');toast('已恢复');refreshMeta();refreshScores();
-  });
-};
-
-$('#bClear').onclick=()=>{
-  confirmDialog('清空全部数据',`将删除所有班级/项目/打分记录（不可撤销），清空前会自动备份。`,async()=>{
-    await takeSnapshot(true,true);
-    await db.from('scores').delete().neq('id',0);
-    await db.from('projects').delete().neq('id',0);
-    await db.from('classes').delete().neq('id',0);
-    await logEvent('清空','清空全部数据');toast('已清空');refreshMeta();refreshScores();
-  });
-};
-
-/* ============ CONFIRM MODAL ============ */
-let confirmCb=null;
-function confirmDialog(title,text,cb){
-  $('#confirmTitle').textContent=title;$('#confirmText').textContent=text;
-  confirmCb=cb;$('#confirmBg').classList.remove('hidden');
-}
-$('#confirmCancel').onclick=()=>{$('#confirmBg').classList.add('hidden');confirmCb=null;};
-$('#confirmOk').onclick=async()=>{$('#confirmBg').classList.add('hidden');const cb=confirmCb;confirmCb=null;if(cb)await cb();};
-
-/* ============ NAV ============ */
-$$('#nav button').forEach(b=>b.onclick=()=>{
-  $$('#nav button').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active');
-  $$('section.view').forEach(s=>s.classList.remove('active'));
-  $('#view-'+b.dataset.view).classList.add('active');
-  if(b.dataset.view==='records')renderRecords();
-  if(b.dataset.view==='classes')renderClasses();
-  if(b.dataset.view==='projects')renderProjects();
-  if(b.dataset.view==='users')renderUsers();
-  if(b.dataset.view==='scorers')renderScorers();
-  if(b.dataset.view==='backup')renderSnapshots();
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  ['#scoreModalBg','#confirmBg','#tierModalBg','#moreBg','#auth'].forEach(s=>{const el=$(s);if(el)el.classList.add('hidden');});
 });
 
-/* ============ BOOT ============ */
-function showFatal(msg){
+/* ==================================================================
+   模块 6/6 · BOOT
+   ================================================================== */
+async function boot(){
   try{
-    const d=document.createElement('div'); d.id='fatal';
-    d.innerHTML='页面初始化出错，请下拉刷新重试。<br/><span style="color:#64748b;font-size:13px;word-break:break-all;">'+String(msg||'').slice(0,300)+'</span>';
-    document.body.appendChild(d);
-  }catch(_){}
-}
-(async()=>{
-  try{
-    const {data:session}=await cloud.auth.getSession();
-    if(session&&session.user){await afterLogin(session.user);}
-    else{enterPublicMode();}
+    if($('#fatal'))$('#fatal').remove();
+    bindNavDelegates();
+    let sess=null;
+    try{ sess=await cloud.auth.getSession(); }catch(e){}
+    if(sess&&sess.data&&sess.data.user){
+      await afterLogin(sess.data.user);
+    }else{
+      enterPublicMode();
+    }
+    cloud.auth.onAuthStateChange(async(evt,user)=>{
+      if(evt==='SIGNED_IN'&&user&&(!state.user||state.user.id!==user.id)){
+        await afterLogin(user);
+      }else if(evt==='SIGNED_OUT'){
+        enterPublicMode();
+      }
+    });
   }catch(e){
-    try{ enterPublicMode(); }catch(e2){ showFatal((e2&&e2.message)||(e&&e.message)||e); }
+    document.body.insertAdjacentHTML('afterbegin','<div id="fatal">启动失败：'+esc(e.message||e)+'<br>请刷新页面重试</div>');
   }
-})();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+else boot();
 </script>
 </body>
 </html>
