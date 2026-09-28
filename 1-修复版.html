@@ -1,0 +1,3058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#1d4ed8" />
+<title>班级打分台 · 学生管理工作台</title>
+<style>
+  :root{
+    --blue-700:#1d4ed8; --blue-600:#2563eb; --blue-500:#3b82f6; --blue-400:#60a5fa; --blue-100:#dbeafe; --blue-50:#eff4ff;
+    --gold:#f5b301; --gold-100:#fef3c7;
+    --red-600:#dc2626; --red-500:#ef4444; --red-100:#fee2e2; --red-50:#fef2f2;
+    --green-600:#15803d; --green-500:#16a34a; --green-100:#dcfce7; --green-50:#f0fdf4;
+    --amber-600:#d97706; --amber-500:#f59e0b; --amber-100:#fef3c7; --amber-50:#fffbeb;
+    --ink-900:#0f172a; --ink:#1e293b; --muted:#64748b; --muted-2:#94a3b8;
+    --line:#e2e8f0; --line-2:#f1f5f9; --card:#ffffff; --bg:#f4f7fb;
+    --s1:#1d4ed8; --s2:#f59e0b; --s3:#16a34a; --s4:#9333ea; --s5:#0891b2; --s6:#e11d48; --s7:#65a30d; --s8:#db2777;
+    --r-sm:8px; --r-md:12px; --r-lg:14px; --r-xl:18px;
+    --shadow:0 6px 22px rgba(29,78,216,.08);
+    --shadow-sm:0 4px 14px rgba(29,78,216,.06);
+    --touch:44px;
+    --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;}
+  #fatal{position:fixed;inset:0;background:#fff;z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:15px;line-height:1.7;color:var(--red-600);}
+  h1,h2,h3{font-weight:700;letter-spacing:.3px;}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:var(--r-sm);padding:10px 14px;min-height:var(--touch);font-size:15px;background:var(--blue-700);color:#fff;transition:.15s;}
+  button:hover{background:var(--blue-500);}
+  button.ghost{background:transparent;color:var(--blue-700);border:1px solid var(--blue-500);}
+  button.ghost:hover{background:var(--blue-50);}
+  button.danger{background:var(--red-500);}
+  button.danger:hover{background:var(--red-600);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  input,select,textarea{font-family:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;color:var(--ink);width:100%;min-height:var(--touch);}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--blue-400);border-color:var(--blue-400);}
+  label{font-size:14px;color:var(--muted);display:block;margin:8px 0 4px;}
+  .hidden{display:none !important;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px;}
+  .grid{display:grid;gap:14px;}
+  #auth{position:fixed;inset:0;background:rgba(29,78,216,.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
+  .auth-box{background:#fff;border-radius:var(--r-xl);padding:28px;width:min(420px,92vw);box-shadow:var(--shadow);}
+  .auth-box h1{color:var(--blue-700);text-align:center;margin:0 0 4px;}
+  .auth-sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:14px;}
+  .tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+  .tabs button{flex:1;background:var(--blue-50);color:var(--blue-700);border:1px solid var(--line);}
+  .tabs button.active{background:var(--blue-700);color:#fff;}
+  .err{color:var(--red-600);font-size:14px;min-height:18px;margin-top:6px;}
+  .linkish{color:var(--blue-500);font-size:14px;cursor:pointer;text-decoration:underline;}
+  header.top{background:var(--blue-700);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:30;}
+  header.top .title{font-weight:700;font-size:18px;display:flex;align-items:center;gap:8px;}
+  header.top .title svg{width:22px;height:22px;}
+  header.top .spacer{flex:1;}
+  .pill{background:rgba(255,255,255,.18);border-radius:20px;padding:4px 10px;font-size:13px;}
+  .pill.role-admin{background:var(--gold);color:var(--ink);}
+  .pill.role-visitor{background:rgba(255,255,255,.25);}
+  .pill.role-super{background:var(--gold);color:var(--ink);}
+  .pill.role-sub{background:var(--green-500);color:#fff;}
+  .sync{display:flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:20px;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green-500);flex:0 0 8px;}
+  .dot.busy{background:var(--gold);animation:pulse 1s infinite;}
+  .dot.off{background:var(--red-500);}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  nav.tabs-nav{display:flex;gap:6px;padding:8px 12px;background:#fff;overflow-x:auto;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(29,78,216,.04);position:sticky;top:52px;z-index:29;-webkit-overflow-scrolling:touch;}
+  nav.tabs-nav::-webkit-scrollbar{height:0;}
+  nav.tabs-nav button{background:transparent;color:var(--blue-700);border:1px solid transparent;white-space:nowrap;font-size:15px;}
+  nav.tabs-nav button.active{background:var(--blue-700);color:#fff;}
+  main{padding:16px;max-width:1200px;margin:0 auto;padding-bottom:calc(16px + var(--safe-b));}
+  section.view{display:none;}
+  section.view.active{display:block;}
+  nav.bottom-nav{display:none;}
+  .stat-row{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+  .stat{background:#fff;border:1px solid var(--gold);border-radius:var(--r-lg);padding:13px 12px;display:flex;flex-direction:column;gap:4px;box-shadow:var(--shadow-sm);}
+  .stat-ic{width:30px;height:30px;color:var(--blue-700);}
+  .stat-ic svg{width:30px;height:30px;}
+  .stat-v{font-size:24px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .stat-k{font-size:13px;color:var(--muted);}
+  .two{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;}
+  .two-eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:900px){.two,.two-eq{grid-template-columns:1fr;}}
+  .dash-filter{margin-bottom:14px;}
+  .dash-filter label{font-size:15px;color:var(--muted);margin:0 0 6px;}
+  .dash-filter select{font-size:15px;padding:8px 10px;height:var(--touch);}
+  .dash-filter button{font-size:15px;padding:8px 14px;}
+  table{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border-radius:var(--r-md);overflow:hidden;}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  th{background:var(--blue-50);color:var(--blue-700);position:sticky;top:0;}
+  tr:hover td{background:#f7faff;}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;}
+  .toolbar > div{flex:1;min-width:120px;}
+  .small{padding:6px 10px;font-size:14px;min-height:36px;}
+  .row-actions{display:flex;gap:6px;}
+  .donut-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .legend{font-size:14px;color:var(--ink);}
+  .legend div{display:flex;align-items:center;gap:6px;margin:3px 0;}
+  .swatch{width:12px;height:12px;border-radius:3px;display:inline-block;flex:0 0 12px;}
+  .event{font-size:14px;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .event .t{color:var(--muted);font-size:12px;}
+  .bar-row{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:14px;}
+  .bar-label{width:110px;flex:0 0 110px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-track{flex:1;background:var(--blue-50);border-radius:var(--r-sm);height:22px;position:relative;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue-400),var(--blue-700));border-radius:var(--r-sm);transition:width .4s;}
+  .bar-val{position:absolute;right:8px;top:2px;font-size:13px;color:var(--ink);font-weight:600;}
+  .heat-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+  .heat-table{border-collapse:separate;border-spacing:4px;min-width:520px;}
+  .heat-table th{background:transparent;color:var(--muted);font-size:13px;font-weight:600;position:static;text-align:center;padding:4px 6px;white-space:nowrap;}
+  .heat-table th.rowh{text-align:left;color:var(--ink);font-size:14px;}
+  .heat-cell{width:64px;height:46px;border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;line-height:1.15;}
+  .heat-cell small{font-size:10px;font-weight:400;opacity:.85;}
+  .heat-cell.na{background:var(--line-2);color:var(--muted-2);font-weight:400;}
+  .heat-legend{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+  .heat-legend .scale{display:flex;gap:2px;}
+  .heat-legend .scale i{width:24px;height:12px;border-radius:3px;display:block;}
+  .batch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:6px;}
+  .batch-row{display:flex;align-items:center;gap:10px;background:var(--blue-50);border-radius:var(--r-md);padding:10px 12px;}
+  .bi-item{font-weight:600;color:var(--blue-700);min-width:84px;flex:0 0 84px;}
+  .batch-row label{margin:0;font-size:13px;flex:1;color:var(--muted);}
+  .batch-row input{margin-top:2px;}
+  .bi-cur{font-size:14px;color:var(--ink);min-width:96px;flex:0 0 96px;}
+  .bi-cur b{color:var(--blue-700);font-size:16px;}
+  .ded-btn{background:#fff;color:var(--red-600);border:1px solid var(--red-500);white-space:nowrap;min-height:var(--touch);}
+  .ded-btn:hover{background:var(--red-50);}
+  .tier-opt{background:#fff;border:1px solid var(--blue-500);color:var(--blue-700);font-size:18px;font-weight:600;padding:14px 0;min-height:48px;}
+  .tier-opt:hover{background:var(--blue-50);}
+  .modal-bg{position:fixed;inset:0;background:rgba(29,78,216,.45);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
+  .modal{background:#fff;border-radius:var(--r-xl);padding:22px;width:min(460px,94vw);box-shadow:var(--shadow);max-height:90vh;overflow:auto;}
+  .modal h3{margin:0 0 10px;color:var(--blue-700);}
+  .toast{position:fixed;bottom:calc(18px + var(--safe-b));left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-md);z-index:80;font-size:15px;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center;}
+  .toast.show{opacity:1;}
+  .muted{color:var(--muted);font-size:14px;}
+  .kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px;gap:8px;align-items:center;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:13px;background:var(--blue-50);color:var(--blue-700);}
+  .empty{padding:30px;text-align:center;color:var(--muted);}
+  .section-title{color:var(--blue-700);border-left:4px solid var(--blue-500);padding-left:8px;margin:18px 0 10px;font-weight:700;}
+  .only-admin,.only-staff{display:none;}
+  body.is-admin .only-admin,body.is-staff .only-staff{display:inline-block;}
+  body.is-admin td.only-admin,body.is-admin th.only-admin,body.is-staff td.only-staff,body.is-staff th.only-staff{display:table-cell;}
+  body.is-admin .only-admin-block,body.is-staff .only-staff-block{display:block;}
+  .only-admin-block,.only-staff-block{display:none;}
+  body:not(.is-admin) .only-admin-view{display:none !important;}
+  body:not(.is-staff) .only-staff-view{display:none !important;}
+  #eventStream{max-height:280px;overflow-y:auto;padding-right:6px;}
+  #eventStream::-webkit-scrollbar{width:8px;}
+  #eventStream::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}
+  #eventStream::-webkit-scrollbar-track{background:var(--line-2);border-radius:4px;}
+  .rec-cards{display:none;}
+
+  .dash-hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .dash-hero h2{margin:0;font-size:22px;color:var(--ink);letter-spacing:.3px;}
+  .dash-sub{font-size:14px;color:var(--muted);margin-top:4px;}
+  .dash-hero-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .hero-select{width:auto;min-width:130px;font-size:15px;padding:8px 10px;height:42px;}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+  @media(max-width:768px){.hero-stats{grid-template-columns:repeat(2,1fr);}}
+  .hero-stat{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow-sm);}
+  .hero-stat .k{font-size:13px;color:var(--muted);margin-bottom:6px;}
+  .hero-stat .v{font-size:28px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .hero-stat .v small{font-size:14px;color:var(--muted);font-weight:400;margin-left:2px;}
+  .hero-stat .v .up{font-size:13px;color:var(--green-600);margin-left:6px;}
+  .hero-stat .v .down{font-size:13px;color:var(--red-600);margin-left:6px;}
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+  @media(max-width:900px){.dash-grid{grid-template-columns:1fr;}}
+  .proj-score{margin:12px 0;}
+  .proj-score .head{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;margin-bottom:6px;gap:8px;}
+  .proj-score .name{font-weight:600;color:var(--ink);}
+  .proj-score .val{font-weight:700;font-size:18px;}
+  .proj-score .track{background:var(--line-2);height:10px;border-radius:5px;overflow:hidden;}
+  .proj-score .fill{height:100%;border-radius:5px;transition:width .5s;}
+  .proj-score .sub{font-size:12px;color:var(--muted);margin-top:4px;}
+  .ded-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line);gap:8px;}
+  .ded-row:last-child{border-bottom:none;}
+  .ded-row .txt{flex:1;min-width:0;}
+  .ded-row .txt b{font-size:15px;color:var(--ink);font-weight:600;}
+  .ded-row .txt .m{font-size:12px;color:var(--muted);margin-top:2px;}
+  .ded-row .num{color:var(--red-600);font-weight:700;font-size:16px;white-space:nowrap;}
+  .rank-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-md);margin-bottom:6px;background:#fff;border:1px solid var(--line);}
+  .rank-row.me{background:var(--blue-50);border-color:var(--blue-400);}
+  .rank-row .rk{flex:0 0 26px;height:26px;line-height:26px;text-align:center;border-radius:8px;background:var(--line);color:var(--muted);font-weight:700;font-size:13px;}
+  .rank-row.top1 .rk{background:var(--gold);color:#fff;}
+  .rank-row.top2 .rk{background:#94a3b8;color:#fff;}
+  .rank-row.top3 .rk{background:#cd7f32;color:#fff;}
+  .rank-row .nm{flex:1;font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rank-row .me-tag{font-size:11px;color:var(--blue-700);background:#fff;border:1px solid var(--blue-400);border-radius:8px;padding:1px 6px;margin-left:6px;font-weight:400;}
+  .rank-row .sc{font-size:17px;font-weight:700;color:var(--blue-700);white-space:nowrap;}
+
+  /* ---- 班级排行（总分 + 均分 双指标合一）---- */
+  .rank-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}  .rank-head h3{margin:0;}
+  .rank-head .spacer{flex:1;}
+  .rank-seg{display:flex;background:var(--blue-50);border-radius:20px;padding:3px;flex:0 0 auto;}
+  .rank-seg button{background:transparent;color:var(--blue-700);border:none;font-size:13px;font-weight:600;padding:4px 12px;min-height:0;height:26px;line-height:1;border-radius:16px;transition:.15s;}
+  .rank-seg button:hover{background:transparent;}
+  .rank-seg button.active,.rank-seg button.active:hover{background:var(--blue-700);color:#fff;}
+  .dash-grid > .span2{grid-column:1 / -1;}
+  .crow{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line);}
+  .crow:last-child{border-bottom:none;}
+  .crow-rk{flex:0 0 32px;height:32px;border-radius:8px;background:var(--line);color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;}
+  .crow-rk.g1{background:var(--gold);color:#fff;}
+  .crow-rk.g2{background:#94a3b8;color:#fff;}
+  .crow-rk.g3{background:#cd7f32;color:#fff;}
+  .crow-mid{flex:1;min-width:0;}
+  .crow-l1{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px;}
+  .crow-l1 .nm{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .crow-l1 .tot{font-size:19px;font-weight:700;white-space:nowrap;}
+  .crow-l1 .tot small{font-size:12px;color:var(--muted);font-weight:400;}
+  .crow-track{background:var(--line-2);border-radius:5px;height:8px;overflow:hidden;}
+  .crow-track i{display:block;height:100%;border-radius:5px;transition:width .5s;}
+  .crow-avg{flex:0 0 78px;text-align:center;background:#fff;border:1px solid var(--blue-100);border-radius:10px;padding:5px 0;box-shadow:var(--shadow-sm);}
+  .crow-avg .av{display:block;font-size:18px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .crow-avg .ak{font-size:11px;color:var(--muted);}
+  .crow-avg.hi{background:var(--green-100);border-color:#86efac;}
+  .crow-avg.hi .av{color:var(--green-600);}
+  /* ---- 红旗 / 单班今日视图 ---- */
+  .flag{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#7c2d12;background:var(--gold-100);border:1px solid var(--gold);border-radius:20px;padding:1px 7px;margin-left:6px;vertical-align:middle;}
+  .flag svg{width:11px;height:11px;flex:0 0 11px;}
+  .kv2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .kv2-box{background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--r-md);padding:12px 14px;}
+  .kv2-box .k{font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .kv2-box .v{font-size:26px;font-weight:700;color:var(--blue-700);line-height:1.1;}
+  .kv2-box .v small{font-size:13px;color:var(--muted);font-weight:400;}
+  .kv2-box .s{font-size:12px;color:var(--muted);margin-top:5px;}
+  .prow-head,.prow{display:grid;grid-template-columns:1fr 92px 92px;gap:8px;align-items:center;}
+  .prow-head{font-size:12px;color:var(--muted);padding:0 0 6px;border-bottom:1px solid var(--line);text-align:right;}
+  .prow-head span:first-child{text-align:left;}
+  .prow{padding:9px 0;border-bottom:1px dashed var(--line);}
+  .prow:last-child{border-bottom:none;}
+  .prow .pn{font-size:15px;font-weight:600;color:var(--ink);}
+  .prow .pd,.prow .pp{text-align:right;font-size:15px;font-weight:700;color:var(--red-600);}
+  .prow .pp{color:var(--amber-600);}
+  .prow .zero{color:var(--green-600);font-weight:400;}
+  /* ---- 打分录入 · 行内档位 ---- */
+  .tier-rows{display:grid;gap:8px;margin-top:4px;}
+  .tier-row{display:flex;align-items:center;gap:10px 12px;background:var(--blue-50);border-radius:var(--r-md);padding:9px 12px;flex-wrap:wrap;}
+  .tier-row .tier-name{font-weight:600;color:var(--blue-700);min-width:104px;flex:0 0 104px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tier-chips{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0;}
+  .tier-chip{background:#fff;color:var(--blue-700);border:1px solid var(--blue-400);border-radius:8px;padding:0 11px;min-height:36px;height:36px;font-size:14px;font-weight:600;line-height:1;}
+  .tier-chip:hover{background:var(--blue-100);}
+  .tier-chip.active{background:var(--red-500);border-color:var(--red-500);color:#fff;}
+  .tier-chip.active:hover{background:var(--red-600);}
+  .tier-chip.zero.active{background:var(--green-500);border-color:var(--green-500);}
+  .tier-chip.zero.active:hover{background:var(--green-600);}
+  .tier-row .tier-cur{font-size:13px;color:var(--muted);min-width:80px;flex:0 0 80px;text-align:right;}
+  .tier-row .tier-cur b{color:var(--blue-700);font-size:16px;}
+  .tier-row .tier-note{flex:0 0 100%;display:flex;align-items:center;gap:8px;margin-top:2px;}
+  .tier-row .tier-note>span{font-size:12px;color:var(--muted);white-space:nowrap;}
+  .tier-row .tier-note input{min-height:36px;height:36px;font-size:14px;padding:6px 10px;}
+  /* ---- 扣分细则面板 ---- */
+  .proj-block{background:var(--blue-50);border-radius:var(--r-md);padding:10px 12px;margin-bottom:10px;}
+  .proj-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .proj-head>b{font-size:15px;color:var(--blue-700);}
+  .proj-ded{font-size:13px;color:var(--muted);}
+  .proj-ded b{font-size:15px;}
+  .proj-ded b:first-of-type{color:var(--red-600);}
+  .proj-ded b:last-of-type{color:var(--blue-700);}
+  .rule-list{display:grid;gap:4px;}
+  .rule-group{font-size:12px;font-weight:700;color:var(--blue-700);margin:6px 0 2px;border-left:3px solid var(--blue-400);padding-left:7px;}
+  .rule-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:14px;}
+  .rule-row.on{background:var(--red-50);border-color:#fca5a5;}
+  .rule-tick{flex:0 0 24px;width:24px;height:24px;min-height:0;padding:0;border-radius:6px;border:1px solid var(--blue-400);background:#fff;color:var(--blue-700);font-size:13px;font-weight:700;line-height:1;}
+  .rule-tick:hover{background:var(--blue-50);}
+  .rule-tick.on{background:var(--red-500);border-color:var(--red-500);color:#fff;}
+  .rule-tick.on:hover{background:var(--red-600);}
+  .rule-text{flex:1;min-width:0;color:var(--ink);line-height:1.4;}
+  .rule-dup{color:var(--amber-600);font-style:normal;font-size:12px;margin-left:4px;}
+  .rule-score{flex:0 0 auto;color:var(--muted);font-size:12px;white-space:nowrap;}
+  .rule-step{flex:0 0 auto;display:flex;align-items:center;gap:2px;}
+  .rule-step button{width:26px;height:26px;min-height:0;padding:0;border-radius:6px;background:var(--blue-50);color:var(--blue-700);border:1px solid var(--blue-100);font-size:15px;line-height:1;}
+  .rule-step button:hover{background:var(--blue-100);}
+  .rule-step b{min-width:20px;text-align:center;font-size:14px;color:var(--ink);}
+  .rule-warn{font-size:12px;color:var(--amber-600);margin-top:4px;}
+  /* ---- 横评：每班折叠块 ---- */
+  .x-block{background:var(--blue-50);border-radius:var(--r-md);padding:9px 12px;margin-bottom:8px;}
+  .x-block.open{background:#fff;border:1px solid var(--blue-400);}
+  .x-head{display:flex;align-items:center;gap:10px;cursor:pointer;flex-wrap:wrap;}
+  .x-name{flex:1;font-weight:600;color:var(--blue-700);font-size:15px;}
+  .x-ded{font-size:13px;color:var(--muted);}
+  .x-ded b{font-size:15px;}
+  .x-ded b:first-of-type{color:var(--red-600);}
+  .x-ded b:last-of-type{color:var(--blue-700);}
+  .x-arrow{color:var(--muted);font-size:13px;flex:0 0 auto;}
+  .x-block .rule-list{margin-top:8px;}
+  .x-block .tier-note{margin-top:8px;}
+  .trend-summary{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7;}
+  .trend-summary b{color:var(--ink);}
+
+  @media(max-width:768px){
+    main{padding:12px;padding-bottom:calc(74px + var(--safe-b));}
+    header.top{padding:8px 12px;gap:8px;}
+    header.top .title{font-size:16px;}
+    .sync{font-size:12px;padding:3px 8px;}
+    #userPill{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    nav.tabs-nav{top:48px;}
+    nav.bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:4px 4px var(--safe-b);box-shadow:0 -2px 12px rgba(29,78,216,.08);}
+    nav.bottom-nav button{flex:1;background:transparent;color:var(--muted);border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;padding:6px 2px;min-height:52px;border-radius:var(--r-sm);}
+    nav.bottom-nav button svg{width:22px;height:22px;}
+    nav.bottom-nav button.active{color:var(--blue-700);background:var(--blue-50);}
+    .card.table-card{padding:0;border:none;box-shadow:none;background:transparent;max-height:none !important;overflow:visible !important;}
+    .card.table-card table{display:none;}
+    .rec-cards{display:grid;gap:10px;}
+    .rec-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);padding:12px;box-shadow:var(--shadow-sm);}
+    .rec-card .r1{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;}
+    .rec-card .r1 b{font-size:15px;color:var(--blue-700);}
+    .rec-card .r2{font-size:14px;color:var(--muted);margin-bottom:6px;}
+    .rec-card .r3{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted);flex-wrap:wrap;}
+    .rec-card .acts{display:flex;gap:8px;margin-top:10px;}
+    .rec-card .acts button{flex:1;}
+    .heat-table{min-width:460px;}
+    .bar-label{width:84px;flex:0 0 84px;font-size:13px;}
+    .toolbar > div{min-width:calc(50% - 4px);}
+    .batch-grid{grid-template-columns:1fr;}
+    .modal{padding:18px;width:min(460px,94vw);}
+    .stat-row{grid-template-columns:repeat(2,1fr);}
+    .stat-v{font-size:21px;}
+    .dash-hero h2{font-size:18px;}
+    .hero-stat .v{font-size:24px;}
+    .crow{gap:10px;padding:10px 0;}
+    .crow-rk{flex:0 0 28px;height:28px;font-size:14px;}
+    .crow-l1 .nm{font-size:14px;}
+    .crow-l1 .tot{font-size:17px;}
+    .crow-avg{flex:0 0 64px;}
+    .crow-avg .av{font-size:16px;}
+    .rank-seg button{padding:4px 9px;font-size:12px;}
+    .tier-row{gap:6px 10px;padding:8px 10px;}
+    .tier-row .tier-name{flex:0 0 100%;min-width:0;font-size:14px;}
+    .tier-row .tier-cur{flex:0 0 auto;min-width:0;margin-left:auto;}
+    .tier-chip{padding:0 9px;min-height:32px;height:32px;font-size:13px;border-radius:7px;}
+    .tier-row .tier-note input{min-height:34px;height:34px;font-size:13px;}
+    .tier-row .tier-note>span{font-size:11px;}
+  }
+  #moreBg{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:70;display:flex;align-items:flex-end;}
+  #moreSheet{background:#fff;width:100%;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:16px 16px calc(16px + var(--safe-b));max-height:70vh;overflow:auto;}
+  #moreSheet h3{margin:0 0 12px;color:var(--blue-700);}
+  #moreList{display:grid;gap:8px;}
+  #moreList button{width:100%;text-align:left;background:var(--blue-50);color:var(--blue-700);display:flex;align-items:center;gap:10px;font-size:15px;}
+  #moreList button svg{width:20px;height:20px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.js"></script>
+</head>
+<body>
+<div id="auth" class="hidden">
+  <div class="auth-box">
+    <h1>班级打分台</h1>
+    <div class="auth-sub">学生管理工作台 · 云端实时同步</div>
+    <div class="tabs" id="authTabs">
+      <button data-tab="password" class="active">登录</button>
+      <button data-tab="signup">注册</button>
+    </div>
+    <div id="authStep1">
+      <label id="lblEmail">账号</label>
+      <input id="authEmail" type="text" placeholder="输入账号，如 admin" autocomplete="username"/>
+      <label id="lblPwd">密码</label>
+      <input id="authPwd" type="password" placeholder="密码" autocomplete="current-password"/>
+      <div class="err" id="authErr"></div>
+      <button id="authSubmit" style="width:100%;margin-top:8px;">登录</button>
+      <button id="authClose" class="ghost" style="width:100%;margin-top:8px;">取消</button>
+      <div style="text-align:center;margin-top:8px;" id="switchHint"></div>
+    </div>
+  </div>
+</div>
+
+<div id="main" class="hidden">
+  <header class="top">
+    <span class="title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>
+      班级打分台
+    </span>
+    <span class="sync" id="syncPill"><span class="dot" id="syncDot"></span><span id="syncText">同步中…</span></span>
+    <span class="spacer"></span>
+    <span class="pill hidden" id="userPill">—</span>
+    <span class="pill hidden" id="rolePill">—</span>
+    <button class="ghost hidden" id="adminLoginBtn" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">管理员登录</button>
+    <button class="ghost hidden" id="syncNow" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">同步</button>
+    <button class="ghost hidden" id="logoutBtn" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.4);">退出</button>
+  </header>
+
+  <nav class="tabs-nav" id="nav">
+    <button data-view="dash" class="active">数据看板</button>
+    <button data-view="entry" class="only-staff">打分录入</button>
+    <button data-view="records">数据记录</button>
+    <button data-view="scorers" class="only-staff">打分人</button>
+    <button data-view="classes" class="only-admin">班级管理</button>
+    <button data-view="projects" class="only-admin">项目管理</button>
+    <button data-view="users" class="only-admin">用户权限</button>
+    <button data-view="backup" class="only-admin">备份恢复</button>
+  </nav>
+
+  <main>
+    <section class="view active" id="view-dash">
+      <div class="dash-hero">
+        <div>
+          <h2>班级每日常规得分看板</h2>
+          <div class="dash-sub" id="dashSub">—</div>
+        </div>
+        <div class="dash-hero-actions">
+          <select id="dClass" class="hero-select"><option value="">全部班级</option></select>
+          <select id="dRange" class="hero-select">
+            <option value="week" selected>本周</option>
+            <option value="lastweek">上周</option>
+            <option value="today">今日</option>
+            <option value="custom">自定义…</option>
+          </select>
+          <button class="ghost" id="dashRefresh" style="min-height:42px;">刷新</button>
+        </div>
+      </div>
+
+      <div class="hero-stats" id="heroStats"></div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="rank-head">
+            <h3 id="todayItemsTitle">各项得分 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">刻度 90–100</span></h3>
+            <span class="spacer"></span>
+            <div class="rank-seg hidden" id="rankSeg">
+              <button type="button" data-sort="total" class="active">按总分</button>
+              <button type="button" data-sort="avg">按均分</button>
+            </div>
+          </div>
+          <div id="todayItems"></div>
+        </div>
+        <div class="card">
+          <h3 id="trendTitle">近 7 日常规均分趋势</h3>
+          <div id="trend"></div>
+          <div id="trendSummary" class="trend-summary"></div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card" id="dedCard">
+          <h3>扣分明细 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">按时间倒序</span></h3>
+          <div id="todayDeductions"></div>
+        </div>
+        <div class="card" id="rankCard">
+          <h3 id="rankTitle">班级排名</h3>
+          <div id="classRank"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>易失分热力图（班级 × 项目）</h3>
+        <div class="muted" style="margin:6px 0 10px;">颜色越深＝该项目扣分越多，用来定位「哪个班的哪个项目最需要盯」。</div>
+        <div class="heat-wrap" id="heatmap"></div>
+        <div class="heat-legend" id="heatLegend"></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <h3>扣分分布（按项目）</h3>
+          <div class="donut-wrap">
+            <div id="donut"></div>
+            <div class="legend" id="donutLegend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>实时动态流</h3>
+          <div id="eventStream"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view only-staff-view" id="view-entry">
+      <div class="card">
+        <div class="rank-head">
+          <h3>常规打分</h3>
+          <span class="spacer"></span>
+          <button class="ghost small only-admin" id="rulesBtn">扣分细则</button>
+          <button class="ghost small only-admin" id="tiersBtn">扣分档位</button>
+          <div class="rank-seg" id="entryModeSeg">
+            <button type="button" data-mode="class" class="active">按班级</button>
+            <button type="button" data-mode="project">按项目横评</button>
+          </div>
+        </div>
+
+        <div class="toolbar" style="margin-top:12px;">
+          <div><label>打分人</label><select id="eScorer"></select></div>
+          <div id="eClassWrap"><label>班级</label><select id="eClass"></select></div>
+          <div id="xProjectWrap" class="hidden"><label>项目</label><select id="xProject"></select></div>
+          <div style="flex:0 0 auto;" id="eSubmitWrap"><label>&nbsp;</label><button id="eSubmit">保存全班评分</button></div>
+          <div style="flex:0 0 auto;" id="xSubmitWrap" class="hidden"><label>&nbsp;</label><button id="xSubmit">保存全部班级</button></div>
+          <div style="flex:0 0 auto;" id="eUndoWrap"><label>&nbsp;</label><button class="ghost" id="eUndo">撤销上一笔</button></div>
+        </div>
+
+        <div id="entryClassBox">
+          <div class="muted" style="margin:2px 0 8px;">打分项目由「项目管理」决定，点档位即可，无需弹窗。</div>
+          <div id="itemRows" class="tier-rows"></div>
+          <div class="toolbar" style="margin-top:12px;">
+            <div style="flex:1;"><label>其他备注</label><input id="eNote" placeholder="可选，随本次评分一同记录"/></div>
+          </div>
+          <div class="err" id="entryErr"></div>
+        </div>
+
+        <div id="entryProjBox" class="hidden">
+          <div class="muted" style="margin:2px 0 8px;">一屏横向对比所有班级的同一个项目，适合值日生巡课打分；逐个班点档位，最后一次保存。</div>
+          <div id="xRows" class="tier-rows"></div>
+          <div class="err" id="xErr"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-records">
+      <div class="toolbar">
+        <div><label>按班级筛选</label><select id="fClass"><option value="">全部</option></select></div>
+        <div><label>按项目筛选</label><select id="fProject"><option value="">全部</option></select></div>
+        <div style="flex:0 0 auto;"><label>&nbsp;</label><button class="ghost" id="recRefresh">刷新</button></div>
+      </div>
+      <div class="muted" id="recWindowHint" style="margin:-6px 0 10px;font-size:12px;"></div>
+      <div class="card table-card" style="padding:0;overflow:auto;max-height:70vh;">
+        <table id="recTable"><thead><tr>
+          <th>时间</th><th>班级</th><th>项目</th><th id="thStudent">对象</th><th>分值</th><th>扣分</th><th>备注</th><th>打分人</th><th class="only-staff">操作</th>
+        </tr></thead><tbody id="recBody"></tbody></table>
+      </div>
+      <div class="rec-cards" id="recCards"></div>
+      <div id="recEmpty" class="empty hidden">暂无记录</div>
+    </section>
+
+    <section class="view only-admin-view" id="view-classes">
+      <div class="card only-admin-block">
+        <h3>新增班级</h3>
+        <div class="toolbar">
+          <div><label>班级名称</label><input id="cName" placeholder="如：九年级（1）班"/></div>
+          <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="cAdd">添加班级</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <h3>全部班级</h3>
+        <div id="classList"></div>
+      </div>
+    </section>
+
+    <section class="view only-admin-view" id="view-projects">
+      <div class="card only-admin-block">
+        <h3>新增项目</h3>
+        <div class="muted" style="margin-bottom:8px;">打分项目是<b>全校共用</b>的：选「全部班级」会自动加到每个班；以后新建的班级也会自动继承已有项目。</div>
+        <div class="toolbar">
+          <div><label>所属班级</label><select id="pClass"></select></div>
+          <div><label>项目名称</label><input id="pName" placeholder="如：课间操"/></div>
+          <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="pAdd">添加项目</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <h3>全部项目</h3>
+        <div id="projectList"></div>
+      </div>
+    </section>
+
+    <section class="view only-admin-view" id="view-users">
+      <div class="card">
+        <h3>用户与权限</h3>
+        <div class="muted" style="margin-bottom:8px;">总管理员：全部权限（含删除）。子管理员：打分、看板、修改记录、维护打分人名册，<b>无删除权限</b>。访客：仅查看看板与动态流。首位注册者自动成为总管理员。</div>
+        <div id="userList"></div>
+      </div>
+      <div class="card only-admin-block" style="margin-top:14px;">
+        <h3>子管理员预授权（邮箱白名单）</h3>
+        <div class="muted" style="margin-bottom:8px;">填入对方邮箱，对方用该邮箱登录后自动成为子管理员。从名单移除即停用其子管理员身份。</div>
+        <div class="toolbar">
+          <div><label>邮箱</label><input id="invEmail" placeholder="name@example.com"/></div>
+          <div><label>备注</label><input id="invNote" placeholder="如：九年（1）班 班长"/></div>
+          <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="invAdd">加入白名单</button></div>
+        </div>
+        <div id="inviteList" style="margin-top:12px;"></div>
+      </div>
+    </section>
+
+    <section class="view only-staff-view" id="view-scorers">
+      <div class="card only-staff-block">
+        <h3>新增打分人</h3>
+        <div class="toolbar">
+          <div><label>姓名</label><input id="scName" placeholder="如：王老师 / 值日班长"/></div>
+          <div style="flex:0 0 auto;"><label>&nbsp;</label><button id="scAdd">添加打分人</button></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <h3>打分人名单</h3>
+        <div class="muted" style="margin-bottom:8px;">打分时从名单中点选自己的名字，免输入。删除后历史记录仍保留该名字。</div>
+        <div id="scorerList"></div>
+      </div>
+    </section>
+
+    <section class="view only-admin-view" id="view-backup">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+        <div class="card">
+          <h3>三层备份</h3>
+          <div class="kv"><span>云端快照</span><span id="bCloudN" class="badge">0 / 30</span></div>
+          <div class="kv"><span>本机镜像</span><span id="bLocalN" class="badge">0 / 3</span></div>
+          <div class="kv"><span>导出文件</span><span class="badge">手动</span></div>
+          <button id="bSnapshot" style="width:100%;margin-top:10px;">立即云端快照</button>
+          <div class="muted" style="margin-top:6px;">自动备份：启动后 / 每 30 分钟检查 / 清空前 / 覆盖导入前 / 恢复前。数据无变化时自动跳过，不写重复副本。</div>
+        </div>
+        <div class="card">
+          <h3>导出</h3>
+          <button class="ghost" id="bJson" style="width:100%;margin-bottom:8px;">导出 JSON</button>
+          <button class="ghost" id="bCsv" style="width:100%;">导出 CSV</button>
+        </div>
+        <div class="card">
+          <h3>导入</h3>
+          <label>选择文件（JSON / CSV）</label>
+          <input id="bFile" type="file" accept=".json,.csv"/>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button id="bImportMerge" style="flex:1;">合并</button>
+            <button id="bImportOver" class="danger" style="flex:1;">覆盖</button>
+          </div>
+          <div class="muted" style="margin-top:6px;">合并＝追加为新记录；覆盖＝先清空再写入。</div>
+        </div>
+        <div class="card only-admin-block">
+          <h3>危险操作</h3>
+          <button class="danger" id="bClear" style="width:100%;">清空全部数据</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <h3>一键恢复</h3>
+        <div class="muted" style="margin-bottom:8px;">选择一份快照恢复（恢复前会自动再备份当前状态）。</div>
+        <div id="snapshotList"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" id="bottomNav"></nav>
+</div>
+
+<div id="moreBg" class="hidden">
+  <div id="moreSheet">
+    <h3>更多功能</h3>
+    <div id="moreList"></div>
+    <button class="ghost" id="moreClose" style="width:100%;margin-top:12px;">关闭</button>
+  </div>
+</div>
+
+<div id="scoreModalBg" class="modal-bg hidden">
+  <div class="modal">
+    <h3 id="scoreModalTitle">编辑记录</h3>
+    <input id="mScoreId" type="hidden"/>
+    <label>班级</label><select id="mClass"></select>
+    <label>项目</label><select id="mProject"></select>
+    <label>对象</label><input id="mStudent"/>
+    <label>扣分（满分100，得分=100-扣分）</label><input id="mDeduction" type="number" step="0.1" min="0" max="100" inputmode="decimal"/>
+    <label>备注</label><input id="mNote"/>
+    <div class="err" id="scoreModalErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;">
+      <button class="ghost" id="scoreCancel">取消</button>
+      <button id="scoreSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmBg" class="modal-bg hidden">
+  <div class="modal">
+    <h3 id="confirmTitle">确认</h3>
+    <p id="confirmText" class="muted"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+      <button class="ghost" id="confirmCancel">取消</button>
+      <button id="confirmOk" class="danger">确认</button>
+    </div>
+  </div>
+</div>
+
+<div id="rulesBg" class="modal-bg hidden">
+  <div class="modal" style="width:min(760px,95vw);">
+    <h3>扣分细则设置</h3>
+    <div class="muted" style="margin-bottom:8px;line-height:1.7;">
+      一行一条细则，格式：<code>简称 | 扣分 | 单位 | 完整原文</code>（后两段可省略）。<br>
+      <code># 项目名</code> 开一个新项目；<code>## 子类名</code> 在项目内加子标题（可选）。<br>
+      例：<code>教室/包干区有垃圾 | 0.1 | 处 | 教室地面有纸屑、杂物、垃圾未清理</code><br>
+      <b>打分界面只显示「简称」，鼠标悬停显示「完整原文」</b> —— 简称越短，打分越快。
+    </div>
+    <textarea id="rulesInput" style="min-height:340px;font-family:ui-monospace,Consolas,monospace;font-size:13px;line-height:1.6;"></textarea>
+    <div class="err" id="rulesErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="ghost" id="rulesDef">恢复默认</button>
+      <button class="ghost" id="rulesCancel">取消</button>
+      <button id="rulesSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="tiersBg" class="modal-bg hidden">
+  <div class="modal">
+    <h3>扣分档位设置</h3>
+    <div class="muted" style="margin-bottom:8px;">打分时可选用的扣分档位。全校共用，存云端同步，所有设备自动跟随。</div>
+    <label>档位（英文逗号分隔，必须包含 0）</label>
+    <input id="tiersInput" placeholder="0,0.1,0.2,0.3,0.4,0.5,1"/>
+    <div class="muted" style="margin-top:6px;font-size:12px;">例：<code>0,0.5,1,2</code> —— 档位越少，打分越快。</div>
+    <div class="err" id="tiersErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="ghost" id="tiersDef">恢复默认</button>
+      <button class="ghost" id="tiersCancel">取消</button>
+      <button id="tiersSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="periodBg" class="modal-bg hidden">
+  <div class="modal">
+    <h3>设置评比周期</h3>
+    <div class="muted" style="margin-bottom:8px;">本周期内每个项目满分 100 分，每天检查的扣分从这 100 分里累计扣除。放假周不需要特殊处理 —— 满分只由「项目数」决定，与天数无关。</div>
+    <label>开始日期</label><input id="pStart" type="date"/>
+    <label>结束日期</label><input id="pEnd" type="date"/>
+    <div class="err" id="periodErr"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="ghost" id="pReset">恢复本周</button>
+      <button class="ghost" id="pCancel">取消</button>
+      <button id="pSave">确定</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ==================================================================
+   模块 1/6 · CORE
+   ================================================================== */
+const SUPABASE_URL = 'https://kvammejmkzxffulrmubs.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_yI90MQ_Qkg9KoMBF3aOr4Q_1R3eAKhm';
+let _sb = null;
+try{ _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+catch(e){ _sb = null; }
+
+const _u = s => {
+  const u = s && s.user ? s.user : null;
+  if(!u) return null;
+  const email = u.email || (u.user_metadata && (u.user_metadata.email || u.user_metadata.preferred_username)) || '';
+  return { ...u, id: u.id, email, raw: u };
+};
+const _err = e => ({ message: e?.message || String(e) });
+const cloud = {
+  auth: {
+    async getSession() {
+      try { const { data:{session} } = await _sb.auth.getSession();
+        return { data: session ? { user: _u(session) } : null, error: null };
+      } catch(e) { return { data: null, error: _err(e) }; }
+    },
+    async signInWithPassword({ email, password }) {
+      const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+      return error ? { data: null, error: _err(error) } : { data: { user: _u(data.session) }, error: null };
+    },
+    async signUp({ email, password }) {
+      const { data, error } = await _sb.auth.signUp({ email, password });
+      return error ? { data: null, error: _err(error) } : { data: { user: _u(data.session) }, error: null };
+    },
+    async signOut() { await _sb.auth.signOut(); },
+    onAuthStateChange(cb) {
+      return _sb.auth.onAuthStateChange((evt, s) => setTimeout(() => cb(evt, _u(s)), 0));
+    },
+  },
+};
+const db = _sb;
+
+const state = {
+  user:null, role:'visitor', isAdmin:false, isStaff:false,
+  classes:[], projects:[], scores:[], events:[], profiles:[], backups:[], scorers:[], invites:[],
+  sig:{}, lastSync:null,
+  watermark:{ scores:null, events:null, meta:null },
+  online:true,
+};
+const dashFilter = { classId:'', range:'week' };
+let dashSort = 'total';   /* 'total' = 按总分 / 'avg' = 按均分 */
+const ITEMS = ['卫生','仪容与文明礼仪','活动与秩序纪律','违禁物品与其他行为'];
+/* ===== 扣分细则 =====
+   结构：[{name:'大类', items:[{t:'违规情形', s:单次扣分, u:'单位', g:'子类(可选)', dup:'与哪个项目重复(可选)'}]}]
+   打分时勾选细则 + 填个数 → 系统按 s × 个数 自动累加扣分。
+   管理员可在界面里改，存 app_settings.deduct_rules（云端同步）。 */
+const DEFAULT_RULES = [
+  {name:'卫生', items:[
+    {t:'打扫不到位', d:'教室地面有纸屑、杂物、垃圾未清理；包干区地面纸屑、塑料袋、杂物清理不彻底；黑板未擦、讲台杂乱，卫生工具摆放凌乱；垃圾桶过半未及时倾倒', s:0.1, u:'处'},
+    {t:'值日未到位', d:'值日未到位，公共区域遗留大量垃圾', s:0.5, u:''},
+    {t:'乱扔垃圾、高空抛物', d:'随手乱扔纸屑、垃圾；高空抛掷杂物', s:0.1, u:'人次', dup:'违禁物品与其他行为'}
+  ]},
+  {name:'仪容与文明礼仪', items:[
+    {t:'仪容/言语不文明', d:'留怪异发型、穿戴奇装异服、染发烫发、佩戴首饰等；校园内讲脏话、粗话，言语不文明', s:0.1, u:'人次'},
+    {t:'无礼/欺凌（一般）', d:'对师长、同学言语无礼，发生言语冲突；起哄调侃、语言欺凌同学', s:0.1, u:'起'},
+    {t:'无礼/欺凌（严重·群体）', d:'对师长、同学言语无礼，情节严重或群体性；起哄调侃、语言欺凌同学，情节严重或造成影响', s:0.5, u:'起'}
+  ]},
+  {name:'活动与秩序纪律', items:[
+    {g:'大课间',t:'大课间秩序差（个别）', d:'集合拖拉，班级队伍行动迟缓，整体散漫；列队期间喧哗、打闹、交头接耳；做操动作敷衍、缺位、随意逗留不参与；提前解散、队伍秩序混乱', s:0.1, u:'次'},
+    {g:'大课间',t:'大课间整体混乱', d:'做操时班级整体多数不参与大课间活动；班级整体提前解散、队伍秩序混乱', s:0.5, u:''},
+    {g:'大课间',t:'教室无人、电器未关', d:'大课间期间人不在教室，电器未及时关闭（多媒体除外）', s:0.1, u:'次'},
+    {g:'就餐纪律',t:'就餐秩序差', d:'就餐时大声喧哗、起哄、追逐打闹；就餐随意插队，不按秩序排队取餐；浪费粮食，餐桌残留大量饭菜残渣不收拾', s:0.1, u:'人次'},
+    {g:'午间管理',t:'午间秩序差（个别）', d:'午间休息时段教室内大声喧哗、嬉戏打闹；午间擅自离开教室；午休时段做与休息无关事情，扰乱班级安静氛围', s:0.1, u:'人次'},
+    {g:'午间管理',t:'午间无人管理', d:'午间班级无人管理、秩序混乱', s:0.5, u:''},
+    {g:'眼保健操',t:'眼操不就位（个别）', d:'做操期间学生不就位、随意走动、离开教室', s:0.1, u:'人次'},
+    {g:'眼保健操',t:'整体不做眼保健操', d:'班级整体多数同学不参加眼保健操，班级未组织', s:0.5, u:''}
+  ]},
+  {name:'违禁物品与其他行为', items:[
+    {t:'吃零食/乱扔垃圾', d:'校园教学区吃零食；随手丢弃零食包装袋；随手乱扔纸屑、垃圾；高空抛掷杂物', s:0.1, u:'人次', dup:'卫生'},
+    {t:'携带或使用手机', d:'学生违规携带手机入校；课堂、课间出现使用手机现象', s:1, u:'人次'}
+  ]}
+];
+let RULE_LIST = JSON.parse(JSON.stringify(DEFAULT_RULES));
+let batchRules = {};     /* project_id -> { 细则下标: 个数 } */
+let xActivePid = null;   /* 横评里当前展开的班级 */
+function setRules(list){
+  if(!Array.isArray(list))return false;
+  const ok=list.filter(p=>p && p.name && Array.isArray(p.items) && p.items.length);
+  if(!ok.length)return false;
+  const next=JSON.parse(JSON.stringify(ok));
+  if(JSON.stringify(next)===JSON.stringify(RULE_LIST))return false;
+  RULE_LIST=next;
+  return true;
+}
+/* 取某个项目名对应的细则；没配规则返回 null（自动退回档位模式） */
+function projectRules(name){
+  const p=(RULE_LIST||[]).find(x=>x.name===name);
+  return (p && p.items && p.items.length)? p.items : null;
+}
+/* 该项目按细则算出的扣分；无规则返回 null */
+function ruleDeductionOf(pid){
+  const p=state.projects.find(x=>x.id===pid); if(!p)return null;
+  const items=projectRules(p.name); if(!items)return null;
+  const sel=batchRules[pid]||{}; let d=0;
+  items.forEach((it,i)=>{const n=sel[i]||0; if(n>0)d+=Number(it.s||0)*n;});
+  return n2(d);
+}
+/* 统一取扣分：有规则按规则算，无规则用档位 */
+function projDeduction(pid){
+  const r=ruleDeductionOf(pid);
+  return r==null ? n2(batchDed[pid]||0) : r;
+}
+/* 勾选的细则文本，写进记录备注 */
+function ruleNoteOf(pid){
+  const p=state.projects.find(x=>x.id===pid); if(!p)return '';
+  const items=projectRules(p.name); if(!items)return '';
+  const sel=batchRules[pid]||{}; const out=[];
+  items.forEach((it,i)=>{const n=sel[i]||0; if(n>0)out.push(it.t+(n>1?('×'+n):''));});
+  return out.join('；');
+}
+/* 防呆：勾中的细则里有没有「与其它类重复」的 */
+function dupWarnOf(pid){
+  const p=state.projects.find(x=>x.id===pid); if(!p)return '';
+  const items=projectRules(p.name); if(!items)return '';
+  const sel=batchRules[pid]||{}; const names=[];
+  items.forEach((it,i)=>{ if((sel[i]||0)>0 && it.dup && names.indexOf(it.dup)<0) names.push(it.dup); });
+  return names.length ? ('⚠ 与「'+names.join('、')+'」类重复，请勿重复扣分') : '';
+}
+/* 扣分档位：默认 7 档，管理员可改并云端同步（存 app_settings.tiers） */
+const DEFAULT_TIERS = [0,0.1,0.2,0.3,0.4,0.5,1];
+let TIER_LIST = DEFAULT_TIERS.slice();
+function setTiers(arr){
+  if(!Array.isArray(arr))return false;
+  const v=arr.map(x=>Number(x)).filter(x=>isFinite(x)&&x>=0&&x<=100);
+  if(v.length<2)return false;
+  const next=[...new Set(v)].sort((a,b)=>a-b);
+  if(JSON.stringify(next)===JSON.stringify(TIER_LIST))return false;
+  TIER_LIST=next;
+  return true;
+}
+function tierLabel(t){ return t===0?'0':String(n2(t)); }
+const ROLE_LABEL = {admin:'总管理员', sub:'子管理员', visitor:'访客'};
+const SORT_LABEL = {total:'按总分', avg:'按均分', ded:'按扣分'};
+const BK_CHECK_MS = 30*60*1000;
+const BK_MIN_GAP  = 10*60*1000;
+const BK_KEEP     = 30;
+const SS_LIMIT    = 2000;
+/* 看板/记录只加载最近 N 天：数据越用越多时也不会拖慢，且单次只有几百条。
+   导出 JSON/CSV 与云端快照走服务端 RPC，仍是全量，不受此限制。 */
+const DATA_WINDOW_DAYS = 14;
+/* 实时推送（Supabase Realtime）正常时只做兜底轮询；断开时才用较快的轮询 */
+const POLL_SLOW   = 120000;
+const POLL_DOWN   = 15000;
+let bkLastSig='', bkLastAt=0;
+let autoBackupTimer=null, pollTimer=null, pollingStarted=false;
+let rtChannel=null, rtOk=false, rtPending=false;
+let batchDed={};
+let xNote={};              /* 横评：project_id → 扣分原因 */
+let hasUserIdCol=null;     /* null=未知 / true=库里有 scores.user_id / false=老库自动降级 */
+let entryMode='class';     /* 'class'=按班级打分 / 'project'=按项目横评（巡课） */
+let prevClassId='';
+let lastScoresJson='';
+
+const VIEWS = [
+  {id:'dash',     label:'看板',   perm:'all',   icon:'chart'},
+  {id:'entry',    label:'打分',   perm:'staff', icon:'edit'},
+  {id:'records',  label:'记录',   perm:'all',   icon:'list'},
+  {id:'scorers',  label:'打分人', perm:'staff', icon:'users'},
+  {id:'classes',  label:'班级',   perm:'admin', icon:'school'},
+  {id:'projects', label:'项目',   perm:'admin', icon:'folder'},
+  {id:'users',    label:'权限',   perm:'admin', icon:'shield'},
+  {id:'backup',   label:'备份',   perm:'admin', icon:'db'},
+];
+const BOTTOM_PRIMARY = ['dash','entry','records'];
+
+const $ = (s)=>document.querySelector(s);
+const $$ = (s)=>document.querySelectorAll(s);
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function jsq(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function showSync(mode,text){
+  const dot=$('#syncDot'); dot.className='dot'+(mode==='busy'?' busy':(mode==='off'?' off':''));
+  $('#syncText').textContent=text||(mode==='busy'?'同步中…':(mode==='off'?'离线模式':'已同步'));
+}
+function className(id){return (state.classes.find(c=>c.id===id)?.name)||'—';}
+function projectName(id){return (state.projects.find(p=>p.id===id)?.name)||'—';}
+function n2(v){return Math.round(Number(v||0)*100)/100;}
+function scoreColor(pct){return pct>=90?'var(--green-600)':pct>=70?'var(--amber-600)':'var(--red-600)';}
+function pad2(n){return String(n).padStart(2,'0');}
+function ymd(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function todayStr(){return ymd(new Date());}
+function stamp(){return new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');}
+function csvCell(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function download(name,content,type){
+  const blob=new Blob([content],{type});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function mergeById(oldArr,newArr){
+  const map=new Map();
+  (oldArr||[]).forEach(r=>map.set(r.id,r));
+  (newArr||[]).forEach(r=>map.set(r.id,r));
+  return Array.from(map.values());
+}
+
+const ICON = {
+  avg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 5-6"/></svg>',
+  top:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4l-5 7-5-7z"/></svg>',
+  ded:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+  cnt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+  cls:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>',
+  prj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>',
+  school:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  db:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+  medal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="15" r="6"/><path d="M9 9l-3-6M15 9l3-6M12 12v3l1.5 1.5"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>',
+};
+const FLAG_SVG='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2a1 1 0 0 0-1 1v18a1 1 0 1 0 2 0v-6.2h11.4a1.5 1.5 0 0 0 1.3-2.2L16.6 9l2.1-3.6A1.5 1.5 0 0 0 17.4 3H6a1 1 0 0 0-1-1z"/></svg>';
+
+/* ===== 评比周期 =====
+   模型：每个打分项目在「一个评比周期内」满分 100 分，每天检查的扣分从这 100 分里累计扣除。
+        → 满分恒为「项目数 × 100」，与周期被压缩成几天无关。放假周因此天然公平：
+          完整周 4项×100=400，放假周同样是 4项×100=400，各班面对同一个分母。 */
+let customPeriod = null;   /* {start:'2026-09-21', end:'2026-09-25'} */
+try{
+  const cp=JSON.parse(localStorage.getItem('wb_period')||'null');
+  if(cp && cp.start) customPeriod={start:cp.start,end:cp.end||cp.start};
+}catch(e){}
+if(customPeriod) dashFilter.range='custom';   /* 上次设过自定义周期就沿用 */
+try{                                           /* 档位离线缓存 */
+  const t=JSON.parse(localStorage.getItem('wb_tiers')||'null');
+  if(Array.isArray(t)) setTiers(t);
+}catch(e){}
+try{                                           /* 扣分细则离线缓存 */
+  const r=JSON.parse(localStorage.getItem('wb_rules')||'null');
+  if(Array.isArray(r)) setRules(r);
+}catch(e){}
+
+function weekStart(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const dow=x.getDay();                        /* 0=周日 */
+  x.setDate(x.getDate()+(dow===0?-6:1-dow));   /* 回到本周一 */
+  return x;
+}
+function dayStart(str){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(str||''));
+  return m? new Date(Number(m[1]),Number(m[2])-1,Number(m[3])) : null;
+}
+function fmtDay(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+function fmtMd(d){ return (fmtDay(d)||'').slice(5).replace('-','/'); }
+
+/* 当前评比周期 [start, end)，end 为开区间 */
+function rangeBounds(){
+  const now=new Date();
+  const d0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const r=dashFilter.range;
+  if(r==='today'){
+    const e=new Date(d0); e.setDate(e.getDate()+1);
+    return {start:d0,end:e,label:'今日 '+fmtMd(d0),short:'今日',multi:false};
+  }
+  if(r==='week'){
+    const s=weekStart(now), e=new Date(s); e.setDate(e.getDate()+7);
+    return {start:s,end:e,label:'本周 '+fmtMd(s)+' ~ '+fmtMd(new Date(e-1)),short:'本周',multi:true};
+  }
+  if(r==='lastweek'){
+    const s=weekStart(now); s.setDate(s.getDate()-7);
+    const e=new Date(s); e.setDate(e.getDate()+7);
+    return {start:s,end:e,label:'上周 '+fmtMd(s)+' ~ '+fmtMd(new Date(e-1)),short:'上周',multi:true};
+  }
+  if(r==='custom' && customPeriod && customPeriod.start){
+    const s=dayStart(customPeriod.start);
+    const e0=dayStart(customPeriod.end||customPeriod.start);
+    if(s && e0){
+      const e = e0<s ? new Date(s) : e0;
+      const ex=new Date(e); ex.setDate(ex.getDate()+1);
+      return {start:s,end:ex,label:fmtMd(s)+' ~ '+fmtMd(e),short:'自定义',multi:true};
+    }
+  }
+  return null;   /* 不限制 */
+}
+function inRange(ts){
+  const b=rangeBounds();
+  if(!b)return true;
+  const t=new Date(ts);
+  return t>=b.start && t<b.end;
+}
+function rangeLabel(){ const b=rangeBounds(); return b? b.label : '全部时间'; }
+function rangeAvgLabel(){ const b=rangeBounds(); return b? '（'+b.short+'）' : ''; }
+/* 涨跌＝本周期均分 vs 上一周期均分（本周↔上周 / 今日↔昨日 / 自定义↔等长前段） */
+function prevRangeAvg(){
+  const b=rangeBounds();
+  if(!b)return null;
+  const span=Math.round((b.end-b.start)/86400000);
+  if(span<=0)return null;
+  const prevStart=new Date(b.start); prevStart.setDate(prevStart.getDate()-span);
+  const rows=state.scores.filter(r=>{
+    if(r.score==null||r.score==='')return false;
+    const t=new Date(r.created_at);
+    return t>=prevStart && t<b.start;
+  });
+  if(!rows.length)return null;
+  return rows.reduce((a,r)=>a+Number(r.score),0)/rows.length;
+}
+function prevRangeLabel(){
+  return {today:'较昨日',week:'较上周',lastweek:'较上上周'}[dashFilter.range]||'较上一周期';
+}
+
+/* ==================================================================
+   模块 3/6 · DATA
+   ================================================================== */
+async function loadAll(force){
+  await Promise.all([refreshScores(force),refreshMeta(force)]);
+}
+async function refreshScores(force){
+  if(!navigator.onLine){ state.online=false; showSync('off','离线模式'); return; }
+  state.online=true;
+  // 后台轮询不闪「同步中」，只在首次/手动/强制刷新时显示 busy，避免每 5 秒闪一下
+  if(force || !state.lastSync) showSync('busy');
+  try{
+    const wm=state.watermark;
+    /* 只拉最近 N 天的记录（自定义周期更早时按周期起点放宽） */
+    let q=db.from('scores').select('*').gte('created_at',dataCutoffISO()).order('updated_at',{ascending:false}).limit(SS_LIMIT);
+    if(!force && wm.scores) q=q.gt('updated_at',wm.scores);
+    const {data:scores}=await q;
+    const {data:events}=await db.from('events').select('*').order('created_at',{ascending:false}).limit(50);
+    const rows=scores||[];
+    const evs=events||[];
+    const prevSigS=state.sig.scores, prevSigE=state.sig.events;
+    const sigS=rows.length+':'+((rows[0]?.updated_at)||'');
+    const sigE=evs.length+':'+((evs[0]?.created_at)||'');
+    let dirtyScores=false;
+    if(sigS!==prevSigS){
+      state.scores=(force||!wm.scores)?rows:mergeById(state.scores,rows);
+      state.sig.scores=sigS; dirtyScores=true;
+    }
+    if(sigE!==prevSigE){ state.events=evs; state.sig.events=sigE; }
+    if(rows.length){ const m=rows.reduce((a,r)=>(r.updated_at&&r.updated_at>a?r.updated_at:a),wm.scores||''); if(m)wm.scores=m; }
+    state.lastSync=new Date();
+    showSync('ok','已同步 '+state.lastSync.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}));
+    if(dirtyScores||sigE!==prevSigE){
+      const j=state.scores.length+':'+state.sig.scores;
+      if(j!==lastScoresJson){
+        lastScoresJson=j;
+        if(window._vw==='dash')renderDash();
+        if(window._vw==='records')renderRecords();
+      }
+    }
+  }catch(e){
+    state.online=false;
+    showSync('off','同步失败，重试中');
+  }
+}
+/* 从云端读取全校配置（评比周期 + 扣分档位）；localStorage 只是离线缓存，云端才是权威 */
+async function fetchSettings(){
+  try{
+    const {data:sp,error}=await db.from('app_settings').select('period_start,period_end,tiers,deduct_rules').eq('id',1).maybeSingle();
+    if(error)return;                                   /* 网络失败则保持现状 */
+    /* 扣分细则 */
+    if(sp && Array.isArray(sp.deduct_rules) && sp.deduct_rules.length && setRules(sp.deduct_rules)){
+      try{ localStorage.setItem('wb_rules',JSON.stringify(RULE_LIST)); }catch(e){}
+      batchRules={};
+      if(window._vw==='entry'){ if(entryMode==='class')renderItemsForClass(); else { fillXProjectSelect(); renderCrossRows(); } }
+    }
+    /* 扣分档位 */
+    if(sp && Array.isArray(sp.tiers) && sp.tiers.length && setTiers(sp.tiers)){
+      try{ localStorage.setItem('wb_tiers',JSON.stringify(TIER_LIST)); }catch(e){}
+      if(window._vw==='entry'){ if(entryMode==='class')renderItemsForClass(); else renderCrossRows(); }
+    }
+    /* 评比周期 */
+    const next=(sp && sp.period_start)? {start:sp.period_start,end:sp.period_end||sp.period_start} : null;
+    if(JSON.stringify(next)!==JSON.stringify(customPeriod)){
+      customPeriod=next;
+      try{ if(next)localStorage.setItem('wb_period',JSON.stringify(next)); else localStorage.removeItem('wb_period'); }catch(e){}
+      if(!next && dashFilter.range==='custom') dashFilter.range='week';
+      else if(next && dashFilter.range!=='custom') dashFilter.range='custom';
+      if(window._vw==='dash')renderDash();
+    }
+  }catch(e){}
+}
+async function refreshMeta(force){
+  await fetchSettings();        /* 先同步全校配置 */
+  try{
+    const safe=async(p)=>{ try{ return await p; }catch(e){ return {data:[]}; } };
+    const [c,p,pr,b,sc,iv]=await Promise.all([
+      safe(db.from('classes').select('*').order('name')),
+      safe(db.from('projects').select('*').order('name')),
+      state.isAdmin? safe(db.from('profiles').select('*').order('email')) : Promise.resolve({data:[]}),
+      state.isAdmin? safe(db.from('backups').select('id,created_at,kind').order('created_at',{ascending:false}).limit(40)) : Promise.resolve({data:[]}),
+      state.isStaff? safe(db.from('scorers').select('*').order('name')) : Promise.resolve({data:[]}),
+      state.isAdmin? safe(db.from('staff_invites').select('*').order('created_at',{ascending:false})) : Promise.resolve({data:[]}),
+    ]);
+    const sigC=(c.data||[]).length+':'+((c.data||[]).map(x=>x.name).join('|'));
+    const sigP=(p.data||[]).length+':'+((p.data||[]).map(x=>x.name+x.class_id).join('|'));
+    const sigU=(pr.data||[]).length+':'+((pr.data||[]).map(x=>x.role).join('|'));
+    const sigB=(b.data||[]).length+':'+((b.data||[])[0]?.created_at||'');
+    const sigSC=(sc.data||[]).length+':'+((sc.data||[]).map(x=>x.name).join('|'));
+    const sigIV=(iv.data||[]).length;
+    if(sigC!==state.sig.classes){
+      state.classes=c.data||[];state.sig.classes=sigC;
+      renderClasses();fillClassSelects();fillDashFilter();
+    }
+    if(sigP!==state.sig.projects){
+      state.projects=p.data||[];state.sig.projects=sigP;
+      renderProjects();fillClassSelects();fillDashFilter();applyEntryMode();
+      if(window._vw==='dash')renderDash();
+    }
+    if(sigU!==state.sig.profiles){state.profiles=pr.data||[];state.sig.profiles=sigU;renderUsers();}
+    if(sigB!==state.sig.backups){state.backups=b.data||[];state.sig.backups=sigB;renderSnapshots();}
+    if(sigSC!==state.sig.scorers){state.scorers=sc.data||[];state.sig.scorers=sigSC;renderScorers();fillScorerSelect();}
+    if(sigIV!==state.sig.invites){state.invites=iv.data||[];state.sig.invites=sigIV;renderInvites();}
+  }catch(e){}
+}
+/* 看板数据窗口的下界：最近 N 天；若当前自定义周期更早，则按周期起点放宽 */
+function dataCutoffISO(){
+  const d=new Date();
+  d.setDate(d.getDate()-DATA_WINDOW_DAYS);
+  d.setHours(0,0,0,0);
+  let cut=d;
+  try{
+    const b=rangeBounds();
+    if(b && b.start && b.start.getTime()<cut.getTime()) cut=b.start;
+  }catch(e){}
+  return cut.toISOString();
+}
+
+/* ===== Supabase Realtime：数据库有变化才推送刷新，取代高频轮询 ===== */
+function scheduleRtRefresh(table){
+  if(rtPending)return;
+  rtPending=true;
+  setTimeout(async ()=>{
+    rtPending=false;
+    if(document.hidden)return;
+    if(table==='scores'||table==='events'){
+      state.watermark.scores=null; lastScoresJson='';
+      await refreshScores(true);
+    }else{
+      await refreshMeta(true);
+    }
+  },350);   /* 合并 350ms 内的连续变更，避免批量打分时反复拉取 */
+}
+function startRealtime(){
+  if(rtChannel || !_sb || typeof _sb.channel!=='function')return;
+  try{
+    const tables=['scores','classes','projects','events','scorers','staff_invites','backups','profiles','app_settings'];
+    const ch=_sb.channel('wb-changes');
+    tables.forEach(t=>ch.on('postgres_changes',{event:'*',schema:'public',table:t},()=>scheduleRtRefresh(t)));
+    ch.subscribe(st=>{
+      const ok=(st==='SUBSCRIBED');
+      if(ok!==rtOk){ rtOk=ok; if(rtOk)showSync('ok','实时已连接'); if(pollTimer)schedulePoll(); }
+    });
+    rtChannel=ch;
+  }catch(e){ rtOk=false; }
+}
+function stopRealtime(){
+  try{ if(rtChannel&&_sb)_sb.removeChannel(rtChannel); }catch(e){}
+  rtChannel=null; rtOk=false;
+}
+
+/* 自适应轮询：实时正常时 2 分钟兜底一次；断开时 15 秒一次 */
+function schedulePoll(){
+  if(pollTimer)clearTimeout(pollTimer);
+  const iv=rtOk?POLL_SLOW:POLL_DOWN;
+  pollTimer=setTimeout(async ()=>{
+    if(!document.hidden){
+      /* 全量对账：增量查询看不到「别的设备删除的记录」，定期清水位重拉 */
+      state.watermark.scores=null; lastScoresJson='';
+      try{ await refreshScores(true); await refreshMeta(true); }catch(e){}
+    }
+    schedulePoll();
+  },iv);
+}
+function startPolling(){
+  if(pollingStarted)return;
+  pollingStarted=true;
+  startRealtime();
+  schedulePoll();
+  autoBackupTimer=setInterval(()=>{ if(!document.hidden) takeSnapshot(true); },BK_CHECK_MS);
+  document.addEventListener('visibilitychange',()=>{
+    // 切回页面时立刻全量刷新，并同步其它设备的删除
+    if(!document.hidden){ state.watermark.scores=null; lastScoresJson=''; refreshScores(true); refreshMeta(true); takeSnapshot(true); schedulePoll(); }
+  });
+  window.addEventListener('online',()=>{
+    state.online=true; state.watermark={scores:null,events:null,meta:null}; lastScoresJson='';
+    startRealtime(); refreshScores(true); refreshMeta(true); toast('网络已恢复');
+  });
+  window.addEventListener('offline',()=>{ state.online=false; showSync('off','离线模式'); });
+}
+function filteredScores(){
+  return state.scores.filter(r=>(!dashFilter.classId||String(r.class_id)===dashFilter.classId)&&inRange(r.created_at));
+}
+
+/* ==================================================================
+   模块 2/6 · AUTH
+   ================================================================== */
+let authTab='password';
+$$('#authTabs button').forEach(b=>b.onclick=()=>{
+  authTab=b.dataset.tab;
+  $$('#authTabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  resetAuthStep1();
+});
+function resetAuthStep1(){
+  $('#authStep1').classList.remove('hidden');
+  $('#authErr').textContent='';
+  $('#authEmail').value='';$('#authPwd').value='';
+  if(authTab==='password'){ $('#authSubmit').textContent='登录';$('#switchHint').innerHTML='没有账号？切到「注册」'; }
+  else { $('#authSubmit').textContent='注册';$('#switchHint').innerHTML='已有账号？切到「登录」'; }
+}
+$('#authSubmit').onclick = async ()=>{
+  const raw=$('#authEmail').value.trim();
+  if(!raw){$('#authErr').textContent='请输入账号';return;}
+  const email = raw.includes('@') ? raw : (raw + '@myapp.local');
+  $('#authErr').textContent='';
+  const btn=$('#authSubmit'); const oldTxt=btn.textContent;
+  btn.disabled=true; btn.textContent='处理中…';
+  try{
+    if(authTab==='password'){
+      const pwd=$('#authPwd').value;
+      if(!pwd){$('#authErr').textContent='请输入密码';return;}
+      const {data,error}=await cloud.auth.signInWithPassword({email,password:pwd});
+      if(error){$('#authErr').textContent=error.message||'账号或密码错误';return;}
+      afterLogin(data.user);
+    } else if(authTab==='signup'){
+      const pwd=$('#authPwd').value;
+      if(!pwd||pwd.length<6){$('#authErr').textContent='请设置至少 6 位密码';return;}
+      const {data,error}=await cloud.auth.signUp({email, password:pwd});
+      if(error){
+        if(error.message && (error.message.includes('already registered') || error.message.includes('already been registered'))){
+          $('#authErr').textContent='该账号已被注册，请切换到「登录」';
+        } else {
+          $('#authErr').textContent=error.message;
+        }
+        return;
+      }
+      if(data && data.user){ afterLogin(data.user); }
+      else{
+        // 先切回登录页再写提示，否则 resetAuthStep1() 会把刚写的提示清空
+        authTab='password';
+        $$('#authTabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab==='password'));
+        resetAuthStep1();
+        $('#authErr').textContent = raw.includes('@')
+          ? '注册成功：请到邮箱点击确认链接后，再回来登录。'
+          : '注册成功，但此账号（'+email+'）收不到确认邮件。请在 Supabase 后台关闭「邮箱确认 Confirm email」，或改用真实邮箱注册。';
+      }
+    }
+  }catch(e){$('#authErr').textContent='出错了：'+(e.message||e);}
+  finally{ btn.disabled=false; if(authTab==='password')btn.textContent='登录'; else btn.textContent='注册'; }
+};
+$('#authEmail').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authSubmit').click();});
+$('#authPwd').addEventListener('keydown',e=>{if(e.key==='Enter')$('#authSubmit').click();});
+$('#logoutBtn').onclick=async()=>{
+  try { await cloud.auth.signOut(); } catch(e) {}
+  try {
+    Object.keys(localStorage).forEach(function(k){
+      if (k.indexOf('sb-') === 0 || k.indexOf('supabase') >= 0 || k.indexOf('workbuddy') >= 0) {
+        localStorage.removeItem(k);
+      }
+    });
+  } catch(e) {}
+  location.reload();
+};
+$('#syncNow').onclick=()=>{state.watermark={scores:null,events:null,meta:null};state.sig={};refreshScores(true);refreshMeta(true);toast('已触发同步');};
+$('#adminLoginBtn').onclick=()=>{resetAuthStep1();$('#auth').classList.remove('hidden');};
+$('#authClose').onclick=()=>$('#auth').classList.add('hidden');
+
+async function afterLogin(user){
+  if(user && !user.email && user.raw){
+    user.email = user.raw.email
+      || (user.raw.user_metadata && (user.raw.user_metadata.email || user.raw.user_metadata.preferred_username))
+      || user.raw.sub || '';
+  }
+  state.user=user;
+  $('#auth').classList.add('hidden');
+  $('#main').classList.remove('hidden');
+  $('#adminLoginBtn').classList.add('hidden');
+  $('#syncNow').classList.remove('hidden');
+  $('#logoutBtn').classList.remove('hidden');
+  $('#userPill').classList.remove('hidden');
+  $('#rolePill').classList.remove('hidden');
+  $('#userPill').textContent=(user.email||user.id).split('@')[0];
+  showSync('busy');
+  await ensureProfile(user);
+  try{ await db.rpc('claim_staff_role',{p_email:user.email||''}); }catch(e){}
+  await loadProfile();
+  applyRole();
+  buildNav();
+  renderItemsForClass();
+  await loadAll(true);
+  startPolling();
+  setTimeout(()=>takeSnapshot(true,true),1500);
+}
+function applyRole(){
+  state.isAdmin=state.role==='admin';
+  state.isStaff=state.isAdmin||state.role==='sub';
+  document.body.classList.toggle('is-admin',state.isAdmin);
+  document.body.classList.toggle('is-staff',state.isStaff);
+  $('#rolePill').textContent=ROLE_LABEL[state.role]||'访客';
+  $('#rolePill').className='pill '+(state.isAdmin?'role-super':(state.role==='sub'?'role-sub':'role-visitor'));
+  buildNav();
+  const cur=window._vw||'dash';
+  if(!viewAllowed(cur)){ switchView('dash'); }
+}
+function viewAllowed(vid){
+  const v=VIEWS.find(x=>x.id===vid); if(!v)return false;
+  if(v.perm==='all')return true;
+  if(v.perm==='staff')return state.isStaff;
+  return state.isAdmin;
+}
+function enterPublicMode(){
+  state.user=null;state.role='visitor';state.isAdmin=false;state.isStaff=false;
+  document.body.classList.remove('is-admin');
+  document.body.classList.remove('is-staff');
+  $('#main').classList.remove('hidden');
+  $('#auth').classList.add('hidden');
+  $('#adminLoginBtn').classList.remove('hidden');
+  $('#syncNow').classList.add('hidden');
+  $('#logoutBtn').classList.add('hidden');
+  $('#userPill').classList.add('hidden');
+  $('#rolePill').classList.add('hidden');
+  showSync('ok','公开数据 · 游客只读');
+  buildNav();
+  loadAll(true);
+  startPolling();
+}
+async function ensureProfile(user){
+  try{
+    const {data:me}=await db.from('profiles').select('email,role').eq('user_id',user.id).maybeSingle();
+    if(!me){
+      // 首个注册者自动成为总管理员（服务端另有触发器兜底，见 supabase_setup.sql）
+      let role='visitor';
+      try{
+        const {count}=await db.from('profiles').select('id',{count:'exact',head:true});
+        if((count||0)===0) role='admin';
+      }catch(e){}
+      await db.from('profiles').insert({user_id:user.id,email:user.email||null,role});
+    }
+    else if(!me.email && user.email){ await db.from('profiles').update({email:user.email}).eq('user_id',user.id); }
+  }catch(e){}
+}
+async function loadProfile(){
+  const {data}=await db.from('profiles').select('*').eq('user_id',state.user.id).maybeSingle();
+  state.role=data?.role||'visitor';
+  state.isAdmin=state.role==='admin';
+  state.isStaff=state.isAdmin||state.role==='sub';
+}
+function buildNav(){
+  $$('#nav button').forEach(b=>{
+    const v=VIEWS.find(x=>x.id===b.dataset.view);
+    if(v) b.classList.toggle('hidden',!viewAllowed(v.id));
+  });
+  const nav=$('#bottomNav');
+  const primary=BOTTOM_PRIMARY.filter(viewAllowed);
+  const rest=VIEWS.filter(v=>!BOTTOM_PRIMARY.includes(v.id)&&viewAllowed(v.id));
+  let html=primary.map(v=>`<button data-view="${v.id}" class="${window._vw===v.id?'active':''}">${ICON[v.icon]}<span>${v.label}</span></button>`).join('');
+  if(rest.length){
+    const anyActive=rest.some(v=>v.id===window._vw);
+    html+=`<button id="moreBtn" class="${anyActive?'active':''}">${ICON.more}<span>更多</span></button>`;
+  }
+  nav.innerHTML=html;
+  const mb=$('#moreBtn'); if(mb) mb.onclick=openMore;
+  $('#moreList').innerHTML=rest.map(v=>`<button data-view="${v.id}">${ICON[v.icon]}<span>${v.label}</span></button>`).join('')||'<div class="muted">当前权限下没有更多功能</div>';
+}
+function bindNavDelegates(){
+  const onNavClick=(e)=>{
+    const btn=e.target.closest('button[data-view]');
+    if(!btn)return;
+    if(btn.closest('#moreBg'))closeMore();
+    if(btn.dataset.view)switchView(btn.dataset.view);
+  };
+  const bn=$('#bottomNav'); if(bn) bn.addEventListener('click',onNavClick);
+  const ml=$('#moreList'); if(ml) ml.addEventListener('click',onNavClick);
+  const nv=$('#nav'); if(nv) nv.addEventListener('click',onNavClick);
+}
+function openMore(){$('#moreBg').classList.remove('hidden');}
+function closeMore(){$('#moreBg').classList.add('hidden');}
+$('#moreClose').onclick=closeMore;
+$('#moreBg').onclick=(e)=>{if(e.target.id==='moreBg')closeMore();};
+
+function switchView(vid){
+  if(!viewAllowed(vid)){toast('无权限访问该模块');return;}
+  window._vw=vid;
+  $$('#nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===vid));
+  $$('section.view').forEach(s=>s.classList.remove('active'));
+  const sec=$('#view-'+vid); if(sec)sec.classList.add('active');
+  if(vid==='records')renderRecords();
+  if(vid==='classes')renderClasses();
+  if(vid==='projects')renderProjects();
+  if(vid==='users'){renderUsers();renderInvites();}
+  if(vid==='scorers')renderScorers();
+  if(vid==='backup')renderSnapshots();
+  if(vid==='entry')applyEntryMode();
+  if(vid==='dash')renderDash();
+  buildNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window._vw='dash';
+
+/* ==================================================================
+   模块 4/6 · RENDER
+   ================================================================== */
+function renderDash(){
+  const s=filteredScores();
+  const valid=s.filter(r=>r.score!=null&&r.score!=='');
+  const hasCur=valid.length>0;
+  const avg=hasCur? valid.reduce((a,r)=>a+Number(r.score),0)/valid.length : 0;
+  const dedTotal=n2(s.reduce((a,r)=>a+Number(r.deduction||0),0));
+  const dedCount=s.filter(r=>Number(r.deduction)>0).length;
+  const scoredProjects=new Set(s.map(r=>r.project_id)).size;
+  const curClassName=dashFilter.classId? className(Number(dashFilter.classId)) : '全部班级';
+
+  const d=new Date();
+  const weekday=['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  const dateStr=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+weekday;
+  $('#dashSub').textContent=dateStr+' · '+curClassName+' · '+rangeLabel();
+  /* 保持下拉框与实际周期一致（弹窗打开时不要抢改，避免打断用户选择） */
+  const drSel=$('#dRange');
+  if(drSel && $('#periodBg').classList.contains('hidden') && drSel.value!==dashFilter.range){
+    drSel.value=dashFilter.range;
+  }
+
+  /* 班级排名要用「只按时间范围过滤、不按班级过滤」的全量数据。
+     否则选中某个班后 allClassAvgs 只剩本班：年级排名会恒为 1/1、排名榜也只剩一行 */
+  const sRange=state.scores.filter(r=>inRange(r.created_at));
+  const allClassAvgs=calcClassAvgs(sRange);
+  let rankHtml='—';
+  if(dashFilter.classId && allClassAvgs.length){
+    const idx=allClassAvgs.findIndex(x=>String(x.id)===dashFilter.classId);
+    rankHtml=(idx>=0?idx+1:'—')+'<small>/'+allClassAvgs.length+'</small>';
+  } else {
+    rankHtml=allClassAvgs.length+'<small>个班</small>';
+  }
+  /* 涨跌＝当前范围 vs 上一段等长时间窗口，与上面均分保持同一口径。
+     原来写死"今日 vs 昨日"，导致"近 30 天均分"后面挂着今天的涨跌 */
+  const prevAvg=prevRangeAvg();
+  let deltaHtml='';
+  if(hasCur && prevAvg!=null){
+    const dlt=n2(avg-prevAvg);
+    const tip=prevRangeLabel(dashFilter.range);
+    deltaHtml = dlt>0 ? `<span class="up" title="${tip}">↑${dlt.toFixed(1)}</span>`
+             : dlt<0 ? `<span class="down" title="${tip}">↓${Math.abs(dlt).toFixed(1)}</span>`
+             : `<span class="up" style="color:var(--muted);" title="${tip}">持平</span>`;
+  }
+
+  $('#heroStats').innerHTML=`
+    <div class="hero-stat"><div class="k">常规均分${rangeAvgLabel()}</div><div class="v">${hasCur?avg.toFixed(1):'—'}${deltaHtml}</div></div>
+    <div class="hero-stat"><div class="k">扣分事件</div><div class="v">${dedCount}<small>次</small></div></div>
+    <div class="hero-stat"><div class="k">已打分项目</div><div class="v">${scoredProjects}<small>/ ${dashFilter.classId? state.projects.filter(p=>String(p.class_id)===dashFilter.classId).length : state.projects.length}</small></div></div>
+    <div class="hero-stat"><div class="k">${dashFilter.classId?'年级排名':'班级数'}</div><div class="v">${rankHtml}</div></div>`;
+
+  renderTodayItems(s);
+  renderTrend(s);
+  renderTodayDeductions(s);
+  renderTodayRanking(s, allClassAvgs);
+  renderDonut();
+  renderHeatmap();
+  renderEvents();
+}
+function calcClassAvgs(s){
+  const map={};
+  s.forEach(r=>{
+    if(r.score==null||r.score==='')return;
+    if(!map[r.class_id])map[r.class_id]={sum:0,n:0};
+    map[r.class_id].sum+=Number(r.score);map[r.class_id].n++;
+  });
+  return Object.entries(map)
+    .map(([cid,v])=>({id:Number(cid),name:className(Number(cid)),avg:v.sum/v.n,n:v.n}))
+    .sort((a,b)=>b.avg-a.avg);
+}
+function renderTodayItems(s){
+  const isClassMode = !!dashFilter.classId;
+
+  /* 模式一：全部班级 → 班级排行（总分 + 均分）
+     满分＝项目数×100，与周期天数无关：未检查的项目没有扣分，就计满分。
+     这正是放假周也能公平评比的原因 —— 完整周和放假周的分母都是「项目数×100」。 */
+  if(!isClassMode){
+    const b=rangeBounds();
+    const sorts=['total','avg'];
+    if(sorts.indexOf(dashSort)<0) dashSort='total';
+    $('#todayItemsTitle').innerHTML='班级排行 <span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">总分＝Σ(100−各项目周期内累计扣分) · 满分＝项目数×100</span>';
+    $('#rankSeg').classList.remove('hidden');
+    $('#rankSeg').innerHTML=sorts.map(k=>
+      `<button type="button" data-sort="${k}" class="${dashSort===k?'active':''}">${SORT_LABEL[k]}</button>`).join('');
+    $('#rankCard').classList.add('hidden');
+    $('#dedCard').classList.add('span2');
+
+    const dedByProject={}, avgMap={}, daysByClass={};
+    s.forEach(r=>{
+      const d=Number(r.deduction||0);
+      if(d>0) dedByProject[r.project_id]=(dedByProject[r.project_id]||0)+d;
+      const ck=String(r.class_id);
+      (daysByClass[ck]=daysByClass[ck]||{})[(r.created_at||'').slice(0,10)]=1;
+      if(r.score==null||r.score==='')return;
+      if(!avgMap[ck])avgMap[ck]={sum:0,n:0};
+      avgMap[ck].sum+=Number(r.score);avgMap[ck].n++;
+    });
+    const rows=state.classes.map(c=>{
+      const projs=state.projects.filter(p=>p.class_id===c.id);
+      let cur=0;
+      projs.forEach(p=>{const dd=n2(dedByProject[p.id]||0);cur+=Math.max(0,100-dd);});
+      const tot=projs.length*100;
+      const a=avgMap[String(c.id)];
+      const avg=(a&&a.n)? a.sum/a.n : null;
+      const dc=daysByClass[String(c.id)];
+      return {id:c.id,name:c.name,cur:n2(cur),tot,projN:projs.length,
+              avg,checkedDays:dc?Object.keys(dc).length:0,pct:tot>0?cur/tot*100:0};
+    }).filter(x=>x.projN>0 && x.checkedDays>0);
+
+    if(!rows.length){
+      $('#todayItems').innerHTML='<div class="empty">本周期内还没有评分记录（或还没建班级/项目）</div>';
+      return;
+    }
+    rows.sort((a,c2)=>{
+      if(dashSort==='avg'){
+        const av=a.avg==null?-1:a.avg, bv=c2.avg==null?-1:c2.avg;
+        if(bv!==av) return bv-av;
+      }
+      return c2.cur-a.cur;
+    });
+    /* 周期已结束才叫「流动红旗」，本周还在进行中就叫「本轮领跑」 */
+    const ongoing = !b || (new Date() < b.end);
+    const flagText = ongoing ? '本轮领跑' : '流动红旗';
+
+    $('#todayItems').innerHTML=rows.map((r,i)=>{
+      const rank=i+1;
+      const g = rank===1?' g1':rank===2?' g2':rank===3?' g3':'';
+      const col = r.pct>=98?'var(--green-600)':r.pct>=95?'var(--blue-700)':'var(--amber-600)';
+      const barPct = r.tot>0 ? Math.min(100,Math.max(0,r.pct)) : 0;
+      const avgTxt = r.avg==null ? '—' : r.avg.toFixed(1);
+      const avgHi = (r.avg!=null && r.avg>=98) ? ' hi' : '';
+      const flag = (rank===1 && b && b.multi) ? `<span class="flag">${FLAG_SVG}${flagText}</span>` : '';
+      return `<div class="crow">
+        <div class="crow-rk${g}">${rank}</div>
+        <div class="crow-mid">
+          <div class="crow-l1">
+            <span class="nm">${esc(r.name)} <span class="muted" style="font-weight:400;font-size:12px;">${r.projN} 项 · 查 ${r.checkedDays} 天</span>${flag}</span>
+            <span class="tot" style="color:${col};">${r.cur.toFixed(1)}<small> / ${r.tot}</small></span>
+          </div>
+          <div class="crow-track"><i style="width:${barPct.toFixed(1)}%;background:${col};"></i></div>
+        </div>
+        <div class="crow-avg${avgHi}"><span class="av">${avgTxt}</span><span class="ak">均分</span></div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  /* 模式二：单个班级 → 今日各项目扣分 + 今日得分 + 本轮总分 */
+  $('#rankSeg').classList.add('hidden');
+  $('#rankCard').classList.remove('hidden');
+  $('#dedCard').classList.remove('span2');
+  const cid=Number(dashFilter.classId);
+  const pb=rangeBounds();
+  $('#todayItemsTitle').innerHTML='「'+esc(className(cid))+'」<span class="muted" style="font-size:13px;font-weight:400;margin-left:6px;">今日扣分情况 · 今日得分 · 本轮总分</span>';
+  const projs=state.projects.filter(p=>p.class_id===cid);
+  if(!projs.length){
+    $('#todayItems').innerHTML='<div class="empty">该班级暂无项目，去「项目管理」添加</div>';
+    return;
+  }
+  /* 今日：只算今天；本轮：算当前评比周期（s 已按班级+周期过滤） */
+  const nw=new Date();
+  const tS=new Date(nw.getFullYear(),nw.getMonth(),nw.getDate());
+  const tE=new Date(tS); tE.setDate(tE.getDate()+1);
+  const sToday=state.scores.filter(r=>{
+    if(String(r.class_id)!==String(cid))return false;
+    const t=new Date(r.created_at);
+    return t>=tS && t<tE;
+  });
+  const dedOf=(arr,pid)=>n2((arr||[]).filter(r=>r.project_id===pid)
+    .reduce((a,r)=>a+Number(r.deduction||0),0));
+  let todayDed=0, periodDed=0;
+  const rows=projs.map(p=>{
+    const dT=dedOf(sToday,p.id), dP=dedOf(s,p.id);
+    todayDed+=dT; periodDed+=dP;
+    return {name:p.name,dT,dP};
+  });
+  const full=projs.length*100;
+  const todayScore=n2(Math.max(0,full-todayDed));
+  const periodScore=n2(Math.max(0,full-periodDed));
+  $('#todayItems').innerHTML=`
+    <div class="kv2">
+      <div class="kv2-box">
+        <div class="k">今日得分</div>
+        <div class="v">${todayScore.toFixed(1)}<small> / ${full}</small></div>
+        <div class="s">${fmtMd(tS)} · 今日共扣 ${todayDed.toFixed(1)} 分</div>
+      </div>
+      <div class="kv2-box">
+        <div class="k">本轮总分</div>
+        <div class="v">${periodScore.toFixed(1)}<small> / ${full}</small></div>
+        <div class="s">${pb?esc(pb.label):'全部时间'} · 累计扣 ${periodDed.toFixed(1)} 分</div>
+      </div>
+    </div>
+    <div class="prow-head"><span>项目</span><span>今日扣分</span><span>本轮累计</span></div>
+    ${rows.map(r=>`<div class="prow">
+        <span class="pn">${esc(r.name)}</span>
+        <span class="pd${r.dT>0?'':' zero'}">${r.dT>0?('−'+r.dT.toFixed(1)):'0'}</span>
+        <span class="pp${r.dP>0?'':' zero'}">${r.dP>0?('−'+r.dP.toFixed(1)):'0'}</span>
+      </div>`).join('')}`;
+}
+function renderTrend(s){
+  const days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(ymd(d));}
+  const map={};
+  state.scores.forEach(r=>{
+    if(r.score==null)return;
+    const day=(r.created_at||'').slice(0,10);
+    if(days.indexOf(day)<0)return;
+    if(dashFilter.classId && String(r.class_id)!==dashFilter.classId)return;
+    if(!map[day])map[day]={sum:0,n:0};
+    map[day].sum+=Number(r.score);map[day].n++;
+  });
+  const pts=days.map(d=>map[d]?{d, y:map[d].sum/map[d].n}:{d,y:null});
+  const valid=pts.filter(p=>p.y!=null);
+  if(!valid.length){
+    $('#trend').innerHTML='<div class="empty">近 7 日暂无数据</div>';
+    $('#trendSummary').innerHTML='';
+    return;
+  }
+  const w=560,h=220,padL=34,padR=14,padT=14,padB=32;
+  const max=Math.max(...valid.map(p=>p.y),100);
+  const min=Math.min(...valid.map(p=>p.y),95);
+  const span=(max-min)||1;
+  const xOf=i=>padL+(w-padL-padR)*(i/(days.length-1||1));
+  const yOf=v=>padT+(h-padT-padB)*(1-(v-min)/span);
+  let grid='';
+  for(let g=0;g<=4;g++){
+    const yv=min+span*g/4, yy=yOf(yv);
+    grid+=`<line x1="${padL}" y1="${yy.toFixed(1)}" x2="${w-padR}" y2="${yy.toFixed(1)}" stroke="#f1f5f9"/>`;
+    grid+=`<text x="4" y="${(yy+3).toFixed(1)}" font-size="10" fill="#94a3b8">${yv.toFixed(0)}</text>`;
+  }
+  let segPath='',dots='';
+  let started=false, lastX=null;
+  const areas=[]; let curArea='';
+  pts.forEach((p,i)=>{
+    if(p.y==null){
+      if(curArea){areas.push(curArea+' L'+lastX+' '+(h-padB)+' Z');curArea='';}
+      started=false;lastX=null;
+      return;
+    }
+    const x=xOf(i).toFixed(1), y=yOf(p.y).toFixed(1);
+    segPath+=(started?'L':'M')+x+' '+y;
+    if(!started){curArea='M'+x+' '+(h-padB)+' L'+x+' '+y;}
+    else{curArea+=' L'+x+' '+y;}
+    lastX=x;
+    started=true;
+    dots+=`<circle cx="${x}" cy="${y}" r="3" fill="#fff" stroke="#1d4ed8" stroke-width="2"><title>${p.d}: ${p.y.toFixed(1)}</title></circle>`;
+  });
+  if(curArea){areas.push(curArea+' L'+lastX+' '+(h-padB)+' Z');}
+  const areaPath=areas.join(' ');
+  const xlabels=pts.map((p,i)=>`<text x="${xOf(i).toFixed(1)}" y="${h-10}" font-size="10" fill="#94a3b8" text-anchor="middle">${p.d.slice(5)}</text>`).join('');
+  $('#trend').innerHTML=`<svg width="100%" viewBox="0 0 ${w} ${h}">
+    ${grid}
+    ${areaPath?`<path d="${areaPath}" fill="#1d4ed8" opacity="0.10"/>`:''}
+    ${segPath?`<path d="${segPath}" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>`:''}
+    ${dots}${xlabels}
+  </svg>`;
+  const cur=valid[valid.length-1], best=valid.reduce((a,b)=>a.y>=b.y?a:b);
+  const prev=valid.length>1?valid[valid.length-2]:null;
+  let delta='';
+  if(prev){
+    const dlt=n2(cur.y-prev.y);
+    delta = dlt>0 ? `较前一记录 +${dlt.toFixed(1)}` : dlt<0 ? `较前一记录 ${dlt.toFixed(1)}` : '较前一记录持平';
+  }
+  $('#trendSummary').innerHTML=`近 7 日最高 <b>${best.y.toFixed(1)}</b>（${best.d.slice(5)}）· 当前 <b>${cur.y.toFixed(1)}</b>${delta?'，'+delta:''}`;
+}
+function renderTodayDeductions(s){
+  const rows=s.filter(r=>Number(r.deduction)>0)
+    .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
+    .slice(0,12);
+  if(!rows.length){$('#todayDeductions').innerHTML='<div class="empty">暂无扣分记录</div>';return;}
+  $('#todayDeductions').innerHTML=rows.map(r=>{
+    const t=new Date(r.created_at);
+    const hm=pad2(t.getHours())+':'+pad2(t.getMinutes());
+    const who=r.scorer||r.operator||'—';
+    return `<div class="ded-row">
+      <div class="txt">
+        <b>${esc(className(r.class_id))} · ${esc(projectName(r.project_id))}</b>
+        <div class="m">打分人 ${esc(who)} · ${hm}${r.note?' · '+esc(r.note):''}</div>
+      </div>
+      <div class="num">−${Number(r.deduction).toFixed(1)}</div>
+    </div>`;
+  }).join('');
+}
+function renderTodayRanking(s, allClassAvgs){
+  $('#rankTitle').textContent = dashFilter.classId ? '班级排名（本班高亮）' : '班级排名';
+  if(!allClassAvgs.length){$('#classRank').innerHTML='<div class="empty">暂无数据</div>';return;}
+  const curId=String(dashFilter.classId||'');
+  $('#classRank').innerHTML=allClassAvgs.map((x,i)=>{
+    const rk=i+1;
+    const cls='rank-row'+(String(x.id)===curId?' me':'')+(rk===1?' top1':rk===2?' top2':rk===3?' top3':'');
+    return `<div class="${cls}">
+      <div class="rk">${rk}</div>
+      <div class="nm">${esc(x.name)}${String(x.id)===curId?'<span class="me-tag">本班</span>':''}</div>
+      <div class="sc">${x.avg.toFixed(1)}</div>
+    </div>`;
+  }).join('');
+}
+function renderDonut(){
+  const groups={};
+  filteredScores().forEach(r=>{const d=Number(r.deduction||0);if(d<=0)return;const k=projectName(r.project_id);groups[k]=(groups[k]||0)+d;});
+  const rawPal=['#1d4ed8','#f59e0b','#16a34a','#9333ea','#0891b2','#e11d48','#65a30d','#db2777'];
+  const segs=Object.entries(groups).map(([k,v])=>({label:k,value:n2(v)})).sort((a,b)=>b.value-a.value).slice(0,8);
+  const total=n2(segs.reduce((a,s)=>a+s.value,0));
+  const size=160,r=size/2-16,cx=size/2,cy=size/2,inner=r*0.62;
+  let a=-Math.PI/2,paths='';
+  if(total<=0){
+    paths=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="#f1f5f9"/><circle cx="${cx}" cy="${cy}" r="${inner}" fill="#fff"/>`;
+  }else{
+    segs.forEach((seg,i)=>{
+      const v=seg.value; if(v<=0)return;
+      const ang=v/total*Math.PI*2, a2=a+ang;
+      const x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+      const xi2=cx+inner*Math.cos(a2),yi2=cy+inner*Math.sin(a2),xi1=cx+inner*Math.cos(a),yi1=cy+inner*Math.sin(a);
+      const lg=ang>Math.PI?1:0;
+      paths+=`<path d="M${x1.toFixed(2)} ${y1.toFixed(2)} A${r} ${r} 0 ${lg} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} L${xi2.toFixed(2)} ${yi2.toFixed(2)} A${inner} ${inner} 0 ${lg} 0 ${xi1.toFixed(2)} ${yi1.toFixed(2)} Z" fill="${rawPal[i%rawPal.length]}"><title>${esc(seg.label)}: ${seg.value}</title></path>`;
+      a=a2;
+    });
+  }
+  $('#donut').innerHTML=`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${paths}<text x="${cx}" y="${cy-1}" text-anchor="middle" font-size="19" fill="#1d4ed8" font-weight="700">${total}</text><text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="10" fill="#64748b">扣分合计</text></svg>`;
+  $('#donutLegend').innerHTML=segs.length
+    ? segs.map((s,i)=>`<div><span class="swatch" style="background:${rawPal[i%rawPal.length]}"></span>${esc(s.label)}：${s.value}</div>`).join('')
+    : '<div class="muted">暂无扣分记录</div>';
+}
+function renderHeatmap(){
+  const box=$('#heatmap'), lg=$('#heatLegend');
+  if(!box)return;
+  if(!state.projects.length||!state.classes.length){
+    box.innerHTML='<div class="empty">暂无班级或项目</div>'; lg.innerHTML=''; return;
+  }
+  const scores=filteredScores();
+  const projNames=[...new Set(state.projects.map(p=>p.name))];
+  const matrix=state.classes.map(c=>{
+    const cells=projNames.map(pn=>{
+      const pids=new Set(state.projects.filter(p=>p.class_id===c.id&&p.name===pn).map(p=>p.id));
+      if(!pids.size)return null;
+      let ded=0; scores.forEach(r=>{if(r.class_id===c.id&&pids.has(r.project_id))ded+=Number(r.deduction||0);});
+      return n2(ded);
+    });
+    return {name:c.name,cells};
+  });
+  const allVals=[]; matrix.forEach(r=>r.cells.forEach(v=>{if(v!=null)allVals.push(v);}));
+  const maxV=Math.max(...allVals,0.1);
+  const colorOf=v=>{
+    if(v==null)return {bg:'#f1f5f9',fg:'#94a3b8'};
+    if(v<=0)return {bg:'#f0fdf4',fg:'#15803d'};
+    const t=Math.min(1,v/maxV);
+    const stops=[[254,243,199],[253,186,116],[239,68,68],[185,28,28]];
+    const seg=t*(stops.length-1), i=Math.min(stops.length-2,Math.floor(seg)), f=seg-i;
+    const c1=stops[i],c2=stops[i+1];
+    const rgb=c1.map((v0,k)=>Math.round(v0+(c2[k]-v0)*f));
+    return {bg:`rgb(${rgb.join(',')})`,fg:(t>0.35?'#fff':'#7c2d12')};
+  };
+  let html='<table class="heat-table"><thead><tr><th></th>';
+  projNames.forEach(pn=>{html+=`<th>${esc(pn)}</th>`;});
+  html+='</tr></thead><tbody>';
+  matrix.forEach(r=>{
+    html+=`<tr><th class="rowh">${esc(r.name)}</th>`;
+    r.cells.forEach(v=>{
+      const c=colorOf(v);
+      html+= v==null
+        ? '<td><div class="heat-cell na">—</div></td>'
+        : `<td><div class="heat-cell" style="background:${c.bg};color:${c.fg};">${v<=0?'0':'−'+v}${v>0?'<small>扣分</small>':''}</div></td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  box.innerHTML=html;
+  const steps=[0,0.25,0.5,0.75,1].map(t=>colorOf(t*maxV));
+  lg.innerHTML=`<span>扣分少</span><span class="scale">${steps.map(c=>`<i style="background:${c.bg}"></i>`).join('')}</span><span>扣分多（最多 ${n2(maxV)}）</span>`;
+}
+function renderEvents(){
+  const all=state.events||[], ev=all.slice(0,20);
+  if(!ev.length){$('#eventStream').innerHTML='<div class="empty">暂无动态</div>';return;}
+  $('#eventStream').innerHTML=ev.map(e=>`<div class="event"><div>${esc(e.summary)}</div><div class="t">${new Date(e.created_at).toLocaleString('zh-CN')} · ${esc(e.actor||'')}</div></div>`).join('')
+    +`<div class="muted" style="text-align:center;padding:8px 0 2px;font-size:12px;">共 ${all.length} 条</div>`;
+}
+/* 谁能改这条记录：总管理员全可改；子管理员只能改「自己提交的」（按 scores.user_id 判定） */
+function canEditScoreRow(r){
+  if(!r)return false;
+  if(state.isAdmin)return true;
+  if(!state.isStaff)return false;
+  const uid=state.user&&state.user.id;
+  return !!(uid && r.user_id && String(r.user_id)===String(uid));
+}
+function renderRecords(){
+  const wh=$('#recWindowHint');
+  if(wh) wh.textContent='页面只加载最近 '+DATA_WINDOW_DAYS+' 天（当前 '+state.scores.length+' 条）；导出的 JSON/CSV 与云端快照仍是全量历史数据。';
+  const fc=$('#fClass').value, fp=$('#fProject').value;
+  let rows=state.scores;
+  if(fc)rows=rows.filter(r=>String(r.class_id)===fc);
+  if(fp)rows=rows.filter(r=>projectName(r.project_id)===fp);
+  rows=rows.slice(0,500);
+  if(!rows.length){
+    $('#recTable').classList.add('hidden');
+    $('#recCards').innerHTML='';
+    $('#recEmpty').classList.remove('hidden');
+    return;
+  }
+  $('#recTable').classList.remove('hidden');
+  $('#recEmpty').classList.add('hidden');
+  /* 「对象」列在整批都是「全班」时自动隐藏，避免占地方（想记个人时手填该列会自动出现） */
+  const showStudent=rows.some(r=>r.student_name && r.student_name!=='全班');
+  $('#thStudent').classList.toggle('hidden',!showStudent);
+  const myEdit=canEditScoreRow;
+  $('#recBody').innerHTML=rows.map(r=>`<tr>
+    <td>${new Date(r.created_at).toLocaleString('zh-CN')}</td>
+    <td>${esc(className(r.class_id))}</td>
+    <td>${esc(projectName(r.project_id))}</td>
+    <td class="${showStudent?'':'hidden'}">${esc(r.student_name)}</td>
+    <td>${esc(r.score)}</td>
+    <td>${esc(r.deduction||0)}</td>
+    <td>${esc(r.note||'')}</td>
+    <td>${esc(r.scorer||r.operator||'')}</td>
+    <td class="only-staff"><div class="row-actions">
+      ${myEdit(r)?`<button class="ghost small" onclick="editScore(${r.id})">改</button>`:''}
+      <button class="danger small only-admin" onclick="delScore(${r.id})">删</button>
+    </div></td></tr>`).join('');
+  const canDel=state.isAdmin;
+  $('#recCards').innerHTML=rows.map(r=>{
+    const ded=Number(r.deduction||0);
+    return `<div class="rec-card">
+    <div class="r1"><b>${esc(className(r.class_id))} · ${esc(projectName(r.project_id))}</b>
+      <span class="badge" style="${ded>0?'background:var(--red-100);color:var(--red-600);':'background:var(--green-100);color:var(--green-600);'}">${ded>0?'−'+esc(r.deduction):'满分'}</span></div>
+    <div class="r2">${new Date(r.created_at).toLocaleString('zh-CN')} · ${esc(r.scorer||r.operator||'—')}</div>
+    <div class="r3">${(r.student_name&&r.student_name!=='全班')?`<span>对象：${esc(r.student_name)}</span>`:''}<span>得分 ${esc(r.score)}</span></div>
+    ${r.note?`<div class="r3" style="margin-top:4px;"><span>备注：${esc(r.note)}</span></div>`:''}
+    ${(myEdit(r)||canDel)?`<div class="acts">
+      ${myEdit(r)?`<button class="ghost small" onclick="editScore(${r.id})">修改</button>`:''}
+      ${canDel?`<button class="danger small" onclick="delScore(${r.id})">删除</button>`:''}
+    </div>`:''}
+  </div>`;}).join('');
+}
+function fillClassSelects(){
+  const allOpt='<option value="">全部</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  $('#fClass').innerHTML=allOpt;
+  const cOpt=state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  $('#eClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  $('#pClass').innerHTML=(state.classes.length
+    ? '<option value="all">★ 全部班级（推荐）</option>'
+    : '<option value="">（先建班级）</option>')+cOpt;
+  $('#mClass').innerHTML=cOpt||'<option value="">（先建班级）</option>';
+  const pOpt=state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  const mp=$('#mProject'); if(mp)mp.innerHTML=pOpt||'<option value="">（先建项目）</option>';
+  fillProjectFilter();
+}
+function fillProjectFilter(){
+  const fc=$('#fClass').value;
+  const list=fc?state.projects.filter(p=>String(p.class_id)===fc):state.projects;
+  /* 按「项目名」去重：同名项目在多个班各有一份，下拉里只该出现一次 */
+  const names=[...new Set(list.map(p=>p.name))].sort();
+  const cur=$('#fProject').value;
+  $('#fProject').innerHTML='<option value="">全部</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  if(cur&&names.indexOf(cur)>=0)$('#fProject').value=cur;
+}
+function fillScorerSelect(){
+  const sel=$('#eScorer');
+  const prev=sel.value;
+  const o=state.scorers.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+  sel.innerHTML=o||'<option value="">（先去「打分人」添加）</option>';
+  if(!state.scorers.length)return;
+  /* 记忆上次选择；没记忆过就用登录账号名去名册里匹配 */
+  let want=prev;
+  if(!want){ try{ want=localStorage.getItem('wb_scorer')||''; }catch(e){} }
+  if(!want && state.user && state.user.email){
+    const nm=String(state.user.email).split('@')[0];
+    if(state.scorers.some(s=>s.name===nm)) want=nm;
+  }
+  if(want && state.scorers.some(s=>s.name===want)) sel.value=want;
+}
+function fillDashFilter(){
+  const cur=$('#dClass').value;
+  $('#dClass').innerHTML='<option value="">全部班级</option>'+state.classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  if(cur&&state.classes.some(c=>String(c.id)===cur)){$('#dClass').value=cur;}
+  else{dashFilter.classId='';}
+}
+function renderScorers(){
+  if(!state.scorers.length){$('#scorerList').innerHTML='<div class="empty">还没有打分人，先在上方添加</div>';return;}
+  $('#scorerList').innerHTML=state.scorers.map(s=>`<div class="kv"><span><b>${esc(s.name)}</b></span>
+    <button class="danger small only-staff" onclick="delScorer(${s.id})">删除</button></div>`).join('');
+}
+function renderClasses(){
+  if(!state.classes.length){$('#classList').innerHTML='<div class="empty">还没有班级，先在上方添加</div>';return;}
+  $('#classList').innerHTML=state.classes.map(c=>{
+    const cnt=state.scores.filter(s=>s.class_id===c.id).length;
+    const pc=state.projects.filter(p=>p.class_id===c.id).length;
+    return `<div class="kv"><span><b>${esc(c.name)}</b> <span class="badge">${cnt} 条记录 · ${pc} 个项目</span></span>
+      <span class="row-actions only-admin"><button class="ghost small" onclick="renameClass(${c.id})">重命名</button>
+      <button class="danger small" onclick="delClass(${c.id})">删除</button></span></div>`;
+  }).join('');
+}
+function renderProjects(){
+  if(!state.classes.length){$('#projectList').innerHTML='<div class="empty">还没有班级，先到「班级管理」添加</div>';return;}
+  const byName={};
+  state.projects.forEach(p=>{(byName[p.name]=byName[p.name]||[]).push(p);});
+  const names=Object.keys(byName).sort();
+  const total=state.classes.length;
+  let html='';
+
+  /* 1) 按项目名汇总：一眼看出哪个项目没铺满所有班级，并可一键补齐 */
+  html+='<div class="section-title" style="margin-top:0;">按项目名汇总</div>';
+  if(!names.length){
+    html+='<div class="muted" style="padding:4px 0 8px;">还没有项目。用上方「新增项目」添加，班级建议选「全部班级」。</div>';
+  }else{
+    html+='<div class="muted" style="margin-bottom:6px;">同一名称的项目应当存在于每个班级；框里是覆盖情况。</div>';
+    names.forEach(n=>{
+      const list=byName[n], miss=total-list.length;
+      const badge = miss
+        ? `<span class="badge" style="background:var(--amber-100);color:var(--amber-600);">${list.length}/${total} 个班 · 缺 ${miss}</span>`
+        : `<span class="badge" style="background:var(--green-100);color:var(--green-600);">${list.length}/${total} 个班</span>`;
+      html+=`<div class="kv"><span><b>${esc(n)}</b> ${badge}</span>
+        <span class="row-actions only-admin">
+          ${miss?`<button class="ghost small" data-act="fill" data-pname="${esc(n)}">补齐 ${miss} 个班</button>`:''}
+          <button class="ghost small" data-act="rename" data-pname="${esc(n)}">重命名</button>
+          <button class="danger small" data-act="delall" data-pname="${esc(n)}">全部删除</button>
+        </span></div>`;
+    });
+  }
+
+  /* 2) 按班级查看：单个班级的增删改 */
+  html+='<div class="section-title">按班级查看</div>';
+  const byClass={};
+  state.projects.forEach(p=>{(byClass[p.class_id]=byClass[p.class_id]||[]).push(p);});
+  state.classes.forEach(c=>{
+    const list=byClass[c.id]||[];
+    html+=`<div style="margin:10px 0 4px;"><b style="color:var(--blue-700)">${esc(c.name)}</b> <span class="badge">${list.length} 项</span></div>`;
+    if(!list.length)html+='<div class="muted" style="padding:2px 0 6px;">— 暂无项目 —</div>';
+    list.forEach(p=>{
+      const cnt=state.scores.filter(s=>s.project_id===p.id).length;
+      html+=`<div class="kv"><span>${esc(p.name)} <span class="badge">${cnt} 条</span></span>
+        <span class="row-actions only-admin">
+          <button class="ghost small" data-act="renone" data-pid="${p.id}">重命名</button>
+          <button class="danger small" data-act="delone" data-pid="${p.id}">删除</button>
+        </span></div>`;
+    });
+  });
+  $('#projectList').innerHTML=html;
+}
+/* 项目列表的统一事件委托（只挂一次，避免每次重渲染叠加） */
+$('#projectList').onclick=function(e){
+  const b=e.target.closest('button[data-act]'); if(!b)return;
+  const act=b.dataset.act, pname=b.dataset.pname||'', pid=Number(b.dataset.pid||0);
+  if(act==='fill')fillProjectClasses(pname);
+  else if(act==='rename')renameProjectAll(pname);
+  else if(act==='delall')delProjectAll(pname);
+  else if(act==='renone')renameProject(pid);
+  else if(act==='delone')delProject(pid);
+};
+function renderUsers(){
+  if(!state.isAdmin){$('#userList').innerHTML='<div class="empty">仅总管理员可查看</div>';return;}
+  if(!state.profiles.length){$('#userList').innerHTML='<div class="empty">暂无用户</div>';return;}
+  $('#userList').innerHTML=state.profiles.map(p=>{
+    const me=p.user_id===(state.user?state.user.id:'');
+    const sel=`<select onchange="setRole('${jsq(p.user_id)}',this.value)" style="min-width:132px;min-height:40px;font-size:15px;">
+      <option value="admin"${p.role==='admin'?' selected':''}>总管理员</option>
+      <option value="sub"${p.role==='sub'?' selected':''}>子管理员</option>
+      <option value="visitor"${(p.role==='visitor'||!p.role)?' selected':''}>访客</option></select>`;
+    return `<div class="kv"><span>${esc((p.email||p.user_id).split('@')[0])} ${me?'<span class="badge">我</span>':''}</span>${sel}</div>`;
+  }).join('');
+}
+function renderInvites(){
+  if(!state.isAdmin)return;
+  const list=state.invites||[];
+  if(!list.length){$('#inviteList').innerHTML='<div class="muted">白名单为空。也可让对方先登录一次，再在上方用户列表里改为「子管理员」。</div>';return;}
+  $('#inviteList').innerHTML=list.map(v=>`<div class="kv"><span><b>${esc(v.email)}</b>${v.note?` <span class="badge">${esc(v.note)}</span>`:''}</span>
+    <button class="danger small" onclick="delInvite(${v.id})">移除</button></div>`).join('');
+}
+function renderSnapshots(){
+  if(!state.isAdmin)return;
+  $('#bCloudN').textContent=state.backups.length+' / '+BK_KEEP;
+  $('#bLocalN').textContent=localMirrors().length+' / 3';
+  let html='';
+  if(state.backups.length){
+    html+='<div class="section-title">云端快照</div>';
+    html+='<div class="muted" style="margin-bottom:6px;">由服务器生成，含全部记录（不受页面显示上限影响）。</div>';
+    html+=state.backups.slice(0,BK_KEEP).map(b=>`<div class="kv"><span>${new Date(b.created_at).toLocaleString('zh-CN')}</span>
+      <button class="ghost small" onclick="restoreSnapshot(${b.id})">恢复</button></div>`).join('');
+  }
+  const lm=localMirrors();
+  if(lm.length){
+    html+='<div class="section-title">本机镜像</div>';
+    html+='<div class="muted" style="margin-bottom:6px;">存于本机浏览器、容量有限，仅作离线应急；可能不含全部历史记录，不要当主备份。</div>';
+    html+=lm.map((m,i)=>`<div class="kv"><span>镜像 #${i+1} · ${esc((m.at||'').slice(0,19).replace('T',' '))}</span>
+      <button class="ghost small" onclick="restoreLocal(${i})">恢复</button></div>`).join('');
+  }
+  $('#snapshotList').innerHTML=html||'<div class="empty">暂无快照，点击「立即云端快照」</div>';
+}
+/* ---- 行内档位：一个项目一行，直接点档位，不再弹窗 ---- */
+function tierChipsHtml(pid){
+  const ded=batchDed[pid]||0;
+  return TIER_LIST.map(t=>{
+    const on=Math.abs(t-ded)<1e-9;
+    return `<button type="button" class="tier-chip${t===0?' zero':''}${on?' active':''}" data-t="${t}" onclick="setTier(${pid},${t})">${tierLabel(t)}</button>`;
+  }).join('');
+}
+function tierRowHtml(pid,label,withNote){
+  const ded=batchDed[pid]||0, cur=Math.max(0,n2(100-ded));
+  const noteHtml = withNote
+    ? `<div class="tier-note${ded>0?'':' hidden'}"><span>扣分原因</span>`
+      +`<input data-note-pid="${pid}" placeholder="如：讲台有粉笔灰（可留空）" value="${esc(xNote[pid]||'')}"/></div>`
+    : '';
+  return `<div class="tier-row" data-pid="${pid}">
+    <span class="tier-name">${esc(label)}</span>
+    <div class="tier-chips">${tierChipsHtml(pid)}</div>
+    <span class="tier-cur">当前 <b>${cur}</b></span>
+    ${noteHtml}
+  </div>`;
+}
+/* ---- 扣分细则勾选面板（有规则的项目用它，替代档位按钮）---- */
+function rulePanelInner(pid){
+  const p=state.projects.find(x=>x.id===pid); if(!p)return '';
+  const items=projectRules(p.name); if(!items)return '';
+  const sel=batchRules[pid]||{};
+  let lastG=null, html='';
+  items.forEach((it,i)=>{
+    if(it.g && it.g!==lastG){ html+=`<div class="rule-group">${esc(it.g)}</div>`; lastG=it.g; }
+    const n=sel[i]||0;
+    html+=`<div class="rule-row${n>0?' on':''}">
+      <button type="button" class="rule-tick${n>0?' on':''}" onclick="toggleRule(${pid},${i})">${n>0?'✓':''}</button>
+      <span class="rule-text" title="${esc(it.d||it.t)}">${esc(it.t)}${it.dup?`<i class="rule-dup">（与「${esc(it.dup)}」重复）</i>`:''}</span>
+      <span class="rule-score">${n2(it.s)}${it.u?(' / '+esc(it.u)):''}</span>
+      <span class="rule-step">
+        <button type="button" onclick="ruleStep(${pid},${i},-1)">−</button><b>${n}</b><button type="button" onclick="ruleStep(${pid},${i},1)">+</button>
+      </span>
+    </div>`;
+  });
+  return html;
+}
+function projBlockHtml(pid,label){
+  const p=state.projects.find(x=>x.id===pid); const name=p?p.name:label;
+  if(!projectRules(name)){
+    /* 没配规则 → 退回档位按钮，保证兼容 */
+    const d0=n2(batchDed[pid]||0);
+    return `<div class="proj-block"><div class="proj-head"><b>${esc(name)}</b>
+      <span class="proj-ded">扣 <b id="pded_${pid}">${d0.toFixed(1)}</b> 分 · 得分 <b id="pscore_${pid}">${n2(Math.max(0,100-d0)).toFixed(1)}</b></span></div>
+      ${tierRowHtml(pid,label)}</div>`;
+  }
+  const ded=n2(projDeduction(pid));
+  return `<div class="proj-block">
+    <div class="proj-head"><b>${esc(name)}</b>
+      <span class="proj-ded">扣 <b id="pded_${pid}">${ded.toFixed(1)}</b> 分 · 得分 <b id="pscore_${pid}">${n2(Math.max(0,100-ded)).toFixed(1)}</b></span></div>
+    <div class="rule-list" id="rules_${pid}">${rulePanelInner(pid)}</div>
+    <div class="rule-warn" id="pwarn_${pid}">${esc(dupWarnOf(pid))}</div>
+  </div>`;
+}
+function renderItemsForClass(){
+  prevClassId=$('#eClass').value||'';
+  const cid=Number(prevClassId||0);
+  if(!cid){$('#itemRows').innerHTML='<div class="empty">请先选择班级</div>';return;}
+  const list=state.projects.filter(p=>p.class_id===cid);
+  if(!list.length){
+    $('#itemRows').innerHTML=`<div class="empty">该班级暂无打分项。${state.isAdmin
+      ?'可在「项目管理」中添加，或 <button class="ghost small" onclick="seedDefaults()">一键添加默认四项</button>'
+      :'请联系总管理员在「项目管理」中添加打分项后即可打分。'}</div>`;
+    return;
+  }
+  $('#itemRows').innerHTML=list.map(p=>projBlockHtml(p.id,p.name)).join('');
+}
+/* 只刷新这一个项目的面板，不动其它项目 */
+function refreshProjBlock(pid){
+  const box=document.getElementById('rules_'+pid);
+  if(box) box.innerHTML=rulePanelInner(pid);
+  const ded=n2(projDeduction(pid));
+  const d1=document.getElementById('pded_'+pid); if(d1)d1.textContent=ded.toFixed(1);
+  const d2=document.getElementById('pscore_'+pid); if(d2)d2.textContent=n2(Math.max(0,100-ded)).toFixed(1);
+  const w=document.getElementById('pwarn_'+pid); if(w)w.textContent=dupWarnOf(pid);
+}
+window.toggleRule=function(pid,i){
+  const sel=batchRules[pid]||(batchRules[pid]={});
+  if(sel[i])delete sel[i]; else sel[i]=1;
+  refreshProjBlock(pid);
+};
+window.ruleStep=function(pid,i,d){
+  const sel=batchRules[pid]||(batchRules[pid]={});
+  const n=Math.max(0,(sel[i]||0)+d);
+  if(n)sel[i]=n; else delete sel[i];
+  refreshProjBlock(pid);
+};
+window.setTier=function(pid,t){
+  if(t)batchDed[pid]=t; else delete batchDed[pid];
+  /* 两种模式的容器同时在 DOM 里（一个被 CSS 隐藏），必须限定到当前模式的容器，
+     否则同一个 project_id 会先匹配到隐藏的那一行，可见行反而不更新 */
+  const box=document.querySelector(entryMode==='project' ? '#xRows' : '#itemRows');
+  const row=box ? box.querySelector('.tier-row[data-pid="'+pid+'"]') : null;
+  const ded=batchDed[pid]||0;
+  if(row){
+    row.querySelectorAll('.tier-chip').forEach(b=>b.classList.toggle('active',Math.abs(Number(b.dataset.t)-ded)<1e-9));
+    const cb=row.querySelector('.tier-cur b'); if(cb)cb.textContent=Math.max(0,n2(100-ded));
+    const nt=row.querySelector('.tier-note'); if(nt)nt.classList.toggle('hidden',!(ded>0));
+  }
+  const d1=document.getElementById('pded_'+pid); if(d1)d1.textContent=ded.toFixed(1);
+  const d2=document.getElementById('pscore_'+pid); if(d2)d2.textContent=n2(Math.max(0,100-ded)).toFixed(1);
+};
+/* ---- 按项目横评（巡课）：同一个项目名，跨所有班级 ---- */
+function projectNamesList(){ return [...new Set(state.projects.map(p=>p.name))].sort(); }
+function crossRows(name){
+  return state.classes.map(c=>{
+    const p=state.projects.find(x=>x.class_id===c.id && x.name===name);
+    return p? {classId:c.id,className:c.name,pid:p.id} : null;
+  }).filter(Boolean);
+}
+function fillXProjectSelect(){
+  const cur=$('#xProject').value, names=projectNamesList();
+  $('#xProject').innerHTML=names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')||'<option value="">（先建项目）</option>';
+  if(cur && names.indexOf(cur)>=0)$('#xProject').value=cur;
+}
+window.toggleX=function(pid){
+  xActivePid=(String(xActivePid)===String(pid))?null:pid;
+  renderCrossRows();
+};
+function renderCrossRows(){
+  const name=$('#xProject').value;
+  if(!name){$('#xRows').innerHTML='<div class="empty">还没有可横评的项目</div>';return;}
+  const list=crossRows(name);
+  if(!list.length){$('#xRows').innerHTML='<div class="empty">没有班级有「'+esc(name)+'」这个项目</div>';return;}
+  if(!projectRules(name)){        /* 无规则的老项目：保持档位行 + 自由原因 */
+    $('#xRows').innerHTML=list.map(r=>tierRowHtml(r.pid,r.className,true)).join('');
+    return;
+  }
+  $('#xRows').innerHTML=list.map(r=>{
+    const ded=n2(projDeduction(r.pid));
+    const open=(String(xActivePid)===String(r.pid));
+    return `<div class="x-block${open?' open':''}">
+      <div class="x-head" onclick="toggleX(${r.pid})">
+        <span class="x-name">${esc(r.className)}</span>
+        <span class="x-ded">扣 <b id="pded_${r.pid}">${ded.toFixed(1)}</b> 分 · 得分 <b id="pscore_${r.pid}">${n2(Math.max(0,100-ded)).toFixed(1)}</b></span>
+        <span class="x-arrow">${open?'▴':'▾'}</span>
+      </div>
+      ${open?`<div class="rule-list" id="rules_${r.pid}">${rulePanelInner(r.pid)}</div>`
+             +`<div class="rule-warn" id="pwarn_${r.pid}">${esc(dupWarnOf(r.pid))}</div>`
+             +`<div class="tier-note"><span>补充说明</span><input data-note-pid="${r.pid}" placeholder="可选，补充文字说明" value="${esc(xNote[r.pid]||'')}"/></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ==================================================================
+   模块 5/6 · EVENTS
+   ================================================================== */
+$('#dClass').onchange=function(){dashFilter.classId=this.value;renderDash();};
+$('#dRange').onchange=function(){
+  if(this.value==='custom'){ openPeriodModal(); return; }   /* 选「自定义…」先弹窗填日期 */
+  dashFilter.range=this.value;
+  renderDash();
+};
+$('#dashRefresh').onclick=function(){renderDash();toast('看板已刷新');};
+$('#rankSeg').onclick=function(e){
+  const b=e.target.closest('button[data-sort]');
+  if(!b)return;
+  dashSort=b.dataset.sort;
+  renderDash();
+};
+/* ---- 自定义评比周期（用于放假周 / 半月评 / 学期评），存云端全校同步 ---- */
+function openPeriodModal(){
+  if(!state.isAdmin){ $('#dRange').value=dashFilter.range; toast('只有总管理员能设置评比周期'); return; }
+  const b=rangeBounds();
+  $('#pStart').value=(customPeriod&&customPeriod.start)||(b?fmtDay(b.start):todayStr());
+  $('#pEnd').value  =(customPeriod&&customPeriod.end)  ||(b?fmtDay(new Date(b.end-1)):todayStr());
+  $('#periodErr').textContent='';
+  $('#periodBg').classList.remove('hidden');
+}
+$('#pCancel').onclick=function(){
+  $('#periodBg').classList.add('hidden');
+  $('#dRange').value=dashFilter.range;          /* 取消则还原下拉选择 */
+};
+$('#pReset').onclick=async function(){
+  customPeriod=null;
+  try{ localStorage.removeItem('wb_period'); }catch(e){}
+  dashFilter.range='week';
+  $('#dRange').value='week';
+  $('#periodBg').classList.add('hidden');
+  renderDash();
+  toast('已恢复「本周」（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, period_start:null, period_end:null, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('已恢复本周并同步到云端');
+  }catch(e){ toast('已恢复本周，但云端同步失败：'+(e.message||e)); }
+};
+$('#pSave').onclick=async function(){
+  const sv=$('#pStart').value, ev=$('#pEnd').value;
+  if(!sv){ $('#periodErr').textContent='请选择开始日期'; return; }
+  const e2=ev||sv;
+  if(dayStart(e2)<dayStart(sv)){ $('#periodErr').textContent='结束日期不能早于开始日期'; return; }
+  customPeriod={start:sv,end:e2};
+  try{ localStorage.setItem('wb_period',JSON.stringify(customPeriod)); }catch(e){}
+  dashFilter.range='custom';
+  $('#dRange').value='custom';
+  $('#periodBg').classList.add('hidden');
+  renderDash();
+  toast('评比周期已设为 '+sv+' ~ '+e2+'（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, period_start:sv, period_end:e2, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('评比周期已同步到云端');
+  }catch(e){ toast('已本地保存，但云端同步失败：'+(e.message||e)); }
+};
+$('#periodBg').onclick=function(e){ if(e.target===this)$('#pCancel').click(); };
+$('#fClass').onchange=function(){fillProjectFilter();renderRecords();};
+$('#fProject').onchange=renderRecords;
+$('#recRefresh').onclick=function(){renderRecords();toast('已刷新');};
+$('#eClass').onchange=function(){
+  const sel=this, next=sel.value;
+  if(Object.keys(batchDed).length){
+    confirmBox('切换班级','当前有未保存的扣分，切换后会清空。确定要切换吗？',
+      ()=>{ batchDed={}; prevClassId=next; renderItemsForClass(); },
+      ()=>{ sel.value=prevClassId; });          /* 取消 → 还原选择 */
+  }else{
+    batchDed={}; prevClassId=next; renderItemsForClass();
+  }
+};
+$('#eScorer').onchange=function(){
+  try{ localStorage.setItem('wb_scorer', this.value||''); }catch(e){}
+};
+
+$('#eSubmit').onclick=async function(){
+  const cid=Number($('#eClass').value||0);
+  const scorer=$('#eScorer').value.trim();
+  const note=$('#eNote').value.trim();
+  const errEl=$('#entryErr'); errEl.textContent='';
+  if(!cid){errEl.textContent='请选择班级';return;}
+  if(!scorer){errEl.textContent='请选择打分人（先去「打分人」添加）';return;}
+  const list=state.projects.filter(p=>p.class_id===cid);
+  if(!list.length){errEl.textContent='该班级没有打分项目';return;}
+  const rows=list.map(p=>{
+    const ded=n2(projDeduction(p.id));
+    const rn=ruleNoteOf(p.id);
+    let nt = rn ? (rn+(ded>0?('（扣 '+ded+'）'):'')) : (ded>0?('扣分 '+ded):'满分');
+    if(note) nt=note+' '+nt;
+    return {
+      class_id:cid, project_id:p.id, student_name:'全班',
+      deduction:ded, score:n2(Math.max(0,100-ded)), scorer, operator:scorer,
+      note:nt,
+    };
+  });
+  const btn=this; btn.disabled=true; const old=btn.textContent; btn.textContent='保存中…';
+  try{
+    const {error}=await insertScoreRows(rows);
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('打分',`${className(cid)}：${scorer} 完成常规评分（${rows.map(r=>r.deduction>0?r.deduction:'0').join('/')}）`);
+    await refreshScores(true);
+    batchDed={}; batchRules={}; $('#eNote').value='';
+    renderItemsForClass();
+    toast('已保存 '+rows.length+' 条');
+    setTimeout(()=>takeSnapshot(true),800);
+  }catch(e){ errEl.textContent='保存失败：'+(e.message||e); }
+  finally{ btn.disabled=false; btn.textContent=old; }
+};
+$('#eUndo').onclick=async function(){
+  const cid=Number($('#eClass').value||0);
+  const scorer=$('#eScorer').value.trim();
+  if(!cid||!scorer){toast('请先选班级和打分人');return;}
+  let mine=state.scores.filter(r=>r.class_id===cid&&(r.scorer===scorer||r.operator===scorer));
+  /* 子管理员只能撤销「自己提交的」那一笔；总管理员不限 */
+  if(!state.isAdmin){
+    const uid=state.user&&state.user.id;
+    mine=mine.filter(r=>uid && r.user_id && String(r.user_id)===String(uid));
+  }
+  mine.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  if(!mine.length){toast(state.isAdmin?'没有可撤销的记录':'没有你提交的可撤销记录');return;}
+  const t0=mine[0].created_at;
+  // 同一笔提交的所有行共享同一个 created_at（Postgres now() 在单条 INSERT 内一致），
+  // 用精确时间戳分组，避免把两次快速提交误合并删除
+  const batch=mine.filter(r=>r.created_at===t0);
+  confirmBox('撤销上一笔',`将删除 ${scorer} 于 ${new Date(t0).toLocaleString('zh-CN')} 提交的 ${batch.length} 条记录，确定吗？`,async()=>{
+    try{
+      const ids=batch.map(r=>r.id);
+      const {error}=await db.from('scores').delete().in('id',ids);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('撤销',`${className(cid)}：撤销 ${scorer} 的一笔评分（${ids.length} 条）`);
+      await refreshScores(true);
+      toast('已撤销 '+ids.length+' 条');
+    }catch(e){toast('撤销失败：'+(e.message||e));}
+  });
+};
+/* ---- 模式切换 / 横评保存 / 档位设置 ---- */
+function applyEntryMode(){
+  const isClass=entryMode==='class';
+  $('#eClassWrap').classList.toggle('hidden',!isClass);
+  $('#eSubmitWrap').classList.toggle('hidden',!isClass);
+  $('#eUndoWrap').classList.toggle('hidden',!isClass);
+  $('#entryClassBox').classList.toggle('hidden',!isClass);
+  $('#xProjectWrap').classList.toggle('hidden',isClass);
+  $('#xSubmitWrap').classList.toggle('hidden',isClass);
+  $('#entryProjBox').classList.toggle('hidden',isClass);
+  $$('#entryModeSeg button').forEach(b=>b.classList.toggle('active',b.dataset.mode===entryMode));
+  $('#entryErr').textContent=''; $('#xErr').textContent='';
+  if(isClass) renderItemsForClass();
+  else { fillXProjectSelect(); renderCrossRows(); }
+}
+function switchEntryMode(mode){
+  if(entryMode===mode)return;
+  const go=()=>{ batchDed={}; batchRules={}; xNote={}; xActivePid=null; entryMode=mode; applyEntryMode(); };
+  if(Object.keys(batchDed).length){
+    confirmBox('切换打分模式','当前有未保存的扣分，切换后会清空。确定吗？',go);
+  }else go();
+}
+$('#entryModeSeg').onclick=function(e){
+  const b=e.target.closest('button[data-mode]'); if(!b)return;
+  switchEntryMode(b.dataset.mode);
+};
+$('#xProject').onchange=function(){ xActivePid=null; renderCrossRows(); };
+$('#xSubmit').onclick=async function(){
+  const name=$('#xProject').value;
+  const scorer=$('#eScorer').value.trim();
+  const errEl=$('#xErr'); errEl.textContent='';
+  if(!name){errEl.textContent='请选择项目';return;}
+  if(!scorer){errEl.textContent='请选择打分人（先去「打分人」添加）';return;}
+  const list=crossRows(name);
+  if(!list.length){errEl.textContent='没有可打分的班级';return;}
+  const rows=list.map(r=>{
+    const ded=n2(projDeduction(r.pid));
+    const rn=ruleNoteOf(r.pid);                      /* 勾选的细则 */
+    const reason=(xNote[r.pid]||'').trim();          /* 自由补充说明 */
+    let nt;
+    if(rn) nt=rn+(reason?(' | '+reason):'')+(ded>0?('（扣 '+ded+'）'):'');
+    else nt= reason ? reason : ('横评 '+(ded>0?('扣分 '+ded):'满分'));
+    return {class_id:r.classId, project_id:r.pid, student_name:'全班',
+      deduction:ded, score:n2(Math.max(0,100-ded)), scorer, operator:scorer, note:nt};
+  });
+  const btn=this; btn.disabled=true; const old=btn.textContent; btn.textContent='保存中…';
+  try{
+    const {error}=await insertScoreRows(rows);
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('横评',`${name}：${scorer} 对 ${rows.length} 个班完成横评（${rows.map(r=>r.deduction>0?r.deduction:'0').join('/')}）`);
+    await refreshScores(true);
+    batchDed={}; batchRules={}; xNote={}; xActivePid=null; renderCrossRows();
+    toast('已保存 '+rows.length+' 个班的「'+name+'」');
+    setTimeout(()=>takeSnapshot(true),800);
+  }catch(e){ errEl.textContent='保存失败：'+(e.message||e); }
+  finally{ btn.disabled=false; btn.textContent=old; }
+};
+/* 横评里每行「扣分原因」的输入，实时缓存到 xNote */
+$('#xRows').addEventListener('input',function(e){
+  const inp=e.target.closest('input[data-note-pid]');
+  if(!inp)return;
+  xNote[inp.dataset.notePid]=inp.value;
+});
+function parseTiersInput(s){
+  return String(s||'').split(/[,，;；\s]+/).map(x=>Number(x)).filter(x=>isFinite(x)&&x>=0&&x<=100);
+}
+/* ---- 扣分细则编辑（管理员）---- */
+function rulesToText(list){
+  const out=[];
+  (list||[]).forEach(p=>{
+    out.push('# '+p.name);
+    let lastG=null;
+    (p.items||[]).forEach(it=>{
+      if(it.g && it.g!==lastG){ out.push('## '+it.g); lastG=it.g; }
+      const f=[it.t, n2(it.s), it.u||''];
+      if(it.d) f.push(it.d);          /* 第 4 段：完整原文（悬停显示） */
+      out.push(f.join(' | '));
+    });
+    out.push('');
+  });
+  return out.join('\n');
+}
+function parseRulesText(txt){
+  const out=[]; let cur=null, g=null;
+  String(txt||'').split(/\r?\n/).forEach(line=>{
+    const s=line.trim(); if(!s)return;
+    if(/^##/.test(s)){ g=s.replace(/^#+\s*/,'').trim(); return; }
+    if(/^#/.test(s)){ cur={name:s.replace(/^#+\s*/,'').trim(), items:[]}; out.push(cur); g=null; return; }
+    if(!cur)return;
+    const parts=s.split('|').map(x=>x.trim());
+    const t=parts[0], sc=Number(parts[1]||0), u=parts[2]||'', d=parts[3]||'';
+    if(!t||!isFinite(sc)||sc<0)return;
+    const it={t:t, s:sc, u:u};
+    if(d)it.d=d;                       /* 第 4 段可选 */
+    if(g)it.g=g;
+    cur.items.push(it);
+  });
+  return out.filter(x=>x.name && x.items.length);
+}
+$('#rulesBtn').onclick=function(){
+  $('#rulesInput').value=rulesToText(RULE_LIST);
+  $('#rulesErr').textContent='';
+  $('#rulesBg').classList.remove('hidden');
+};
+$('#rulesCancel').onclick=()=>$('#rulesBg').classList.add('hidden');
+$('#rulesDef').onclick=function(){ $('#rulesInput').value=rulesToText(DEFAULT_RULES); };
+$('#rulesSave').onclick=async function(){
+  const list=parseRulesText($('#rulesInput').value);
+  if(!list.length){ $('#rulesErr').textContent='至少要有 1 个项目，每个项目至少 1 条细则'; return; }
+  setRules(list);
+  $('#rulesBg').classList.add('hidden');
+  try{ localStorage.setItem('wb_rules',JSON.stringify(RULE_LIST)); }catch(e){}
+  batchRules={};
+  if(entryMode==='class') renderItemsForClass(); else { fillXProjectSelect(); renderCrossRows(); }
+  toast('细则已更新（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, deduct_rules:RULE_LIST, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('扣分细则已同步到云端');
+  }catch(e){ toast('已本地生效，但云端同步失败：'+(e.message||e)); }
+};
+$('#tiersBtn').onclick=function(){
+  $('#tiersInput').value=TIER_LIST.join(',');
+  $('#tiersErr').textContent='';
+  $('#tiersBg').classList.remove('hidden');
+};
+$('#tiersCancel').onclick=()=>$('#tiersBg').classList.add('hidden');
+$('#tiersDef').onclick=function(){ $('#tiersInput').value=DEFAULT_TIERS.join(','); };
+$('#tiersSave').onclick=async function(){
+  const v=parseTiersInput($('#tiersInput').value);
+  const uniq=[...new Set(v)].sort((a,b)=>a-b);
+  if(uniq.length<2){ $('#tiersErr').textContent='至少要有 2 个档位'; return; }
+  if(uniq[0]!==0){ $('#tiersErr').textContent='必须包含 0（不扣分档）'; return; }
+  setTiers(uniq);
+  $('#tiersBg').classList.add('hidden');
+  if(entryMode==='class') renderItemsForClass(); else renderCrossRows();
+  toast('档位已更新（同步中…）');
+  try{
+    const {error}=await db.from('app_settings').upsert({id:1, tiers:uniq, updated_at:new Date().toISOString()});
+    if(error)throw error;
+    toast('扣分档位已同步到云端');
+  }catch(e){ toast('已本地生效，但云端同步失败：'+(e.message||e)); }
+};
+
+window.editScore=function(id){
+  const r=state.scores.find(x=>x.id===id); if(!r)return;
+  if(!canEditScoreRow(r)){ toast('只能修改自己提交的记录'); return; }
+  $('#mScoreId').value=id;
+  $('#mClass').value=String(r.class_id);
+  const po=state.projects.filter(p=>String(p.class_id)===String(r.class_id));
+  $('#mProject').innerHTML=po.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  $('#mProject').value=String(r.project_id);
+  $('#mStudent').value=r.student_name||'';
+  $('#mDeduction').value=r.deduction||0;
+  $('#mNote').value=r.note||'';
+  $('#scoreModalErr').textContent='';
+  $('#scoreModalBg').classList.remove('hidden');
+};
+$('#mClass').onchange=function(){
+  const po=state.projects.filter(p=>String(p.class_id)===this.value);
+  $('#mProject').innerHTML=po.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+};
+$('#scoreCancel').onclick=()=>$('#scoreModalBg').classList.add('hidden');
+$('#scoreSave').onclick=async function(){
+  const id=$('#mScoreId').value;
+  const editing=state.scores.find(x=>String(x.id)===String(id));
+  if(editing && !canEditScoreRow(editing)){ $('#scoreModalErr').textContent='只能修改自己提交的记录'; return; }
+  let ded=n2($('#mDeduction').value||0);
+  if(!isFinite(ded)||ded<0||ded>100){ $('#scoreModalErr').textContent='扣分需在 0–100 之间'; return; }
+  ded=n2(Math.min(100,Math.max(0,ded)));
+  const payload={
+    class_id:Number($('#mClass').value),
+    project_id:Number($('#mProject').value),
+    student_name:$('#mStudent').value.trim()||'全班',
+    deduction:ded, score:n2(100-ded),
+    note:$('#mNote').value.trim(),
+    updated_at:new Date().toISOString(),
+  };
+  try{
+    const {error}=await db.from('scores').update(payload).eq('id',id);
+    if(error)throw error;
+    state.watermark.scores=null; lastScoresJson='';
+    await logEvent('修改',`修改记录 #${id}（${className(payload.class_id)} · ${projectName(payload.project_id)}）扣分 ${ded}`);
+    await refreshScores(true);
+    $('#scoreModalBg').classList.add('hidden');
+    toast('已保存');
+  }catch(e){$('#scoreModalErr').textContent='保存失败：'+(e.message||e);}
+};
+window.delScore=function(id){
+  const r=state.scores.find(x=>x.id===id);
+  confirmBox('删除记录',`确定删除「${className(r?.class_id)} · ${projectName(r?.project_id)}」该条记录？删除后不可恢复。`,async()=>{
+    try{
+      const {error}=await db.from('scores').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除',`删除记录 #${id}（${className(r?.class_id)} · ${projectName(r?.project_id)}）`);
+      await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+$('#cAdd').onclick=async function(){
+  const name=$('#cName').value.trim(); if(!name){toast('请输入班级名称');return;}
+  try{
+    const ins=await db.from('classes').insert({name}).select();
+    if(ins.error)throw ins.error;
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    /* 新班级自动继承已有的全部项目名，保证「所有班级都有同一批项目」 */
+    const names=[...new Set(state.projects.map(p=>p.name))];
+    let inherited=0;
+    if(nid && names.length){
+      const r=await db.from('projects').insert(names.map(n=>({class_id:nid,name:n})));
+      if(!r.error)inherited=names.length;
+    }
+    $('#cName').value='';
+    await logEvent('新增班级',name+(inherited?('（自动继承 '+inherited+' 个项目）'):''));
+    await refreshMeta(true);
+    toast(inherited?('已添加班级，并继承 '+inherited+' 个项目'):'已添加班级');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.renameClass=function(id){
+  const c=state.classes.find(x=>x.id===id); if(!c)return;
+  const nv=prompt('新的班级名称',c.name); if(nv==null)return;
+  const name=nv.trim(); if(!name)return;
+  db.from('classes').update({name}).eq('id',id).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名班级',c.name+' → '+name).then(()=>refreshMeta(true));
+    toast('已重命名');
+  });
+};
+window.delClass=function(id){
+  const c=state.classes.find(x=>x.id===id);
+  const cnt=state.scores.filter(s=>s.class_id===id).length;
+  confirmBox('删除班级',`确定删除「${c?.name}」？其下 ${cnt} 条打分记录与该班项目也会一并删除，不可恢复。`,async()=>{
+    try{
+      await db.from('scores').delete().eq('class_id',id);
+      await db.from('projects').delete().eq('class_id',id);
+      const {error}=await db.from('classes').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除班级',c?.name+`（含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+$('#pAdd').onclick=async function(){
+  const sel=$('#pClass').value, name=$('#pName').value.trim();
+  if(!state.classes.length){toast('请先建班级');return;}
+  if(!name){toast('请输入项目名称');return;}
+  const targets = (sel==='all'||!sel) ? state.classes : state.classes.filter(c=>String(c.id)===String(sel));
+  if(!targets.length){toast('请选择班级');return;}
+  /* 跳过已经有同名项目的班，避免重复 */
+  const rows=targets.filter(c=>!state.projects.some(p=>p.class_id===c.id && p.name===name))
+                    .map(c=>({class_id:c.id,name}));
+  if(!rows.length){toast('所选班级都已有「'+name+'」');return;}
+  try{
+    const {error}=await db.from('projects').insert(rows);
+    if(error)throw error;
+    $('#pName').value='';
+    await logEvent('新增项目',name+'（'+rows.length+' 个班）');
+    await refreshMeta(true);
+    toast('已把「'+name+'」加到 '+rows.length+' 个班');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.renameProject=function(id){
+  const p=state.projects.find(x=>x.id===id); if(!p)return;
+  const nv=prompt('新的项目名称',p.name); if(nv==null)return;
+  const name=nv.trim(); if(!name)return;
+  db.from('projects').update({name}).eq('id',id).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名项目',p.name+' → '+name).then(()=>refreshMeta(true));
+    toast('已重命名');
+  });
+};
+window.delProject=function(id){
+  const p=state.projects.find(x=>x.id===id);
+  if(!p)return;
+  const cnt=state.scores.filter(s=>s.project_id===id).length;
+  confirmBox('删除项目（仅本班）',`确定只删除「${className(p.class_id)}」的「${p.name}」？关联 ${cnt} 条打分记录会一并删除。\n（如需所有班级一起删，请用上方汇总区的「全部删除」）`,async()=>{
+    try{
+      await db.from('scores').delete().eq('project_id',id);
+      const {error}=await db.from('projects').delete().eq('id',id);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除项目',className(p.class_id)+' · '+p.name+`（含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+/* ---- 项目名级别的全局操作（保证所有班级都有同一批项目）---- */
+window.fillProjectClasses=async function(name){
+  const missing=state.classes.filter(c=>!state.projects.some(p=>p.class_id===c.id && p.name===name));
+  if(!missing.length){toast('所有班级都已有该项');return;}
+  try{
+    const {error}=await db.from('projects').insert(missing.map(c=>({class_id:c.id,name})));
+    if(error)throw error;
+    await logEvent('新增项目',name+' 补齐到 '+missing.length+' 个班');
+    await refreshMeta(true);
+    toast('已把「'+name+'」补齐到 '+missing.length+' 个班');
+  }catch(e){toast('补齐失败：'+(e.message||e));}
+};
+window.renameProjectAll=function(name){
+  const list=state.projects.filter(p=>p.name===name);
+  if(!list.length)return;
+  const nv=prompt('新的项目名称（'+list.length+' 个班一起改）',name); if(nv==null)return;
+  const nn=nv.trim(); if(!nn||nn===name)return;
+  db.from('projects').update({name:nn}).in('id',list.map(p=>p.id)).then(({error})=>{
+    if(error)return toast('重命名失败：'+error.message);
+    logEvent('重命名项目',name+' → '+nn+'（所有班级）').then(()=>refreshMeta(true));
+    toast('已重命名 '+list.length+' 个班的「'+name+'」');
+  });
+};
+window.delProjectAll=function(name){
+  const list=state.projects.filter(p=>p.name===name);
+  if(!list.length)return;
+  const ids=list.map(p=>p.id);
+  const cnt=state.scores.filter(s=>ids.indexOf(s.project_id)>=0).length;
+  confirmBox('删除项目（所有班级）',`将删除 ${list.length} 个班的「${name}」，关联的 ${cnt} 条打分记录也会一并删除，不可恢复。确定吗？`,async()=>{
+    try{
+      if(ids.length)await db.from('scores').delete().in('project_id',ids);
+      const {error}=await db.from('projects').delete().in('id',ids);
+      if(error)throw error;
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('删除项目',name+`（所有班级，含 ${cnt} 条记录）`);
+      await refreshMeta(true); await refreshScores(true); toast('已删除所有班级的「'+name+'」');
+    }catch(e){toast('删除失败：'+(e.message||e));}
+  });
+};
+window.seedDefaults=async function(){
+  /* 默认四项补齐到所有缺项的班级，而不是只补当前班 */
+  const rows=[];
+  state.classes.forEach(c=>{
+    ITEMS.forEach(n=>{
+      if(!state.projects.some(p=>p.class_id===c.id && p.name===n)) rows.push({class_id:c.id,name:n});
+    });
+  });
+  if(!rows.length){toast('所有班级都已有默认四项');return;}
+  try{
+    const {error}=await db.from('projects').insert(rows);
+    if(error)throw error;
+    await logEvent('新增项目','补齐默认四项（'+rows.length+' 条）');
+    await refreshMeta(true); toast('已补齐 '+rows.length+' 项');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+$('#scAdd').onclick=async function(){
+  const name=$('#scName').value.trim(); if(!name){toast('请输入姓名');return;}
+  try{
+    const {error}=await db.from('scorers').insert({name});
+    if(error)throw error;
+    $('#scName').value='';
+    await logEvent('新增打分人',name);
+    await refreshMeta(true); toast('已添加');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.delScorer=function(id){
+  const s=state.scorers.find(x=>x.id===id);
+  confirmBox('删除打分人',`确定删除「${s?.name}」？历史记录里的名字会保留。`,async()=>{
+    const {error}=await db.from('scorers').delete().eq('id',id);
+    if(error)return toast('删除失败：'+error.message);
+    await refreshMeta(true); toast('已删除');
+  });
+};
+window.setRole=async function(uid,role){
+  if(!state.isAdmin)return toast('需要总管理员权限');
+  if(uid===(state.user?state.user.id:'')){ return toast('不能修改自己的角色'); }
+  // 防止把最后一名总管理员降级，导致无人能进后台
+  const target=state.profiles.find(p=>p.user_id===uid);
+  if(target && target.role==='admin' && role!=='admin'){
+    const admins=state.profiles.filter(p=>p.role==='admin');
+    if(admins.length<=1){ toast('至少保留一名总管理员，无法降级'); return; }
+  }
+  try{
+    const {error}=await db.from('profiles').update({role}).eq('user_id',uid);
+    if(error)throw error;
+    await logEvent('权限变更',`用户 ${uid} → ${ROLE_LABEL[role]||role}`);
+    await refreshMeta(true); toast('已更新为'+(ROLE_LABEL[role]||role));
+  }catch(e){toast('更新失败：'+(e.message||e));}
+};
+$('#invAdd').onclick=async function(){
+  const email=$('#invEmail').value.trim().toLowerCase();
+  const note=$('#invNote').value.trim();
+  if(!email||!email.includes('@')){toast('请输入有效邮箱');return;}
+  try{
+    const {error}=await db.from('staff_invites').insert({email,note});
+    if(error)throw error;
+    $('#invEmail').value='';$('#invNote').value='';
+    await logEvent('新增白名单',email);
+    await refreshMeta(true); toast('已加入白名单');
+  }catch(e){toast('添加失败：'+(e.message||e));}
+};
+window.delInvite=function(id){
+  confirmBox('移出白名单','确定移出该邮箱？对方将失去子管理员身份。',async()=>{
+    const {error}=await db.from('staff_invites').delete().eq('id',id);
+    if(error)return toast('操作失败：'+error.message);
+    await refreshMeta(true); toast('已移出');
+  });
+};
+async function logEvent(kind,summary){
+  try{
+    await db.from('events').insert({kind,summary,actor:(state.user?.email)||'匿名'});
+  }catch(e){}
+}
+let confirmCb=null, confirmCancelCb=null;
+function confirmBox(title,text,cb,onCancel){
+  $('#confirmTitle').textContent=title;
+  $('#confirmText').textContent=text;
+  confirmCb=cb;
+  confirmCancelCb=onCancel||null;
+  $('#confirmBg').classList.remove('hidden');
+}
+$('#confirmCancel').onclick=()=>{
+  $('#confirmBg').classList.add('hidden');
+  confirmCb=null;
+  const cc=confirmCancelCb; confirmCancelCb=null;
+  if(cc)cc();
+};
+$('#confirmOk').onclick=async function(){
+  $('#confirmBg').classList.add('hidden');
+  const cb=confirmCb; confirmCb=null; confirmCancelCb=null;
+  if(cb)await cb();
+};
+const MIRROR_KEY = 'wb_mirrors';
+function localMirrors(){ try{ return JSON.parse(localStorage.getItem(MIRROR_KEY)||'[]'); }catch(e){ return []; } }
+function writeLocalMirror(){
+  try{
+    const p={at:new Date().toISOString(),classes:state.classes,projects:state.projects,scores:state.scores};
+    const lm=localMirrors(); lm.unshift(p);
+    while(lm.length>3)lm.pop();
+    while(lm.length>1 && JSON.stringify(lm).length>2000000)lm.pop();
+    localStorage.setItem(MIRROR_KEY,JSON.stringify(lm));
+  }catch(e){}
+}
+async function fetchFullPayload(){
+  const {data,error}=await db.rpc('dump_payload');
+  if(error)throw error;
+  return data;
+}
+function backupSig(){
+  let h=5381;
+  const add=s=>{ for(let i=0;i<s.length;i++)h=((h*33)^s.charCodeAt(i))|0; };
+  (state.classes||[]).forEach(c=>add('c'+c.id+'|'+c.name+'|'+(c.updated_at||'')));
+  (state.projects||[]).forEach(p=>add('p'+p.id+'|'+p.class_id+'|'+p.name));
+  (state.scores||[]).forEach(r=>add('s'+r.id+'|'+r.project_id+'|'+r.score+'|'+r.deduction+'|'+(r.updated_at||'')));
+  add('#'+(state.classes||[]).length+'/'+(state.projects||[]).length+'/'+(state.scores||[]).length);
+  return String(h);
+}
+async function takeSnapshot(silent,force){
+  if(!state.isAdmin)return;
+  const sig=backupSig(), now=Date.now();
+  if(!force){
+    if(sig===bkLastSig)return;
+    if(bkLastAt && now-bkLastAt<BK_MIN_GAP)return;
+  }
+  try{
+    const {error}=await db.rpc('make_snapshot',{p_kind:'snapshot',p_keep:BK_KEEP});
+    if(error)throw error;
+    bkLastSig=sig; bkLastAt=now;
+    writeLocalMirror();
+    if(!silent)toast('已备份');
+    refreshMeta(true);
+  }catch(e){ if(!silent)toast('备份失败：'+(e.message||e)); }
+}
+$('#bSnapshot').onclick=()=>takeSnapshot(false,true);
+function pickClassId(s,clsById,clsByName){
+  if(s.className && clsByName[s.className]!=null) return clsByName[s.className];
+  if(s.class_id!=null && clsById[s.class_id]!=null) return clsById[s.class_id];
+  return null;
+}
+function pickProjectId(s,cid,projById,projByKey){
+  if(s.projectName && projByKey[s.projectName+'@'+cid]!=null) return projByKey[s.projectName+'@'+cid];
+  if(s.project_id!=null && projById[s.project_id]!=null) return projById[s.project_id];
+  return null;
+}
+function scoreRow(s,class_id,project_id){
+  const ded=n2(s.deduction||0);
+  return {
+    class_id, project_id,
+    student_name: s.student_name||'全班',
+    score: (s.score!=null && s.score!=='') ? Number(s.score) : n2(100-ded),
+    deduction: ded,
+    note: s.note||'',
+    scorer: s.scorer||s.operator||'',
+    operator: s.operator||s.scorer||(state.user?state.user.email:'')||'',
+    created_at: s.created_at||new Date().toISOString(),
+  };
+}
+/* 统一的打分记录写入：自动带「提交人账号」user_id。
+   如果数据库还没加 scores.user_id 列，会自动降级重试一次，保证功能不挂。 */
+async function insertScoreRows(rows){
+  const uid=(state.user&&state.user.id)||null;
+  const payload=(uid && hasUserIdCol!==false) ? rows.map(r=>({...r,user_id:uid})) : rows;
+  let res=await db.from('scores').insert(payload);
+  if(res.error && uid && hasUserIdCol!==false && /user_id/i.test(res.error.message||'')){
+    hasUserIdCol=false;                              /* 老库：去掉该列再试 */
+    res=await db.from('scores').insert(rows);
+  }else if(!res.error && uid && hasUserIdCol===null){
+    hasUserIdCol=true;
+  }
+  return res;
+}
+async function insertChunks(rows){
+  for(let i=0;i<rows.length;i+=200){
+    const {error}=await insertScoreRows(rows.slice(i,i+200));
+    if(error)throw error;
+  }
+  state.watermark.scores=null; lastScoresJson='';
+}
+async function replaceAllFrom(p){
+  await db.from('scores').delete().neq('id',0);
+  await db.from('projects').delete().neq('id',0);
+  await db.from('classes').delete().neq('id',0);
+  const clsById={}, clsByName={};
+  for(const c of (p.classes||[])){
+    const ins=await db.from('classes').insert({name:c.name}).select();
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    if(!nid)continue;
+    clsByName[c.name]=nid;
+    if(c.id!=null)clsById[c.id]=nid;
+  }
+  const projById={}, projByKey={};
+  for(const x of (p.projects||[])){
+    const cid = (x.className&&clsByName[x.className]!=null) ? clsByName[x.className]
+              : (x.class_id!=null ? clsById[x.class_id] : null);
+    if(cid==null)continue;
+    const ins=await db.from('projects').insert({class_id:cid,name:x.name}).select();
+    const nid=ins.data&&ins.data[0]&&ins.data[0].id;
+    if(!nid)continue;
+    projByKey[x.name+'@'+cid]=nid;
+    if(x.id!=null)projById[x.id]=nid;
+  }
+  const rows=[];
+  for(const s of (p.scores||[])){
+    const cid=pickClassId(s,clsById,clsByName);
+    if(cid==null)continue;
+    const pid=pickProjectId(s,cid,projById,projByKey);
+    if(pid==null)continue;
+    rows.push(scoreRow(s,cid,pid));
+  }
+  await insertChunks(rows);
+  await logEvent('恢复','全量替换 '+rows.length+' 条记录');
+  await refreshMeta(true); await refreshScores(true);
+  return rows.length;
+}
+async function mergePayload(p){
+  const clsByName={}, clsById={};
+  for(const c of (p.classes||[])){
+    const {data}=await db.from('classes').select('id').eq('name',c.name).maybeSingle();
+    let cid=data&&data.id;
+    if(!cid){
+      const ins=await db.from('classes').insert({name:c.name}).select();
+      cid=ins.data&&ins.data[0]&&ins.data[0].id;
+    }
+    if(cid){ clsByName[c.name]=cid; if(c.id!=null)clsById[c.id]=cid; }
+  }
+  // 解析班级：优先按名称 → 快照内原 id 映射 → 仅当目标库确实存在该 id 时才沿用
+  const resolveClass=(obj)=>{
+    if(obj.className && clsByName[obj.className]!=null) return clsByName[obj.className];
+    if(obj.class_id!=null && clsById[obj.class_id]!=null) return clsById[obj.class_id];
+    if(obj.class_id!=null && state.classes.some(c=>String(c.id)===String(obj.class_id))) return obj.class_id;
+    return null;
+  };
+  const projByKey={}, projById={};
+  for(const x of (p.projects||[])){
+    const cid=resolveClass(x);
+    if(cid==null)continue;
+    const {data}=await db.from('projects').select('id').eq('name',x.name).eq('class_id',cid).maybeSingle();
+    let pid=data&&data.id;
+    if(!pid){
+      const ins=await db.from('projects').insert({class_id:cid,name:x.name}).select();
+      pid=ins.data&&ins.data[0]&&ins.data[0].id;
+    }
+    if(pid){ projByKey[x.name+'@'+cid]=pid; if(x.id!=null)projById[x.id]=pid; }
+  }
+  const rows=[];
+  for(const s of (p.scores||[])){
+    if(s.className && clsByName[s.className]==null){
+      const {data}=await db.from('classes').select('id').eq('name',s.className).maybeSingle();
+      if(data){ clsByName[s.className]=data.id; }
+    }
+    const cid=resolveClass(s);
+    if(cid==null)continue;
+    if(s.projectName && projByKey[s.projectName+'@'+cid]==null){
+      const {data}=await db.from('projects').select('id').eq('name',s.projectName).eq('class_id',cid).maybeSingle();
+      if(data)projByKey[s.projectName+'@'+cid]=data.id;
+    }
+    const pid=pickProjectId(s,cid,projById,projByKey);
+    if(pid==null)continue;
+    rows.push(scoreRow(s,cid,pid));
+  }
+  await insertChunks(rows);
+  return rows.length;
+}
+window.restoreSnapshot=function(id){
+  confirmBox('恢复云端快照','将用该快照覆盖当前数据（恢复前会自动再备份当前状态）。确定吗？',async()=>{
+    try{
+      await takeSnapshot(true,true);
+      const {data,error}=await db.from('backups').select('payload').eq('id',id).maybeSingle();
+      if(error)throw error;
+      if(!data||!data.payload){toast('快照不存在');return;}
+      await replaceAllFrom(data.payload);
+      toast('已恢复');
+    }catch(e){toast('恢复失败：'+(e.message||e));}
+  });
+};
+window.restoreLocal=function(i){
+  const m=localMirrors()[i]; if(!m)return;
+  confirmBox('恢复本机镜像','将用本机镜像覆盖当前数据（恢复前会自动再备份当前状态）。确定吗？',async()=>{
+    try{
+      await takeSnapshot(true,true);
+      await replaceAllFrom(m);
+      toast('已恢复本机镜像');
+    }catch(e){toast('恢复失败：'+(e.message||e));}
+  });
+};
+$('#bJson').onclick=async function(){
+  try{
+    const data=await fetchFullPayload();
+    download('班级打分台_备份_'+stamp()+'.json',JSON.stringify(data,null,2),'application/json');
+    toast('已导出 JSON（'+((data.scores||[]).length)+' 条）');
+  }catch(e){toast('导出失败：'+(e.message||e));}
+};
+$('#bCsv').onclick=async function(){
+  try{
+    const data=await fetchFullPayload();
+    const head=['时间','班级','项目','对象','分值','扣分','备注','录入人'];
+    const lines=[head.join(',')].concat((data.scores||[]).map(r=>[
+      r.created_at?new Date(r.created_at).toLocaleString('zh-CN'):'',
+      className(r.class_id),projectName(r.project_id),r.student_name,
+      r.score,r.deduction||0,r.note||'',r.scorer||r.operator||''
+    ].map(csvCell).join(',')));
+    download('班级打分台_记录_'+stamp()+'.csv','\ufeff'+lines.join('\r\n'),'text/csv;charset=utf-8');
+    toast('已导出 CSV（'+(data.scores||[]).length+' 条）');
+  }catch(e){toast('导出失败：'+(e.message||e));}
+};
+function parseCSV(txt){
+  const rows=[];let cur=[],cell='',q=false;
+  for(let i=0;i<txt.length;i++){
+    const ch=txt[i];
+    if(q){
+      if(ch==='"'){ if(txt[i+1]==='"'){cell+='"';i++;} else q=false; }
+      else cell+=ch;
+    }else{
+      if(ch==='"')q=true;
+      else if(ch===','){cur.push(cell);cell='';}
+      else if(ch==='\n'){cur.push(cell);rows.push(cur);cur=[];cell='';}
+      else if(ch!=='\r')cell+=ch;
+    }
+  }
+  if(cell!==''||cur.length){cur.push(cell);rows.push(cur);}
+  return rows.filter(r=>r.some(c=>String(c).trim()!==''));
+}
+function csvToPayload(txt){
+  const rows=parseCSV(txt);
+  if(rows.length<2)return {classes:[],projects:[],scores:[]};
+  const head=rows[0].map(s=>String(s).trim());
+  const pick=(c,names)=>{
+    for(const n of names){
+      const i=head.findIndex(h=>h.includes(n));
+      if(i>=0 && c[i]!=null && String(c[i]).trim()!=='') return String(c[i]).trim();
+    }
+    return '';
+  };
+  const classes={},projects={},scores=[];
+  for(let i=1;i<rows.length;i++){
+    const c=rows[i];
+    const cn=pick(c,['班级']);
+    const pn=pick(c,['项目']);
+    if(!cn||!pn)continue;
+    if(!classes[cn])classes[cn]={name:cn};
+    if(!projects[cn+'>'+pn])projects[cn+'>'+pn]={name:pn,className:cn};
+    const ded=n2(Number(pick(c,['扣分'])||0));
+    const rawScore=pick(c,['分值','得分']);
+    let created_at=new Date().toISOString();
+    const tRaw=pick(c,['时间']);
+    if(tRaw){ const d=new Date(tRaw.replace(/\//g,'-')); if(!isNaN(d.getTime()))created_at=d.toISOString(); }
+    scores.push({
+      className:cn, projectName:pn,
+      student_name: pick(c,['对象','学生'])||'全班',
+      score: rawScore==='' ? n2(100-ded) : Number(rawScore),
+      deduction: ded,
+      note: pick(c,['备注']),
+      scorer: pick(c,['录入人','打分人']),
+      operator: pick(c,['录入人','打分人']),
+      created_at,
+    });
+  }
+  return {classes:Object.values(classes),projects:Object.values(projects),scores};
+}
+async function doImport(mode){
+  const f=$('#bFile').files[0]; if(!f){toast('请先选择文件');return;}
+  const txt=await f.text();
+  let payload;
+  try{
+    const t=txt.trim();
+    if(/\.json$/i.test(f.name)||t.startsWith('{')||t.startsWith('[')){
+      const parsed=JSON.parse(txt);
+      payload=Array.isArray(parsed)?{scores:parsed}:parsed;
+    }else{
+      payload=csvToPayload(txt);
+    }
+  }catch(e){ toast('文件解析失败：'+(e.message||e)); return; }
+  const run=async()=>{
+    try{
+      await takeSnapshot(true,true);
+      if(mode==='overwrite'){
+        const n=await replaceAllFrom(payload);
+        toast('覆盖导入完成：'+n+' 条');
+      }else{
+        const n=await mergePayload(payload);
+        await logEvent('合并导入','写入 '+n+' 条记录');
+        await refreshMeta(true); await refreshScores(true);
+        toast(n?('合并导入完成：'+n+' 条'):'没有可导入的新行（班级/项目未匹配）');
+      }
+    }catch(e){toast('导入失败：'+(e.message||e));}
+    finally{ $('#bFile').value=''; }
+  };
+  if(mode==='overwrite'){
+    confirmBox('覆盖导入','将清空现有「班级 / 项目 / 打分记录」后写入文件内容，不可撤销。确定吗？',run);
+  }else{
+    await run();
+  }
+}
+$('#bImportMerge').onclick=()=>doImport('merge');
+$('#bImportOver').onclick=()=>doImport('overwrite');
+$('#bClear').onclick=function(){
+  confirmBox('清空全部数据','将删除所有打分记录、项目与班级（账户与权限保留）。此操作不可恢复，确定吗？',async()=>{
+    try{
+      await takeSnapshot(true,true);
+      await db.from('scores').delete().neq('id',0);
+      await db.from('projects').delete().neq('id',0);
+      await db.from('classes').delete().neq('id',0);
+      state.watermark.scores=null; lastScoresJson='';
+      await logEvent('清空数据','清空了全部记录 / 项目 / 班级');
+      await refreshMeta(true); await refreshScores(true);
+      toast('已清空');
+    }catch(e){toast('清空失败：'+(e.message||e));}
+  });
+};
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  ['#scoreModalBg','#confirmBg','#periodBg','#tiersBg','#rulesBg','#moreBg','#auth'].forEach(s=>{const el=$(s);if(el)el.classList.add('hidden');});
+});
+
+/* ==================================================================
+   模块 6/6 · BOOT
+   ================================================================== */
+async function boot(){
+  try{
+    if(!_sb){
+      document.body.insertAdjacentHTML('afterbegin','<div id="fatal">依赖加载失败：无法连接 Supabase SDK，请检查网络后刷新页面重试。</div>');
+      return;
+    }
+    if($('#fatal'))$('#fatal').remove();
+    bindNavDelegates();
+    let sess=null;
+    try{ sess=await cloud.auth.getSession(); }catch(e){}
+    if(sess&&sess.data&&sess.data.user){
+      await afterLogin(sess.data.user);
+    }else{
+      enterPublicMode();
+    }
+    cloud.auth.onAuthStateChange(async(evt,user)=>{
+      if(evt==='SIGNED_IN'&&user&&(!state.user||state.user.id!==user.id)){
+        await afterLogin(user);
+      }else if(evt==='SIGNED_OUT'){
+        enterPublicMode();
+      }
+    });
+  }catch(e){
+    document.body.insertAdjacentHTML('afterbegin','<div id="fatal">启动失败：'+esc(e.message||e)+'<br>请刷新页面重试</div>');
+  }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+else boot();
+</script>
+</body>
+</html>
